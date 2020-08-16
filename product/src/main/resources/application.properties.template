@@ -1,0 +1,5 @@
+spring.data.mongodb.database=inventory
+spring.data.mongodb.repositories.enabled=true
+spring.data.mongodb.uri=mongodb://localhost:27017/inventory
+#spring.data.mongodb.password= # Login password of the mongo server.
+#spring.data.mongodb.username= # Login user of the mongo server.
