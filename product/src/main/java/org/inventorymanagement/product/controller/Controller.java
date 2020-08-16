@@ -1,8 +1,11 @@
 package org.inventorymanagement.product.controller;
 
 import org.inventorymanagement.product.model.Product;
-import org.inventorymanagement.product.srevice.ProductService;
+import org.inventorymanagement.product.service.ProductNotFoundException;
+import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +18,13 @@ public class Controller {
     ProductService service;
 
     @PostMapping
-    public void addProduct(@RequestBody Product product) {
-        service.insertProduct(product);
+    public Product addProduct(@RequestBody Product product) {
+        return service.insertProduct(product);
     }
 
     @GetMapping("/{productId}")
     public Product getProductById(@PathVariable("productId") String productId) {
+
         return service.getProductById(productId);
     }
 

@@ -1,4 +1,4 @@
-package org.inventorymanagement.product.srevice;
+package org.inventorymanagement.product.service;
 
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.MongoConnection;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductService {
@@ -13,9 +14,9 @@ public class ProductService {
     @Autowired
     MongoConnection repository;
 
-    public void insertProduct(Product product) {
+    public Product insertProduct(Product product) {
 
-        repository.save(product);
+        return repository.save(product);
     }
 
     public List<Product> getProducts() {
@@ -25,7 +26,7 @@ public class ProductService {
 
     public Product getProductById(String id) {
 
-        return repository.findByProductId(id);
+        return repository.findByProductId(id).orElseThrow(ProductNotFoundException::new);
     }
 
 }
