@@ -1,0 +1,3 @@
+export const FALSE_RESPONSE = 'FALSE_RESPONSE'
+export const GET_ALL_PRODUCTS = 'GET_ALL_PRODUCTS'
+
