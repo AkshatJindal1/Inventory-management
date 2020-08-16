@@ -1,13 +1,12 @@
 package org.inventorymanagement.product.controller;
 
+import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Product;
-import org.inventorymanagement.product.service.ProductNotFoundException;
 import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController()
@@ -18,20 +17,29 @@ public class Controller {
     ProductService service;
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
+    public Product addProduct(@Valid @RequestBody Product product) {
         return service.insertProduct(product);
     }
 
     @GetMapping("/{productId}")
     public Product getProductById(@PathVariable("productId") String productId) {
 
-        return service.getProductById(productId);
+        Product product = service.getProductById(productId);
+        if(product == null)
+            throw new ProductNotFoundException("Product with given ID not present");
+        return product;
     }
 
     //TODO: Add pagenation for number of products
     @GetMapping
     public List<Product> getProducts() {
         return service.getProducts();
+    }
+
+    @PutMapping("/{productId}")
+    public Product updateProduct(@RequestBody Product product, @PathVariable("productId") String productId) {
+
+        return service.updateProductById(productId, product);
     }
 
 
