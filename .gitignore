@@ -1,3 +1,4 @@
 #env
 product/.env
 product/src/main/resources/application.properties
+product/lombok.jar
