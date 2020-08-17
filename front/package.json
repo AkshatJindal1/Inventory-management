@@ -1,8 +1,8 @@
 {
-  "name": "album-here",
+  "name": "front",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://shagunbandi.github.io/albumify-frontend",
+  "homepage": "http://localhost:3000/",
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.4.1",

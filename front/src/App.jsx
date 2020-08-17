@@ -13,7 +13,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="black-bg">
-            <Route path="/directory" component={ProductLanding} />
+            <Route path="/products" component={ProductLanding} />
           </div>
         </Router>
       </Provider>
