@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
 
 @AllArgsConstructor
@@ -36,11 +36,7 @@ public class Product {
     @NotNull(message = "Product cost must not be null")
     private Double cost;
 
-    private String color;
-
-    private String size;
-
-    private String materialType;
+    HashMap<String, String> productDetails;
 
     @NotNull(message = "Quantity in stock must not be null")
     private Integer quantityInStock;
