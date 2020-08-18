@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import MiniDrawer from './Drawer'
+import MiniDrawer from './AppBar'
 
-export class Navigation extends Component {
+export class NavBar extends Component {
   render() {
     return (
       <MiniDrawer/>
@@ -14,4 +14,4 @@ const mapStateToProps = (state) => ({
   products: state.product.allProducts,
 });
 
-export default connect(mapStateToProps, {})(Navigation);
+export default connect(mapStateToProps, {})(NavBar);

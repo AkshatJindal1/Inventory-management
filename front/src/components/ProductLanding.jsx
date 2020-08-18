@@ -57,7 +57,7 @@ export class ProductLanding extends Component {
   render() {
     return (
       <Fragment>
-        {this.renderTable}
+        Hello World
       </Fragment>
     );
   }
