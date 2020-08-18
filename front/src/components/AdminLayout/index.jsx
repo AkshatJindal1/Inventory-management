@@ -1,11 +1,7 @@
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import React, { Component, Suspense } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { withStyles, makeStyles, useTheme } from "@material-ui/core/styles";
-
-import EmptyContainer from "../Container";
-import Navigation from "../Navigation";
-import NavBar from "../NavBar";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 // import Navigation from './Navigation';
 // import NavBar from './NavBar';
@@ -14,58 +10,17 @@ import NavBar from "../NavBar";
 // import Loader from "../Loader";
 
 import routes from "../../routes/routes";
+import EmptyContainer from "../Container";
+import NavBar from "../NavBar";
+import Navigation from "../Navigation";
 
 // import * as actionTypes from "../../../store/actions";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = theme => ({
   root: {
     display: "flex",
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  hide: {
-    display: "none",
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap",
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: "hidden",
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
-    },
   },
   toolbar: {
     display: "flex",
@@ -79,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-}));
+});
 
 class AdminLayout extends Component {
   render() {
@@ -101,9 +56,10 @@ class AdminLayout extends Component {
         <NavBar />
         <Navigation />
         {/* <Breadcrumb /> */}
-        <div className="main-body">
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
           <Switch>{menu}</Switch>
-        </div>
+        </main>
       </div>
     );
   }
