@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   getAllProducts
@@ -12,13 +12,12 @@ const RenderRow = (props) =>{
 
 export class ProductLanding extends Component {
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getAllProducts()
-    console.log(this.props.products)
   }
 
   getKeys = () => {
-    return Object.keys(this.props.product[0])
+    return Object.keys(this.props.products[0])
   }
 
   getHeader = () => {
@@ -29,7 +28,7 @@ export class ProductLanding extends Component {
   }
 
   getRowsData = () => {
-    const items = this.props.product
+    const items = this.props.products
     const keys = this.getKeys()
     return items.map((row, index) => {
       return <tr key = {index}>
@@ -41,26 +40,25 @@ export class ProductLanding extends Component {
   renderTable = () => {
     return (
       <Component>
-        <table>
-          <thead>
-            <tr>
-              {this.getHeader()}
-            </tr>
-          </thead>
-          <tbody>
-            {this.getRowsData()}
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                {this.getHeader()}
+              </tr>
+            </thead>
+            <tbody>
+              {this.getRowsData()}
+            </tbody>
+          </table>
       </Component>
     )
   }
 
   render() {
-    const { products} = this.props;
     return (
-      <Component>
-        {this.renderTable()}
-      </Component>
+      <Fragment>
+        {this.renderTable}
+      </Fragment>
     );
   }
 }
