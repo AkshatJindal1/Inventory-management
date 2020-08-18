@@ -1,22 +1,38 @@
-import React, { Component } from 'react'
-import { Provider } from 'react-redux'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import React, { Component, Suspense } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import Loadable from 'react-loadable';
 
-import './stylesheet/App.css'
-import './stylesheet/bootstrap.min.css'
-import ProductLanding from './components/ProductLanding'
-import store from './store'
+import Loader from './components/Loader'
+
+import routes from './routes/route';
+
+const AdminLayout = Loadable({
+  loader: () => import("./components/AdminLayout"),
+  loading: Loader,
+});
 
 class App extends Component {
   render() {
+    const menu = routes.map((route, index) => {
+      return (route.component) ? (
+        <Route
+          key={index}
+          path={route.path}
+          exact={route.exact}
+          name={route.name}
+          render={props => (
+            <route.component {...props} />
+          )} />
+      ) : (null);
+    });
+
     return (
-      <Provider store={store}>
-        <Router>
-          <div className="black-bg">
-            <Route path="/products" component={ProductLanding} />
-          </div>
-        </Router>
-      </Provider>
+      <Suspense fallback={<Loader />}>
+        <Switch>
+          {menu}
+          <Route path="/" component={AdminLayout} />
+        </Switch>
+      </Suspense>
     );
   }
 }

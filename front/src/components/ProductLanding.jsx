@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   getAllProducts
-} from '../actions/productAction';
+} from '../store/actions/productAction';
 
 const RenderRow = (props) =>{
   return props.keys.map((key, index)=>{
@@ -56,7 +56,6 @@ export class ProductLanding extends Component {
   }
 
   render() {
-    const { products} = this.props;
     return (
       <Component>
         {this.renderTable()}
