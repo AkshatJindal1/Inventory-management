@@ -1,82 +1,68 @@
-# PhotoAlbum
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## What is It ??
+## Available Scripts
 
-Its localhost solution for your photos app. It has a Python (Django) Server for retrieving data, analysing it, and passing it to the front-end React Server.
+In the project directory, you can run:
 
-## Why to use it ??
+### `npm start`
 
-Imagine you had Goodle Photos kind of capability on your collection of photos, without having to upload it anywhere. You could have your photos library on any folder you say. Apple has it's photos app, but you cannot have a folder wise structure in that, you cannot open a Photo Library on your Windows PC with the same folder, album structure. 
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-What we have is, just launch your server on any folder, it will analyse its content and run a localhost web application with all the features your photo library could do. You can create albums, sort by date, location, search through photos by image content, etc. 
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-## How to Use ??
+### `npm test`
 
-### Backend
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-https://github.com/shagunbandi/albumify-backend
+### `npm run build`
 
-Run the main.py file with location of your folder containing images. 
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-```bash
-pip install requirements.txt
-python main.py <Location to your Photos Folder>
-```
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
 
-This will run the python server on `localhost:8000`
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Frontend
+### `npm run eject`
 
-Frontend is hosted on https://shagunbandi.github.io/albumify-frontend/
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-Or to run it on local:
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-https://github.com/shagunbandi/albumify-frontend
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-Install the required node_modules, and start the server
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-```bash
-npm i
-npm start
-```
+## Learn More
 
-This will run the react development server on `localhost:3000`, or you can build the files and and run.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-### What do we have right now ??
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-#### Backend APIs: 
-  1. All Photos in all the sub-directory.
-  2. All the Photos, Directory Wise.
+### Code Splitting
 
-#### Client Side: 
-  1. Photos Tab, this has all the photos
-  2. Album Tab, this has All the photos, directory-wise.
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### What is Coming ??
+### Analyzing the Bundle Size
 
-#### Client Side :
-  - ~~Make a Front End to Display Data~~
-  - ~~Make a single page having all photos~~
-  - ~~Make another tab displaying data directory wise~~
-  - ~~Load more data once previous is done, currently loaading 50 at a time~~
-  - ~~Open Image Viewer when selecting a photo.~~
-  - Scroll to the selected Image when Image viewer Opened
-  - Create New Albums. 
-  - Remove the Directory Album if needed.
-  - Sort/Search by Metadata/Tags.
-  - Make a Music Video from your Photos.
-  - Images in Grid Form.
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-#### Back End:
-  - ~~Create Dango Backend to expose APIs~~
-  - ~~API returning Directory wise Data~~
-  - ~~API returnng all image related files~~
-  - Create Database of some sort, to store File Paths, Image Tags, to increase load rate.
-  - Return Metadata.
-  - Image Recognition, and tag images as well.
-  - Create Thumbnails, for faster Data Load.
-  - Make an offline Image Tagging Model
-  
-####  Others:
-  1. Make an executable to run the the project more easily.
-      a. Use ocliff commands. 
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `npm run build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
