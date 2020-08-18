@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import MiniDrawer from './AppBar'
+import AppBar from './AppBar'
 
 export class NavBar extends Component {
   render() {
-    return (
-      <MiniDrawer/>
-    );
+    return <AppBar />;
   }
 }
 

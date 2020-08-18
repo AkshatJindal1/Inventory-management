@@ -98,8 +98,8 @@ class AdminLayout extends Component {
 
     return (
       <div className={classes.root}>
-        <Navigation />
         <NavBar />
+        <Navigation />
         {/* <Breadcrumb /> */}
         <div className="main-body">
           <Switch>{menu}</Switch>

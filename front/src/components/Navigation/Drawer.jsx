@@ -1,6 +1,8 @@
-import React from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import React, { Component, Suspense } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { makeStyles, withStyles, withTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -18,9 +20,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 
+import { toggleDrawer } from "../../store/actions/appAction";
+
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = theme => ({
   root: {
     display: "flex",
   },
@@ -80,44 +84,74 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-}));
+});
 
-export default function MiniDrawer() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+class MiniDrawer extends Component {
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
+  handleDrawerOpen = () => {
+    this.props.toggleDrawer();
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
+  handleDrawerClose = () => {
+    this.props.toggleDrawer();
   };
 
-  return (
-    <AppBar
-      position="fixed"
-      className={clsx(classes.appBar, {
-        [classes.appBarShift]: open,
-      })}
-    >
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          className={clsx(classes.menuButton, {
-            [classes.hide]: open,
-          })}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" noWrap>
-          Mini variant drawer
-        </Typography>
-      </Toolbar>
-    </AppBar>
-  );
+  render() {
+    const { classes, theme, isDrawerOpen } = this.props;
+    return (
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: isDrawerOpen,
+          [classes.drawerClose]: !isDrawerOpen,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: isDrawerOpen,
+            [classes.drawerClose]: !isDrawerOpen,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={this.handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {["All mail", "Trash", "Spam"].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+    );
+  }
 }
+
+const mapStateToProps = (state) => ({
+  isDrawerOpen: state.app.isDrawerOpen,
+});
+
+export default connect(mapStateToProps, { toggleDrawer })(
+  withStyles(useStyles, { withTheme: true })(MiniDrawer)
+);

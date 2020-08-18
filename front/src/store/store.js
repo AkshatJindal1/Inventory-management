@@ -5,9 +5,7 @@ import rootReducer from './reducers';
 import config from '../config'
 
 const middleware = [thunk];
-const initialState = {
-  ...config
-};
+const initialState = {};
 
 const store = createStore(
   rootReducer,
