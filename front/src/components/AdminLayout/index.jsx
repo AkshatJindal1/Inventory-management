@@ -1,9 +1,7 @@
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import React, { Component, Suspense } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-
-import EmptyContainer from "../Container";
-import Navigation from '../Navigation'
+import { Redirect, Route, Switch } from "react-router-dom";
 
 // import Navigation from './Navigation';
 // import NavBar from './NavBar';
@@ -12,11 +10,35 @@ import Navigation from '../Navigation'
 // import Loader from "../Loader";
 
 import routes from "../../routes/routes";
+import EmptyContainer from "../Container";
+import NavBar from "../NavBar";
+import Navigation from "../Navigation";
 
 // import * as actionTypes from "../../../store/actions";
 
+const drawerWidth = 240;
+
+const useStyles = theme => ({
+  root: {
+    display: "flex",
+  },
+  toolbar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+});
+
 class AdminLayout extends Component {
   render() {
+    const { classes } = this.props;
     const menu = routes.map((route, index) => {
       return route.component ? (
         <Route
@@ -30,18 +52,22 @@ class AdminLayout extends Component {
     });
 
     return (
-      <EmptyContainer>
+      <div className={classes.root}>
+        <NavBar />
         <Navigation />
-        {/* <NavBar /> */}
         {/* <Breadcrumb /> */}
-        <div className="main-body">
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
           <Switch>{menu}</Switch>
-        </div>
-      </EmptyContainer>
+        </main>
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, {})(AdminLayout);
+export default connect(
+  mapStateToProps,
+  {}
+)(withStyles(useStyles, { withTheme: true })(AdminLayout));

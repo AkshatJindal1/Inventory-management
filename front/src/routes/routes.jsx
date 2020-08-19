@@ -1,10 +1,10 @@
 import React from 'react';
 
-const ProductLanding = React.lazy(() => import('../components/ProductLanding'));
+const Product = React.lazy(() => import('../components/AdminLayout/Product'));
 
 const routes = [
     // { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
-    { path: '/products', exact: true, name: 'Product Landing', component: ProductLanding }
+    { path: '/products', exact: true, name: 'Product Index', component: Product }
 ];
 
 export default routes;

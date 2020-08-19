@@ -1,3 +1,3 @@
 export const FALSE_RESPONSE = 'FALSE_RESPONSE'
 export const GET_ALL_PRODUCTS = 'GET_ALL_PRODUCTS'
-
+export const TOGGLE_DRAWER = "TOGGLE_DRAWER";
