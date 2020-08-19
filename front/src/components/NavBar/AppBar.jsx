@@ -5,20 +5,25 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { toggleDrawer } from "../../store/actions/appAction";
 
 const drawerWidth = 240;
 
-const useStyles = theme => ({
+const useStyles = (theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    overflowX: "hidden",
+    width: `calc(100% - ${theme.spacing(7) + 1}px)`,
+    [theme.breakpoints.up("sm")]: {
+      width: `calc(100% - ${theme.spacing(9) + 1}px)`,
+    },
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -41,8 +46,7 @@ class NavBar extends Component {
     this.props.toggleDrawer();
   };
   render() {
-
-    const { classes, theme, isDrawerOpen } = this.props;
+    const { classes, isDrawerOpen } = this.props;
 
     return (
       <AppBar
@@ -57,9 +61,7 @@ class NavBar extends Component {
             aria-label="open drawer"
             onClick={this.handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: isDrawerOpen,
-            })}
+            className={clsx(classes.menuButton)}
           >
             <MenuIcon />
           </IconButton>

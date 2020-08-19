@@ -1,15 +1,15 @@
 import { TOGGLE_DRAWER } from "../actions/types";
 
 const initialState = {
-  isDrawerOpen: false
-}
+  isDrawerOpen: true,
+};
 
 export default function (state = initialState, action) {
   switch (action.type) {
     case TOGGLE_DRAWER:
       return {
-        ...state, 
-        isDrawerOpen: !state.isDrawerOpen
+        ...state,
+        isDrawerOpen: !state.isDrawerOpen,
       };
 
     default:

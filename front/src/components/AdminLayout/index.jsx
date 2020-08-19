@@ -1,24 +1,13 @@
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
-import React, { Component, Suspense } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch } from "react-router-dom";
-
-// import Navigation from './Navigation';
-// import NavBar from './NavBar';
-// import Breadcrumb from './Breadcrumb';
-
-// import Loader from "../Loader";
+import { Route, Switch } from "react-router-dom";
 
 import routes from "../../routes/routes";
-import EmptyContainer from "../Container";
 import NavBar from "../NavBar";
 import Navigation from "../Navigation";
 
-// import * as actionTypes from "../../../store/actions";
-
-const drawerWidth = 240;
-
-const useStyles = theme => ({
+const useStyles = (theme) => ({
   root: {
     display: "flex",
   },

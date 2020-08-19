@@ -1,58 +1,55 @@
 import Typography from "@material-ui/core/Typography";
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
 
-import { getAllProducts } from '../../../store/actions/productAction';
+import { getAllProducts } from "../../../store/actions/productAction";
 
-const RenderRow = (props) =>{
-  return props.keys.map((key, index)=>{
-  return <td key={props.data[key]}>{props.data[key]}</td>
-  })
- }
+const RenderRow = (props) => {
+  return props.keys.map((key, index) => {
+    return <td key={props.data[key]}>{props.data[key]}</td>;
+  });
+};
 
 export class ProductLanding extends Component {
-
   componentWillMount() {
-    this.props.getAllProducts()
+    this.props.getAllProducts();
   }
 
   getKeys = () => {
-    return Object.keys(this.props.products[0])
-  }
+    return Object.keys(this.props.products[0]);
+  };
 
   getHeader = () => {
-    const keys = this.getKeys()
+    const keys = this.getKeys();
     return keys.map((key, index) => {
-      return <th key = {key}>{key.toUpperCase()}</th>
-    })
-  }
+      return <th key={key}>{key.toUpperCase()}</th>;
+    });
+  };
 
   getRowsData = () => {
-    const items = this.props.products
-    const keys = this.getKeys()
+    const items = this.props.products;
+    const keys = this.getKeys();
     return items.map((row, index) => {
-      return <tr key = {index}>
-        <RenderRow key = {index} data = {row} keys = {keys} /> 
-      </tr>
-    })
-  }
+      return (
+        <tr key={index}>
+          <RenderRow key={index} data={row} keys={keys} />
+        </tr>
+      );
+    });
+  };
 
   renderTable = () => {
     return (
       <Component>
-          <table>
-            <thead>
-              <tr>
-                {this.getHeader()}
-              </tr>
-            </thead>
-            <tbody>
-              {this.getRowsData()}
-            </tbody>
-          </table>
+        <table>
+          <thead>
+            <tr>{this.getHeader()}</tr>
+          </thead>
+          <tbody>{this.getRowsData()}</tbody>
+        </table>
       </Component>
-    )
-  }
+    );
+  };
 
   render() {
     return (
@@ -91,13 +88,10 @@ export class ProductLanding extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  products: state.product.allProducts
+const mapStateToProps = (state) => ({
+  products: state.product.allProducts,
 });
 
-export default connect(
-  mapStateToProps,
-  {
-    getAllProducts
-  }
-)(ProductLanding);
+export default connect(mapStateToProps, {
+  getAllProducts,
+})(ProductLanding);

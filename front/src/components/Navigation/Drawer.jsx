@@ -18,7 +18,7 @@ import { toggleDrawer } from "../../store/actions/appAction";
 
 const drawerWidth = 240;
 
-const useStyles = theme => ({
+const useStyles = (theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -53,7 +53,6 @@ const useStyles = theme => ({
 });
 
 class MiniDrawer extends Component {
-
   handleDrawerOpen = () => {
     this.props.toggleDrawer();
   };
@@ -63,7 +62,7 @@ class MiniDrawer extends Component {
   };
 
   render() {
-    const { classes, theme, isDrawerOpen } = this.props;
+    const { classes, isDrawerOpen } = this.props;
     return (
       <Drawer
         variant="permanent"
@@ -78,7 +77,7 @@ class MiniDrawer extends Component {
           }),
         }}
       >
-        <div className={classes.toolbar}>
+        {/* <div className={classes.toolbar}>
           <IconButton onClick={this.handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
@@ -86,7 +85,19 @@ class MiniDrawer extends Component {
               <ChevronLeftIcon />
             )}
           </IconButton>
-        </div>
+        </div> */}
+
+        {/* TODO: Add implementation of adding company header */}
+        <List>
+          {["MY APP"].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
         <Divider />
         <List>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
