@@ -1,17 +1,15 @@
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import withWidth from "@material-ui/core/withWidth";
 import MailIcon from "@material-ui/icons/Mail";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import clsx from "clsx";
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import { toggleDrawer } from "../../store/actions/appAction";
@@ -53,74 +51,77 @@ const useStyles = (theme) => ({
 });
 
 class MiniDrawer extends Component {
-  handleDrawerOpen = () => {
+  handleDrawerClose = () => {
     this.props.toggleDrawer();
   };
 
-  handleDrawerClose = () => {
-    this.props.toggleDrawer();
+  responsiveDrawer = () => {
+    const { width } = this.props;
+
+    const isSmallScreen = /xs/.test(width);
+    var drawerProps = {
+      variant: isSmallScreen ? "tempporary" : "permanent",
+    };
+    if (isSmallScreen)
+      drawerProps = {
+        open: this.props.isDrawerOpen,
+        onClose: this.handleDrawerClose,
+        ...drawerProps,
+      };
+    return drawerProps;
   };
 
   render() {
     const { classes, isDrawerOpen } = this.props;
     return (
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: isDrawerOpen,
-          [classes.drawerClose]: !isDrawerOpen,
-        })}
-        classes={{
-          paper: clsx({
+      <Fragment>
+        <Drawer
+          {...this.responsiveDrawer()}
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: isDrawerOpen,
             [classes.drawerClose]: !isDrawerOpen,
-          }),
-        }}
-      >
-        {/* <div className={classes.toolbar}>
-          <IconButton onClick={this.handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </div> */}
-
-        {/* TODO: Add implementation of adding company header */}
-        <List>
-          {["MY APP"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+          })}
+          classes={{
+            paper: clsx(classes.drawer, {
+              [classes.drawerOpen]: isDrawerOpen,
+              [classes.drawerClose]: !isDrawerOpen,
+            }),
+          }}
+        >
+          <List>
+            {["MY APP"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {["All mail", "Trash", "Spam"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </Fragment>
     );
   }
 }
@@ -130,5 +131,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { toggleDrawer })(
-  withStyles(useStyles, { withTheme: true })(MiniDrawer)
+  withWidth()(withStyles(useStyles, { withTheme: true })(MiniDrawer))
 );

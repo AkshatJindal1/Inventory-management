@@ -1,7 +1,7 @@
 import { TOGGLE_DRAWER } from "../actions/types";
 
 const initialState = {
-  isDrawerOpen: true,
+  isDrawerOpen: false,
 };
 
 export default function (state = initialState, action) {
