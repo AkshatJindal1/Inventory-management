@@ -2,6 +2,7 @@ import { TOGGLE_DRAWER } from "../actions/types";
 
 const initialState = {
   isDrawerOpen: false,
+  companyName: "MY APP",
 };
 
 export default function (state = initialState, action) {
