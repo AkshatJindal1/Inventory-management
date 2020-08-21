@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 
-import routes from "../../routes/routes";
+import routes from "../../routes/productRoutes";
 import NavBar from "../NavBar";
 import Navigation from "../Navigation";
 
