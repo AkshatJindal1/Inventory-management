@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Paper from "@material-ui/core/Paper";
-import styles from "../Assets/jss/tableStyle.js";
+import styles from "../../assets/jss/tableStyle.js";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableHeader from "./TableHeader.jsx";
 

@@ -10,14 +10,33 @@ const useStyles = makeStyles(styles);
 export default function CustomInput(props) {
   const classes = useStyles();
   const {
+    index,
     labelText,
     id,
     value,
-    handleChange
+    handleChange,
+    error,
+    disabled,
+    required,
+    helperText,
+    validateField
   } = props;
 
   return (
-    <TextField variant="outlined" fullWidth="true" id={id} label={labelText} value={value} className={classes.textInput} onChange={handleChange} />
+    <TextField
+      variant="outlined"
+      fullWidth="true"
+      id={id}
+      label={labelText}
+      value={value}
+      error={error}
+      required={required}
+      disabled={disabled}
+      className={classes.textInput}
+      onChange={handleChange}
+      helperText={error ? helperText : ''}
+      onBlur={(e) => validateField(e, index)}
+    />
   );
 }
 
