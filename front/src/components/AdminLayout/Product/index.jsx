@@ -3,6 +3,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import { getAllProducts } from "../../../store/actions/productAction";
+import Table from "../../Table/Table";
 
 const RenderRow = (props) => {
   return props.keys.map((key, index) => {
@@ -11,6 +12,13 @@ const RenderRow = (props) => {
 };
 
 export class ProductLanding extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: "asc",
+      orderBy: "0",
+    };
+  }
   componentWillMount() {
     this.props.getAllProducts();
   }
@@ -51,7 +59,25 @@ export class ProductLanding extends Component {
     );
   };
 
+  setOrder = (isAscending) => {
+    isAscending
+      ? this.setState({ order: "desc" })
+      : this.setState({ order: "asc" });
+  };
+
+  setOrderBy = (property) => {
+    this.setState({ orderBy: property });
+  };
+
+  handleRequestSort = (event, property) => {
+    const { order, orderBy } = this.state;
+    const isAsc = orderBy === property && order === "asc";
+    this.setOrder(isAsc);
+    this.setOrderBy(property);
+  };
+
   render() {
+    const { order, orderBy } = this.state;
     return (
       <Fragment>
         <Typography paragraph>
@@ -83,6 +109,21 @@ export class ProductLanding extends Component {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
+        <Table
+          tableHeaderColor="primary"
+          tableHead={["Name", "Country", "City", "Salary"]}
+          tableData={[
+            ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
+            ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
+            ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
+            ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
+            ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
+            ["Mason Porter", "Chile", "Gloucester", "$78,615"],
+          ]}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={this.handleRequestSort}
+        />
       </Fragment>
     );
   }
