@@ -12,10 +12,12 @@ export default function CustomInput(props) {
   const {
     labelText,
     id,
+    value,
+    handleChange
   } = props;
 
   return (
-    <TextField variant="outlined" fullWidth="true" id={id} label={labelText} className={classes.textInput} />
+    <TextField variant="outlined" fullWidth="true" id={id} label={labelText} value={value} className={classes.textInput} onChange={handleChange} />
   );
 }
 

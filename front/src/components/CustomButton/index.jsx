@@ -5,12 +5,12 @@ import { green, purple } from '@material-ui/core/colors';
 import { Send, CloudUpload, Delete, Save } from '@material-ui/icons';
 
 const CustomButton = withStyles((theme) => ({
-  root: {
-    backgroundColor: "#262626",
-    '&:hover': {
-      backgroundColor: "#404040",
-    },
-  },
+  // root: {
+  //   backgroundColor: "#262626",
+  //   '&:hover': {
+  //     backgroundColor: "#404040",
+  //   },
+  // },
 }))(Button);
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +25,7 @@ export default function CustomizedButtons(props) {
   const {
     id,
     buttonType,
+    handleSubmit,
     children
   } = props;
 
@@ -37,7 +38,7 @@ export default function CustomizedButtons(props) {
   }
 
   return (
-    <CustomButton variant="contained" color="primary" id={id} className={classes.margin} startIcon={buttonIcon(buttonType)}>
+    <CustomButton variant="contained" color="primary" onClick={handleSubmit} id={id} className={classes.margin} startIcon={buttonIcon(buttonType)}>
       {children}
     </CustomButton>
   );
