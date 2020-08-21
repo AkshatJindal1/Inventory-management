@@ -12,40 +12,61 @@ import Button from '@material-ui/core/Button';
 import CustomButton from "../../CustomButton";
 
 export class ProductLanding extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            forms: {}
+        };
+    }
+
     componentWillMount() {
         // this.props.getAllProducts();
+    }
+
+    handleSubmit = (event) => {
+        console.log(this.state.forms)
+    }
+
+    handleChange = (event) => {
+        let forms = this.state.forms;
+        forms[event.target.id] = event.target.value
+        this.setState({ forms })
     }
 
     render() {
         return (
             <Fragment>
                 <Card variant="outlined">
-                    <CardContent>
-                        <Fragment>
-                            <form>
+                    <form>
+                        <CardContent>
+                            <Fragment>
+
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={6}>
-                                        <CustomInput id="productId" labelText="Product Id" />
+                                        <CustomInput id="productId" labelText="Product Id" value={this.state.forms.productId} handleChange={this.handleChange} />
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={6}>
-                                        <CustomInput id="productName" labelText="Product Name" />
+                                        <CustomInput id="productName" labelText="Product Name" value={this.state.forms.productName} handleChange={this.handleChange} />
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={6}>
-                                        <CustomInput id="description" labelText="Description" />
+                                        <CustomInput id="description" labelText="Description" value={this.state.forms.description} handleChange={this.handleChange} />
                                     </GridItem>
                                 </GridContainer>
-                            </form>
-                        </Fragment>
-                    </CardContent>
-                    <CardActions>
-                        <CustomButton
-                            buttonType="send"
-                        >Send
-                        </CustomButton>
 
-                    </CardActions>
+                            </Fragment>
+                        </CardContent>
+                        <CardActions>
+                            <CustomButton
+                                handleSubmit={this.handleSubmit}
+                                type="submit"
+                                buttonType="send"
+                            >Send
+                        </CustomButton>
+                        </CardActions>
+                    </form>
                 </Card>
-            </Fragment>
+            </Fragment >
         );
     }
 }
