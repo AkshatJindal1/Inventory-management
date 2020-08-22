@@ -32,8 +32,6 @@ class CustomInput extends Component {
     const value = event.target.value;
     const { conditions } = this.props;
 
-    console.log(conditions, this.state.error);
-
     let isError = false;
 
     if (conditions !== undefined) {

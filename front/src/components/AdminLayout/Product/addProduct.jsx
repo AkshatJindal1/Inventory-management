@@ -41,14 +41,11 @@ export class ProductLanding extends Component {
                 <GridItem key={index} xs={12} sm={12} md={6}>
                     <CustomInput
                         conditions={field.conditions}
-                        index={index}
                         id={field.id}
                         labelText={field.labelText}
                         value={this.state.forms[field.productId]}
-                        error={field.error}
                         disabled={field.disabled}
                         required={field.required}
-                        validateField={this.validateField}
                         handleChange={this.handleChange}
                     />
                 </GridItem>
