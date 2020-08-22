@@ -8,6 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import withWidth from "@material-ui/core/withWidth";
 import MailIcon from "@material-ui/icons/Mail";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
+import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
@@ -81,6 +82,49 @@ class Navigation extends Component {
             ))}
           </List> */}
           {this.getBrand()}
+          <Divider />
+
+
+
+          <NavLink
+            to='add-product'
+            activeClassName="active"
+            key='add-product'
+          >
+
+            <List>
+              <ListItem button key='add-product'>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary='Add Product' />
+              </ListItem>
+            </List>
+
+          </NavLink>
+
+          <NavLink
+            to='products'
+            activeClassName="active"
+            key='products'
+          >
+
+            <List>
+              <ListItem button key='products'>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary='products' />
+              </ListItem>
+            </List>
+
+          </NavLink>
+
+
+
+
+
+
           <Divider />
           <List>
             {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
