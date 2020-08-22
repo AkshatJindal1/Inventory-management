@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import withWidth from "@material-ui/core/withWidth";
 import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
-import styles from "../Assets/jss/tableStyle.js";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import styles from "../../assets/jss/tableStyle.js";
 import TablePagination from "@material-ui/core/TablePagination";
-import TableHeader from "./TableHeader.jsx";
+import TableHeader from "./TableHeader";
+import TableToolBar from "./TableToolBar";
+import { Checkbox } from "@material-ui/core";
 
 class ReactTable extends Component {
   constructor(props) {
@@ -21,8 +23,41 @@ class ReactTable extends Component {
       rowsPerPage: 2,
       order: "asc",
       orderBy: "0",
+      selected: [],
+      dense: false,
     };
   }
+
+  handleSelectAllClick = (event) => {
+    const { tableData } = this.props;
+    if (event.target.checked) {
+      const newSelected = tableData.map((n) => n[0]);
+      this.setState({ selected: newSelected });
+      return;
+    }
+    this.setState({ selected: [] });
+  };
+
+  handleClick = (event, id) => {
+    const { selected } = this.state;
+    console.log(id, selected);
+    const selectedIndex = selected.indexOf(id);
+
+    let newSelected = [];
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    this.setState({ selected: newSelected });
+  };
 
   handleChangePage = (event, newPage) => {
     this.setState({ page: newPage });
@@ -31,10 +66,6 @@ class ReactTable extends Component {
   handleChangeRowsPerPage = (event) => {
     this.setState({ rowsPerPage: event.target.value, page: 0 });
   };
-
-  // handleRequestSort = (prop) => (event) => {
-  //   this.props.onRequestSort(event, prop);
-  // };
 
   stableSort = (array, comparator) => {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -79,34 +110,66 @@ class ReactTable extends Component {
     this.setOrderBy(property);
   };
 
-  render() {
-    const { classes, tableHead, tableHeaderColor, tableData } = this.props;
+  isSelected = (id) => {
+    return this.state.selected.indexOf(id) !== -1;
+  };
 
-    const { page, rowsPerPage, orderBy, order } = this.state;
+  render() {
+    const {
+      classes,
+      tableHead,
+      tableHeaderColor,
+      tableData,
+      heading,
+    } = this.props;
+
+    const { page, rowsPerPage, orderBy, order, selected } = this.state;
+
     return (
-      <Paper>
-        <div className={classes.tableResponsive}>
-          <Table className={classes.table}>
+      <Card variant="outlined">
+        <CardContent>
+          <TableToolBar
+            classes={classes}
+            numSelected={selected.length}
+            heading={heading}
+          />
+          <Table stickyHeader className={classes.table}>
             {tableHead !== undefined ? (
               <TableHeader
                 tableHead={tableHead}
                 tableHeaderColor={tableHeaderColor}
                 onRequestSort={this.handleRequestSort}
                 classes={classes}
+                onSelectAllClick={this.handleSelectAllClick}
+                rowCount={tableData.length}
+                numSelected={selected.length}
               />
             ) : null}
             <TableBody>
               {this.stableSort(tableData, this.getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((prop, key) => {
+                  const isItemSelected = this.isSelected(prop[0]);
+                  const labelId = `enhanced-table-checkbox-${key}`;
                   return (
-                    <TableRow key={key} className={classes.tableBodyRow}>
+                    <TableRow
+                      hover
+                      onClick={(event) => this.handleClick(event, prop[0])}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={key}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
+                        />
+                      </TableCell>
+
                       {prop.map((prop, key) => {
-                        return (
-                          <TableCell className={classes.tableCell} key={key}>
-                            {prop}
-                          </TableCell>
-                        );
+                        return <TableCell key={key}>{prop}</TableCell>;
                       })}
                     </TableRow>
                   );
@@ -122,8 +185,8 @@ class ReactTable extends Component {
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
-        </div>
-      </Paper>
+        </CardContent>
+      </Card>
     );
   }
 }

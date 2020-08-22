@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
-import { withStyles } from "@material-ui/core/styles";
 import withWidth from "@material-ui/core/withWidth";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { TableSortLabel } from "@material-ui/core";
+import { TableSortLabel, Checkbox } from "@material-ui/core";
 
 class TableHeader extends Component {
   handleRequestSort = (prop) => (event) => {
@@ -14,11 +12,28 @@ class TableHeader extends Component {
   };
 
   render() {
-    const { classes, tableHead, tableHeaderColor, orderBy, order } = this.props;
+    const {
+      classes,
+      tableHead,
+      tableHeaderColor,
+      orderBy,
+      order,
+      numSelected,
+      rowCount,
+      onSelectAllClick,
+    } = this.props;
 
     return (
       <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
         <TableRow className={classes.tableHeadRow}>
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{ "aria-label": "select all items" }}
+            />
+          </TableCell>
           {tableHead.map((property, key) => {
             return (
               <TableCell
