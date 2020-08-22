@@ -1,10 +1,15 @@
-const customInputStyle = {
+const useStyles = (theme) => ({
   textInput: {
     paddingBottom: "10px",
     margin: "10px 0 0 0",
     position: "relative",
     verticalAlign: "unset"
   }
+});
+
+export { useStyles };
+
+
   // disabled: {
   //   "&:before": {
   //     backgroundColor: "transparent !important"
@@ -63,6 +68,3 @@ const customInputStyle = {
   //   position: "relative",
   //   verticalAlign: "unset"
   // }
-};
-
-export default customInputStyle;

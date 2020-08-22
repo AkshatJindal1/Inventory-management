@@ -21,7 +21,6 @@ export class ProductLanding extends Component {
     }
 
     componentWillMount() {
-
         this.setState({ formFields })
     }
 
@@ -34,20 +33,6 @@ export class ProductLanding extends Component {
         forms[event.target.id] = event.target.value
         this.setState({ forms })
     }
-
-    setErrorOn = (index) => {
-        let formFields = this.state.formFields;
-        formFields[index].error = true;
-        this.setState({ formFields })
-    }
-
-    unsetErrorOn = (index) => {
-        let formFields = this.state.formFields;
-        formFields[index].error = false;
-        this.setState({ formFields })
-    }
-
-
 
     render() {
 

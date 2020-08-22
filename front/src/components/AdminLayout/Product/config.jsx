@@ -46,8 +46,9 @@ const formFields = [
         disabled: false,
         error: false,
         conditions: [{
-            type: "float",
+            type: 'float',
             min: 0,
+            max: 100,
             errorText: 'Value should be positive'
         }]
     },
