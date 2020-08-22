@@ -5,12 +5,18 @@ import formFields from '../../../demo/config';
 import AddForm from '../../AddForm/addForm'
 
 export class ProductLanding extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      forms: {},
+    };
+  }
 
-    render() {
-        return (
-            <AddForm formFields={formFields} />
-        );
-    }
+  render() {
+    return (
+      <AddForm formFields={formFields} />
+    );
+  }
 }
 
 export default ProductLanding;

@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import { getAllProducts } from "../../../store/actions/productAction";
 import Table from "../../Table/Table";
+import MUIDataTable from "mui-datatables";
+import { Card, Button } from "@material-ui/core";
 
 const RenderRow = (props) => {
   return props.keys.map((key, index) => {
@@ -76,8 +78,165 @@ export class ProductLanding extends Component {
     this.setOrderBy(property);
   };
 
+  handlePageChange = () => {};
+
+  handleFilterSubmit = (applyFilters) => {
+    applyFilters();
+
+    // this.setState({ isLoading: true });
+
+    // // fake async request
+    // this.xhrRequest(`/myApiServer?filters=${filterList}`, filterList).then(
+    //   (res) => {
+    //     this.setState({ isLoading: false, data: res.data });
+    //   }
+    // );
+  };
+
   render() {
     const { order, orderBy } = this.state;
+    const columns = [
+      {
+        name: "Name",
+        options: {
+          filter: true,
+          display: "excluded",
+        },
+      },
+      {
+        label: "Modified Title Label",
+        name: "Title",
+        options: {
+          filter: true,
+        },
+      },
+      {
+        name: "Location",
+        options: {
+          filter: false,
+        },
+      },
+      {
+        name: "Age",
+        options: {
+          filter: true,
+        },
+      },
+      {
+        name: "Salary",
+        options: {
+          filter: true,
+          sort: false,
+        },
+      },
+    ];
+
+    const data = [
+      ["Gabby George", "Business Analyst", "Minneapolis", 30, "$100,000"],
+      ["Aiden Lloyd", "Business Consultant", "Dallas", 55, "$200,000"],
+      ["Jaden Collins", "Attorney", "Santa Ana", 27, "$500,000"],
+      ["Franky Rees", "Business Analyst", "St. Petersburg", 22, "$50,000"],
+      ["Aaren Rose", "Business Consultant", "Toledo", 28, "$75,000"],
+      [
+        "Blake Duncan",
+        "Business Management Analyst",
+        "San Diego",
+        65,
+        "$94,000",
+      ],
+      ["Frankie Parry", "Agency Legal Counsel", "Jacksonville", 71, "$210,000"],
+      ["Lane Wilson", "Commercial Specialist", "Omaha", 19, "$65,000"],
+      ["Robin Duncan", "Business Analyst", "Los Angeles", 20, "$77,000"],
+      ["Mel Brooks", "Business Consultant", "Oklahoma City", 37, "$135,000"],
+      ["Harper White", "Attorney", "Pittsburgh", 52, "$420,000"],
+      ["Kris Humphrey", "Agency Legal Counsel", "Laredo", 30, "$150,000"],
+      ["Frankie Long", "Industrial Analyst", "Austin", 31, "$170,000"],
+      ["Brynn Robbins", "Business Analyst", "Norfolk", 22, "$90,000"],
+      ["Justice Mann", "Business Consultant", "Chicago", 24, "$133,000"],
+      [
+        "Addison Navarro",
+        "Business Management Analyst",
+        "New York",
+        50,
+        "$295,000",
+      ],
+      ["Jesse Welch", "Agency Legal Counsel", "Seattle", 28, "$200,000"],
+      ["Eli Mejia", "Commercial Specialist", "Long Beach", 65, "$400,000"],
+      ["Gene Leblanc", "Industrial Analyst", "Hartford", 34, "$110,000"],
+      ["Danny Leon", "Computer Scientist", "Newark", 60, "$220,000"],
+      ["Lane Lee", "Corporate Counselor", "Cincinnati", 52, "$180,000"],
+      ["Jesse Hall", "Business Analyst", "Baltimore", 44, "$99,000"],
+      ["Danni Hudson", "Agency Legal Counsel", "Tampa", 37, "$90,000"],
+      ["Terry Macdonald", "Commercial Specialist", "Miami", 39, "$140,000"],
+      ["Justice Mccarthy", "Attorney", "Tucson", 26, "$330,000"],
+      ["Silver Carey", "Computer Scientist", "Memphis", 47, "$250,000"],
+      ["Franky Miles", "Industrial Analyst", "Buffalo", 49, "$190,000"],
+      ["Glen Nixon", "Corporate Counselor", "Arlington", 44, "$80,000"],
+      [
+        "Gabby Strickland",
+        "Business Process Consultant",
+        "Scottsdale",
+        26,
+        "$45,000",
+      ],
+      ["Mason Ray", "Computer Scientist", "San Francisco", 39, "$142,000"],
+    ];
+
+    const options = {
+      // https://github.com/gregnb/mui-datatables
+      filterType: "checkbox",
+      caseSensitive: false,
+      download: true,
+      downloadOptions: {
+        filename: "Product.csv",
+        seperator: ",",
+        filterOptions: {
+          useDisplayedColumnsOnly: false,
+          useDisplayedRowsOnly: false,
+        },
+      },
+      elevation: 0,
+      enableNestedDataAccess: ".",
+      filter: true,
+      fixedHeader: true,
+      jumpToPage: true,
+      confirmFilters: true,
+
+      // Calling the applyNewFilters parameter applies the selected filters to the table
+      customFilterDialogFooter: (currentFilterList, applyNewFilters) => {
+        return (
+          <div style={{ marginTop: "40px" }}>
+            <Button
+              variant="contained"
+              onClick={() => this.handleFilterSubmit(applyNewFilters)}
+            >
+              Apply Filters
+            </Button>
+          </div>
+        );
+      },
+      onChangePage: this.handlePageChange,
+      onChangeRowsPerPage: this.handlePageChange,
+      onColumnSortChange: this.handlePageChange,
+      onDownload: this.handlePageChange,
+      onFilterChange: this.handlePageChange,
+      onFilterConfirm: this.handleFilterSubmit,
+      onRowClick: this.handlePageChange,
+      onRowsDelete: this.handlePageChange,
+      pagination: true,
+      print: true,
+      responsive: "vertical", // stacked, vertica, simple
+      rowHover: true,
+      rowsPerPage: 5,
+      rowsPerPageOptions: [2, 5, 10],
+      search: true,
+      searchPlaceholder: "Enter the searcg text",
+      searchOpen: false,
+      selectableRows: "multiple", //multiple, single, none
+      selectToolbarPlacement: "replace", //replace, above, none
+      sort: true,
+      viewColumns: true,
+    };
     return (
       <Fragment>
         <Typography paragraph>
@@ -109,21 +268,36 @@ export class ProductLanding extends Component {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
-        <Table
+        {/* <Table
           tableHeaderColor="primary"
-          tableHead={["Name", "Country", "City", "Salary"]}
+          tableHead={["Id", "Name", "Country", "City", "Salary"]}
           tableData={[
-            ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-            ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-            ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-            ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-            ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-            ["Mason Porter", "Chile", "Gloucester", "$78,615"],
+            ["1", "Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
+            ["2", "Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
+            ["3", "Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
+            ["4", "Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
+            [
+              "5",
+              "Doris Greene",
+              "Malawi",
+              "Feldkirchen in Kärnten",
+              "$63,542",
+            ],
+            ["6", "Mason Porter", "Chile", "Gloucester", "$78,615"],
           ]}
           order={order}
           orderBy={orderBy}
           onRequestSort={this.handleRequestSort}
-        />
+          heading="Products"
+        /> */}
+        <Card variant="outlined">
+          <MUIDataTable
+            title={"Employee List"}
+            data={data}
+            columns={columns}
+            options={options}
+          />
+        </Card>
       </Fragment>
     );
   }
