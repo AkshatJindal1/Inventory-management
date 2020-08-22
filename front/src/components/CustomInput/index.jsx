@@ -18,13 +18,24 @@ class CustomInput extends Component {
     const { value, conditions } = this.props;
     const { isError } = this.validateUtil(value, conditions)
     this.props.changeErrorStatus(isError, this.props.id)
-    this.setState({ error: this.props.error })
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.validateNow !== prevProps.validateNow && this.props.validateNow) {
       this.validate(this.props.value, this.props.conditions)
     }
+  }
+
+  validate = (value, conditions) => {
+    const { isError, errorText } = this.validateUtil(value, conditions)
+    this.setState({ error: isError, errorText })
+    this.props.changeErrorStatus(isError, this.props.id)
+  }
+
+  validateField = (event) => {
+    const { conditions, changeErrorStatus } = this.props;
+    const value = event.target.value;
+    this.validate(value, conditions)
   }
 
   validateUtil = (value, conditions) => {
@@ -78,18 +89,6 @@ class CustomInput extends Component {
     }
   }
 
-  validate = (value, conditions) => {
-    const { isError, errorText } = this.validateUtil(value, conditions)
-    this.setState({ error: isError, errorText })
-    this.props.changeErrorStatus(isError, this.props.id)
-  }
-
-  validateField = (event) => {
-    const { conditions, changeErrorStatus } = this.props;
-    const value = event.target.value;
-    this.validate(value, conditions)
-  }
-
   render() {
 
     const {
@@ -100,6 +99,7 @@ class CustomInput extends Component {
       disabled,
       required,
       classes,
+      defaultValue
     } = this.props;
 
     return (

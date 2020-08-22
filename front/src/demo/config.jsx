@@ -5,9 +5,10 @@ const formFields = [
         id: 'productId',
         labelText: 'Product Id',
         error: false,
-        disabled: false,
+        disabled: true,
         required: true,
         type: 'number',
+        defaultValue: '11111',
         conditions: [
             {
                 type: 'required',

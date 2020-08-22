@@ -26,7 +26,7 @@ export class AddForm extends Component {
         let forms = {};
         const { formFields } = this.props;
         formFields.forEach(field => {
-            forms[field.id] = ''
+            forms[field.id] = field.defaultValue ? field.defaultValue : ''
         });
         this.setState({ formFields, forms })
     }
