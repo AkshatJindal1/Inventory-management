@@ -16,16 +16,33 @@ export class ProductLanding extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            forms: {}
+            forms: {},
+            formFields: {},
+            validateNow: false,
+            errorSet: new Set()
         };
     }
 
     componentWillMount() {
-        this.setState({ formFields })
+        let forms = {}
+        formFields.forEach(field => {
+            forms[field.id] = ''
+        });
+        this.setState({ formFields, forms })
     }
 
     handleSubmit = (event) => {
-        console.log(this.state.forms)
+        this.setState({ validateNow: true })
+        console.log(this.state.errorSet)
+        if (this.state.errorSet.size === 0) console.log("Calling API", this.state.forms)
+        else console.log("Few Errors Exist")
+    }
+
+    changeErrorStatus = (add, id) => {
+        let errorSet = this.state.errorSet;
+        if (add) errorSet.add(id)
+        else errorSet.delete(id)
+        this.setState({ errorSet })
     }
 
     handleChange = (event) => {
@@ -43,10 +60,12 @@ export class ProductLanding extends Component {
                         conditions={field.conditions}
                         id={field.id}
                         labelText={field.labelText}
-                        value={this.state.forms[field.productId]}
+                        value={this.state.forms[field.id]}
                         disabled={field.disabled}
                         required={field.required}
                         handleChange={this.handleChange}
+                        validateNow={this.state.validateNow}
+                        changeErrorStatus={this.changeErrorStatus}
                     />
                 </GridItem>
             )

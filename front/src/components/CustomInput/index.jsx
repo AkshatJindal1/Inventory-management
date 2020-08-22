@@ -15,31 +15,27 @@ class CustomInput extends Component {
   }
 
   componentDidMount() {
+    const { value, conditions } = this.props;
+    const { isError } = this.validateUtil(value, conditions)
+    this.props.changeErrorStatus(isError, this.props.id)
     this.setState({ error: this.props.error })
   }
 
-  setError = (errorText) => {
-    this.setState({ error: true, errorText })
+  componentDidUpdate(prevProps) {
+    if (this.props.validateNow !== prevProps.validateNow && this.props.validateNow) {
+      this.validate(this.props.value, this.props.conditions)
+    }
   }
 
-  unsetError = () => {
-    this.setState({ error: false, errorText: '' })
-  }
-
-
-
-  validateField = (event) => {
-    const value = event.target.value;
-    const { conditions } = this.props;
-
+  validateUtil = (value, conditions) => {
     let isError = false;
-
+    let errorText = ''
     if (conditions !== undefined) {
       conditions.forEach(condition => {
-
         if (condition.type === 'required' && validator.isEmpty(value)) {
-          this.setError(condition.errorText)
           isError = true;
+          errorText = condition.errorText;
+          return;
         }
 
         else if (condition.type === 'integer') {
@@ -47,8 +43,9 @@ class CustomInput extends Component {
           if (condition.min) minMaxCondition = { ...minMaxCondition, min: condition.min }
           if (condition.max) minMaxCondition = { ...minMaxCondition, max: condition.max }
           if (!validator.isInt(value, { ...minMaxCondition })) {
-            this.setError(condition.errorText)
             isError = true;
+            errorText = condition.errorText;
+            return;
           }
         }
 
@@ -60,20 +57,37 @@ class CustomInput extends Component {
           if (condition.min) minMaxCondition = { ...minMaxCondition, min: condition.min }
           if (condition.max) minMaxCondition = { ...minMaxCondition, max: condition.max }
           if (!validator.isFloat(value, { ...minMaxCondition })) {
-            this.setError(condition.errorText)
             isError = true;
+            errorText = condition.errorText;
+            return;
           }
         }
 
         else if (condition.type === 'email') {
           if (!validator.isEmail(value)) {
-            this.setError(condition.errorText)
             isError = true;
+            errorText = condition.errorText;
+            return;
           }
         }
       });
     }
-    if (!isError) this.unsetError();
+    return {
+      isError: isError,
+      errorText: isError ? errorText : ''
+    }
+  }
+
+  validate = (value, conditions) => {
+    const { isError, errorText } = this.validateUtil(value, conditions)
+    this.setState({ error: isError, errorText })
+    this.props.changeErrorStatus(isError, this.props.id)
+  }
+
+  validateField = (event) => {
+    const { conditions, changeErrorStatus } = this.props;
+    const value = event.target.value;
+    this.validate(value, conditions)
   }
 
   render() {
@@ -85,7 +99,7 @@ class CustomInput extends Component {
       handleChange,
       disabled,
       required,
-      classes
+      classes,
     } = this.props;
 
     return (

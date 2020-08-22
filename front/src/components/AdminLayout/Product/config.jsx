@@ -7,6 +7,7 @@ const formFields = [
         error: false,
         disabled: false,
         required: true,
+        type: 'number',
         conditions: [
             {
                 type: 'required',
@@ -24,6 +25,7 @@ const formFields = [
         disabled: false,
         required: true,
         error: false,
+        type: 'string',
         conditions: [{
             type: 'required',
             errorText: 'Value cannot be empty'
