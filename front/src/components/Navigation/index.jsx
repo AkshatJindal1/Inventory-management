@@ -14,8 +14,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import { toggleDrawer } from "../../store/actions/appAction";
-import companyLogo from '../../assets/images/reactlogo.png';
-import { useStyles } from '../../assets/jss/navigationStyle';
+import { useStyles } from "../../assets/jss/navigationStyle";
 
 class Navigation extends Component {
   handleDrawerClose = () => {
@@ -84,23 +83,15 @@ class Navigation extends Component {
           {this.getBrand()}
           <Divider />
 
-
-
-          <NavLink
-            to='add-product'
-            activeClassName="active"
-            key='add-product'
-          >
-
+          <NavLink to="add-product" activeClassName="active" key="add-product">
             <List>
-              <ListItem button key='add-product'>
+              <ListItem button key="add-product">
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary='Add Product' />
+                <ListItemText primary="Add Product" />
               </ListItem>
             </List>
-
           </NavLink>
 
           <NavLink
@@ -127,20 +118,14 @@ class Navigation extends Component {
           >
 
             <List>
-              <ListItem button key='products'>
+              <ListItem button key="products">
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary='products' />
+                <ListItemText primary="products" />
               </ListItem>
             </List>
-
           </NavLink>
-
-
-
-
-
 
           <Divider />
           <List>
