@@ -94,7 +94,29 @@ class Navigation extends Component {
             </List>
           </NavLink>
 
-          <NavLink to="products" activeClassName="active" key="products">
+          <NavLink
+            to='product-structure'
+            key='product-structure'
+          >
+
+            <List>
+              <ListItem button key='product-structure'>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary='Product Structure' />
+              </ListItem>
+            </List>
+
+          </NavLink>
+
+
+          <NavLink
+            to='products'
+            activeClassName="active"
+            key='products'
+          >
+
             <List>
               <ListItem button key="products">
                 <ListItemIcon>

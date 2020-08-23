@@ -2,9 +2,9 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import formFields from '../../../demo/products';
-import AddForm from '../../AddForm/addForm'
+import StructureForm from '../../AddForm/structureForm'
 
-export class ProductLanding extends Component {
+export class ProductStructure extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,9 +14,9 @@ export class ProductLanding extends Component {
 
   render() {
     return (
-      <AddForm formFields={formFields} />
+      <StructureForm formFields={formFields} />
     );
   }
 }
 
-export default ProductLanding;
+export default ProductStructure;
