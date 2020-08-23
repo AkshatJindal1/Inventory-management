@@ -5,8 +5,20 @@ import { connect } from "react-redux";
 import { getAllProducts } from "../../../store/actions/productAction";
 import Table from "../../Table/Table";
 import MUIDataTable from "mui-datatables";
-import { Card, Button } from "@material-ui/core";
-import { ThreeSixty } from "@material-ui/icons";
+import {
+  Card,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListItemText,
+  Slider,
+  Popover,
+} from "@material-ui/core";
+import SimplePopover from "../../Popover/SimplePopover";
+
+import { ThreeSixty, CheckBox } from "@material-ui/icons";
 
 const RenderRow = (props) => {
   return props.keys.map((key, index) => {
@@ -95,12 +107,13 @@ export class ProductLanding extends Component {
     });
   };
 
-  sort = (page, sortOrder) => {
+  sort = (page, searchText, sortOrder) => {
     this.setState({ isLoading: true });
     this.xhrRequest(
       `http://localhost:8080/prodcuts`,
       page,
       this.state.rowsPerPage,
+      searchText,
       sortOrder
     ).then((res) => {
       this.setState({
@@ -113,7 +126,7 @@ export class ProductLanding extends Component {
     });
   };
 
-  changePage = (page, sortOrder) => {
+  changePage = (page, searchText, sortOrder) => {
     this.setState({
       isLoading: true,
     });
@@ -121,6 +134,7 @@ export class ProductLanding extends Component {
       `http://localhost:8080/products`,
       page,
       this.state.rowsPerPage,
+      searchText,
       sortOrder
     ).then((res) => {
       this.setState({
@@ -133,7 +147,7 @@ export class ProductLanding extends Component {
     });
   };
 
-  changeRowsPerPage = (rowsPerPage, sortOrder) => {
+  changeRowsPerPage = (rowsPerPage, searchText, sortOrder) => {
     this.setState({
       isLoading: true,
       rowsPerPage,
@@ -142,6 +156,7 @@ export class ProductLanding extends Component {
       `http://localhost:8080/products`,
       0,
       rowsPerPage,
+      searchText,
       sortOrder
     ).then((res) => {
       this.setState({
@@ -164,7 +179,7 @@ export class ProductLanding extends Component {
       `http://localhost:8080/products`,
       0,
       rowsPerPage,
-      searchText,
+      searchText || "",
       sortOrder
     ).then((res) => {
       this.setState({
@@ -424,7 +439,7 @@ export class ProductLanding extends Component {
 
     const options = {
       // https://github.com/gregnb/mui-datatables
-      filterType: "checkbox",
+      filterType: "multiselect",
       caseSensitive: false,
       download: true,
       serverSide: true,
@@ -439,7 +454,7 @@ export class ProductLanding extends Component {
       },
       elevation: 0,
       enableNestedDataAccess: ".",
-      filter: true,
+      filter: false,
       fixedHeader: true,
       jumpToPage: true,
       confirmFilters: true,
@@ -451,19 +466,28 @@ export class ProductLanding extends Component {
 
         switch (action) {
           case "changePage":
-            this.changePage(tableState.page, tableState.sortOrder);
+            this.changePage(
+              tableState.page,
+              tableState.searchText || "",
+              tableState.sortOrder
+            );
             break;
           case "sort":
-            this.sort(tableState.page, tableState.sortOrder);
+            this.sort(
+              tableState.page,
+              tableState.searchText || "",
+              tableState.sortOrder
+            );
             break;
           case "changeRowsPerPage":
             this.changeRowsPerPage(
               tableState.rowsPerPage,
+              tableState.searchText || "",
               tableState.sortOrder
             );
             break;
           case "search":
-            this.search(tableState.searchText, tableState.sortOrder);
+            this.search(tableState.searchText || "", tableState.sortOrder);
             break;
           default:
             console.log("action not handled.");
@@ -537,6 +561,7 @@ export class ProductLanding extends Component {
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
         <Card variant="outlined">
+          <SimplePopover />
           <MUIDataTable
             title={"Employee List"}
             data={data}
