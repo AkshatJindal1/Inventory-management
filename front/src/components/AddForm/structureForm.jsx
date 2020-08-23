@@ -11,6 +11,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CustomButton from '../CustomButton';
 import datatypes from '../../demo/datatypes'
 
+const camelCase = require('camelcase');
+
 export class StructureForm extends Component {
 
     constructor(props) {
