@@ -6,6 +6,7 @@ import { getAllProducts } from "../../../store/actions/productAction";
 import Table from "../../Table/Table";
 import MUIDataTable from "mui-datatables";
 import { Card, Button } from "@material-ui/core";
+import { ThreeSixty } from "@material-ui/icons";
 
 const RenderRow = (props) => {
   return props.keys.map((key, index) => {
@@ -19,46 +20,380 @@ export class ProductLanding extends Component {
     this.state = {
       order: "asc",
       orderBy: "0",
+      page: 0,
+      count: 1,
+      rowsPerPage: 5,
+      isLoading: false,
+      columns: [
+        {
+          name: "productId",
+          label: "Product ID",
+          options: {
+            filter: true,
+          },
+        },
+        {
+          name: "productName",
+          label: "Name",
+          options: {
+            filter: true,
+          },
+        },
+        {
+          name: "description",
+          label: "Description",
+          options: {
+            filter: true,
+          },
+        },
+        {
+          name: "cost",
+          label: "Cost",
+          options: {
+            filter: true,
+          },
+        },
+        {
+          name: "productDetails.size",
+          label: "Size",
+          options: {
+            filter: true,
+          },
+        },
+        {
+          name: "quantityInStock",
+          label: "Quantity In Stock",
+          options: {
+            filter: true,
+          },
+        },
+        {
+          name: "ratings",
+          label: "Ratings",
+          empty: true,
+        },
+      ],
     };
   }
+
   componentWillMount() {
     this.props.getAllProducts();
   }
 
-  getKeys = () => {
-    return Object.keys(this.props.products[0]);
-  };
+  componentDidMount() {
+    this.getData(`http://localhost:8080/prodcuts`, 0, this.state.rowsPerPage);
+  }
 
-  getHeader = () => {
-    const keys = this.getKeys();
-    return keys.map((key, index) => {
-      return <th key={key}>{key.toUpperCase()}</th>;
+  getData = (url, page, rowsPerPage) => {
+    this.setState({ isLoading: true });
+    this.xhrRequest(url, page, rowsPerPage).then((res) => {
+      this.setState({
+        data: res.data,
+        isLoading: false,
+        count: res.total,
+      });
     });
   };
 
-  getRowsData = () => {
-    const items = this.props.products;
-    const keys = this.getKeys();
-    return items.map((row, index) => {
-      return (
-        <tr key={index}>
-          <RenderRow key={index} data={row} keys={keys} />
-        </tr>
+  sort = (page, sortOrder) => {
+    this.setState({ isLoading: true });
+    this.xhrRequest(
+      `http://localhost:8080/prodcuts`,
+      page,
+      this.state.rowsPerPage,
+      sortOrder
+    ).then((res) => {
+      this.setState({
+        data: res.data,
+        page: res.page,
+        sortOrder,
+        isLoading: false,
+        count: res.total,
+      });
+    });
+  };
+
+  changePage = (page, sortOrder) => {
+    this.setState({
+      isLoading: true,
+    });
+    this.xhrRequest(
+      `http://localhost:8080/products`,
+      page,
+      this.state.rowsPerPage,
+      sortOrder
+    ).then((res) => {
+      this.setState({
+        isLoading: false,
+        page: res.page,
+        sortOrder,
+        data: res.data,
+        count: res.total,
+      });
+    });
+  };
+
+  changeRowsPerPage = (rowsPerPage, sortOrder) => {
+    this.setState({
+      isLoading: true,
+      rowsPerPage,
+    });
+    this.xhrRequest(
+      `http://localhost:8080/products`,
+      0,
+      rowsPerPage,
+      sortOrder
+    ).then((res) => {
+      this.setState({
+        isLoading: false,
+        page: res.page,
+        sortOrder,
+        data: res.data,
+        count: res.total,
+        rowsPerPage: res.rowsPerPage,
+      });
+    });
+  };
+
+  search = (searchText, sortOrder) => {
+    const { rowsPerPage } = this.state;
+    this.setState({
+      isLoading: true,
+    });
+    this.xhrRequest(
+      `http://localhost:8080/products`,
+      0,
+      rowsPerPage,
+      searchText,
+      sortOrder
+    ).then((res) => {
+      this.setState({
+        isLoading: false,
+        page: res.page,
+        sortOrder,
+        data: res.data,
+        count: res.total,
+        rowsPerPage: res.rowsPerPage,
+      });
+    });
+  };
+
+  filterChange = () => {};
+
+  xhrRequest = (url, page, rowsPerPage, searchText = "", sortOrder = {}) => {
+    return new Promise((resolve, reject) => {
+      // mock page data
+
+      let fullData = [
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "1001",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 235.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "1002",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 236.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "1003",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 237.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "1004",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 236.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "1005",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "1006",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "1007",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "1008",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "1009",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "10010",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "10011",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "10012",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e74ea21fb8798d114d1d",
+          productId: "10013",
+          productName: "T-Shirt",
+          description: "Blue t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+        {
+          _id: "5f41e759a21fb8798d114d1f",
+          productId: "10014",
+          productName: "T-Shirt",
+          description: "Yellow t-shirt",
+          cost: 234.0,
+          productDetails: {
+            size: "M",
+          },
+          quantityInStock: 780,
+          ratings: null,
+        },
+      ];
+      const total = fullData.length; // mock record count from server - normally this would be a number attached to the return data
+
+      let sortField = sortOrder.name;
+      let sortDir = sortOrder.direction;
+
+      if (sortField) {
+        fullData = fullData.sort((a, b) => {
+          if (a[sortField] < b[sortField]) {
+            return 1 * (sortDir === "asc" ? -1 : 1);
+          } else if (a[sortField] > b[sortField]) {
+            return -1 * (sortDir === "asc" ? -1 : 1);
+          } else {
+            return 0;
+          }
+        });
+      }
+
+      if (searchText !== "") {
+        fullData = fullData.filter((row) => {
+          return Object.values(row).some((cell) =>
+            `${cell}`.toLowerCase().includes(searchText.toLowerCase())
+          );
+        });
+      }
+
+      const srcData = fullData.slice(
+        page * rowsPerPage,
+        (page + 1) * rowsPerPage
       );
-    });
-  };
+      let data = srcData;
 
-  renderTable = () => {
-    return (
-      <Component>
-        <table>
-          <thead>
-            <tr>{this.getHeader()}</tr>
-          </thead>
-          <tbody>{this.getRowsData()}</tbody>
-        </table>
-      </Component>
-    );
+      setTimeout(() => {
+        resolve({
+          data,
+          total,
+          page,
+          rowsPerPage,
+        });
+      }, 500);
+    });
   };
 
   setOrder = (isAscending) => {
@@ -82,111 +417,18 @@ export class ProductLanding extends Component {
 
   handleFilterSubmit = (applyFilters) => {
     applyFilters();
-
-    // this.setState({ isLoading: true });
-
-    // // fake async request
-    // this.xhrRequest(`/myApiServer?filters=${filterList}`, filterList).then(
-    //   (res) => {
-    //     this.setState({ isLoading: false, data: res.data });
-    //   }
-    // );
   };
 
   render() {
-    const { order, orderBy } = this.state;
-    const columns = [
-      {
-        name: "Name",
-        options: {
-          filter: true,
-          display: "excluded",
-        },
-      },
-      {
-        label: "Modified Title Label",
-        name: "Title",
-        options: {
-          filter: true,
-        },
-      },
-      {
-        name: "Location",
-        options: {
-          filter: false,
-        },
-      },
-      {
-        name: "Age",
-        options: {
-          filter: true,
-        },
-      },
-      {
-        name: "Salary",
-        options: {
-          filter: true,
-          sort: false,
-        },
-      },
-    ];
-
-    const data = [
-      ["Gabby George", "Business Analyst", "Minneapolis", 30, "$100,000"],
-      ["Aiden Lloyd", "Business Consultant", "Dallas", 55, "$200,000"],
-      ["Jaden Collins", "Attorney", "Santa Ana", 27, "$500,000"],
-      ["Franky Rees", "Business Analyst", "St. Petersburg", 22, "$50,000"],
-      ["Aaren Rose", "Business Consultant", "Toledo", 28, "$75,000"],
-      [
-        "Blake Duncan",
-        "Business Management Analyst",
-        "San Diego",
-        65,
-        "$94,000",
-      ],
-      ["Frankie Parry", "Agency Legal Counsel", "Jacksonville", 71, "$210,000"],
-      ["Lane Wilson", "Commercial Specialist", "Omaha", 19, "$65,000"],
-      ["Robin Duncan", "Business Analyst", "Los Angeles", 20, "$77,000"],
-      ["Mel Brooks", "Business Consultant", "Oklahoma City", 37, "$135,000"],
-      ["Harper White", "Attorney", "Pittsburgh", 52, "$420,000"],
-      ["Kris Humphrey", "Agency Legal Counsel", "Laredo", 30, "$150,000"],
-      ["Frankie Long", "Industrial Analyst", "Austin", 31, "$170,000"],
-      ["Brynn Robbins", "Business Analyst", "Norfolk", 22, "$90,000"],
-      ["Justice Mann", "Business Consultant", "Chicago", 24, "$133,000"],
-      [
-        "Addison Navarro",
-        "Business Management Analyst",
-        "New York",
-        50,
-        "$295,000",
-      ],
-      ["Jesse Welch", "Agency Legal Counsel", "Seattle", 28, "$200,000"],
-      ["Eli Mejia", "Commercial Specialist", "Long Beach", 65, "$400,000"],
-      ["Gene Leblanc", "Industrial Analyst", "Hartford", 34, "$110,000"],
-      ["Danny Leon", "Computer Scientist", "Newark", 60, "$220,000"],
-      ["Lane Lee", "Corporate Counselor", "Cincinnati", 52, "$180,000"],
-      ["Jesse Hall", "Business Analyst", "Baltimore", 44, "$99,000"],
-      ["Danni Hudson", "Agency Legal Counsel", "Tampa", 37, "$90,000"],
-      ["Terry Macdonald", "Commercial Specialist", "Miami", 39, "$140,000"],
-      ["Justice Mccarthy", "Attorney", "Tucson", 26, "$330,000"],
-      ["Silver Carey", "Computer Scientist", "Memphis", 47, "$250,000"],
-      ["Franky Miles", "Industrial Analyst", "Buffalo", 49, "$190,000"],
-      ["Glen Nixon", "Corporate Counselor", "Arlington", 44, "$80,000"],
-      [
-        "Gabby Strickland",
-        "Business Process Consultant",
-        "Scottsdale",
-        26,
-        "$45,000",
-      ],
-      ["Mason Ray", "Computer Scientist", "San Francisco", 39, "$142,000"],
-    ];
+    const { order, orderBy, count, rowsPerPage, data, columns } = this.state;
 
     const options = {
       // https://github.com/gregnb/mui-datatables
       filterType: "checkbox",
       caseSensitive: false,
       download: true,
+      serverSide: true,
+      count: count,
       downloadOptions: {
         filename: "Product.csv",
         seperator: ",",
@@ -201,6 +443,32 @@ export class ProductLanding extends Component {
       fixedHeader: true,
       jumpToPage: true,
       confirmFilters: true,
+      onTableChange: (action, tableState) => {
+        console.log(action, tableState);
+
+        // a developer could react to change on an action basis or
+        // examine the state as a whole and do whatever they want
+
+        switch (action) {
+          case "changePage":
+            this.changePage(tableState.page, tableState.sortOrder);
+            break;
+          case "sort":
+            this.sort(tableState.page, tableState.sortOrder);
+            break;
+          case "changeRowsPerPage":
+            this.changeRowsPerPage(
+              tableState.rowsPerPage,
+              tableState.sortOrder
+            );
+            break;
+          case "search":
+            this.search(tableState.searchText, tableState.sortOrder);
+            break;
+          default:
+            console.log("action not handled.");
+        }
+      },
 
       // Calling the applyNewFilters parameter applies the selected filters to the table
       customFilterDialogFooter: (currentFilterList, applyNewFilters) => {
@@ -215,22 +483,22 @@ export class ProductLanding extends Component {
           </div>
         );
       },
-      onChangePage: this.handlePageChange,
-      onChangeRowsPerPage: this.handlePageChange,
-      onColumnSortChange: this.handlePageChange,
-      onDownload: this.handlePageChange,
-      onFilterChange: this.handlePageChange,
-      onFilterConfirm: this.handleFilterSubmit,
-      onRowClick: this.handlePageChange,
-      onRowsDelete: this.handlePageChange,
+      // onChangePage: this.handlePageChange,
+      // onChangeRowsPerPage: this.handlePageChange,
+      // onColumnSortChange: this.handlePageChange,
+      // onDownload: this.handlePageChange,
+      // onFilterChange: this.handlePageChange,
+      // onFilterConfirm: this.handleFilterSubmit,
+      // onRowClick: this.handlePageChange,
+      // onRowsDelete: this.handlePageChange,
       pagination: true,
       print: true,
       responsive: "vertical", // stacked, vertica, simple
       rowHover: true,
-      rowsPerPage: 5,
-      rowsPerPageOptions: [2, 5, 10],
+      rowsPerPage: rowsPerPage,
+      rowsPerPageOptions: [2, 5, 10, 100],
       search: true,
-      searchPlaceholder: "Enter the searcg text",
+      searchPlaceholder: "Enter the search text",
       searchOpen: false,
       selectableRows: "multiple", //multiple, single, none
       selectToolbarPlacement: "replace", //replace, above, none
@@ -268,28 +536,6 @@ export class ProductLanding extends Component {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
-        {/* <Table
-          tableHeaderColor="primary"
-          tableHead={["Id", "Name", "Country", "City", "Salary"]}
-          tableData={[
-            ["1", "Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-            ["2", "Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-            ["3", "Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-            ["4", "Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-            [
-              "5",
-              "Doris Greene",
-              "Malawi",
-              "Feldkirchen in Kärnten",
-              "$63,542",
-            ],
-            ["6", "Mason Porter", "Chile", "Gloucester", "$78,615"],
-          ]}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={this.handleRequestSort}
-          heading="Products"
-        /> */}
         <Card variant="outlined">
           <MUIDataTable
             title={"Employee List"}
