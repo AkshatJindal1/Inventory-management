@@ -18,7 +18,10 @@ export class AddForm extends Component {
             forms: {},
             formFields: {},
             validateNow: false,
-            errorSet: new Set()
+            errorSet: new Set(),
+            menuitems: {
+
+            }
         };
     }
 
@@ -47,7 +50,11 @@ export class AddForm extends Component {
 
     handleChange = (event) => {
         let forms = this.state.forms;
-        forms[event.target.id] = event.target.value
+        console.log(event.target)
+        let key = event.target.id;
+        if (key === undefined) key = event.target.name
+        console.log(key)
+        forms[key] = event.target.value
         this.setState({ forms })
     }
 
@@ -66,12 +73,11 @@ export class AddForm extends Component {
                         handleChange={this.handleChange}
                         validateNow={this.state.validateNow}
                         changeErrorStatus={this.changeErrorStatus}
+                        menuitems={field.menuitems}
                     />
                 </GridItem>
             )
         });
-
-
 
         return (
             <Card variant="outlined">
