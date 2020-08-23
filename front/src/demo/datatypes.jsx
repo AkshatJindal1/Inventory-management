@@ -54,14 +54,6 @@ const datatypes = {
         labelText: 'text',
         options: [
             {
-                id: 'min',
-                labelText: 'Minimum Length',
-                conditions: [{
-                    type: 'integer',
-                    errorText: 'Value Should be a valid Number'
-                }]
-            },
-            {
                 id: 'max',
                 labelText: 'Maximum Length',
                 conditions: [{

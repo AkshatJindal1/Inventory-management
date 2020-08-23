@@ -55,16 +55,15 @@ export class StructureForm extends Component {
         forms[key] = event.target.value
     }
 
-    getOption = (datatype, defaultOptions) => {
+    getOption = (datatype, defaultCondition) => {
 
         let options = []
+        // let oneOption = null;
+
         if (datatypes[datatype].options) {
             options.push(datatypes[datatype].options.map((option, index) => {
-                let oneOption = defaultOptions.find(opt => opt.id === option.id);
-                let value = "";
-                if (oneOption && oneOption.value !== undefined) {
-                    value = oneOption.value;
-                }
+                let value = defaultCondition !== undefined ? (defaultCondition[option.id] !== undefined ? defaultCondition[option.id] : '') : "";
+
                 return (
                     <GridItem key={index} xs={12} sm={12} md={2}>
                         <CustomInput
@@ -81,7 +80,9 @@ export class StructureForm extends Component {
             }));
         }
 
-        let oneOption = defaultOptions.find(opt => opt.id === 'required');
+        // let oneOption = defaultCondition[option];
+        let oneOption = null;
+
         let value = 1;
         if (oneOption && oneOption.value) {
             console.log(datatype, oneOption.value)
@@ -115,17 +116,20 @@ export class StructureForm extends Component {
 
     render() {
 
-        const forms = this.state.formFields.map((form, index) => {
+        const forms = this.state.formFields.map((field, index) => {
 
-            const options = this.getOption(form.datatype, form.options)
+            const options = this.getOption(field.datatype, field.conditions)
 
             return (
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={4}>
+
+                        {/* TODO add id */}
+
                         <CustomInput
-                            id="name"
-                            labelText="Filed Name"
-                            value={form.labelText}
+                            id="fieldName"
+                            labelText="Field Name"
+                            value={field.labelText}
                             required={true}
                             handleChange={this.handleChange}
                             validateNow={this.state.validateNow}
@@ -136,7 +140,7 @@ export class StructureForm extends Component {
                         <CustomInput
                             id="datatype"
                             labelText="Data Type"
-                            value={form.datatype}
+                            value={field.datatype}
                             required={true}
                             handleChange={this.handleChange}
                             validateNow={this.state.validateNow}

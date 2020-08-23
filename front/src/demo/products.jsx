@@ -8,13 +8,12 @@ const formFields = [
         disabled: true,
         required: true,
         defaultValue: '11111',
-        conditions: [
-            {
-                type: "integer",
-                min: 10000,
-                max: 99999,
-                errorText: "Value should be 5 digits"
-            }]
+        datatype: 'integer',
+        conditions: {
+            min: 10000,
+            max: 99999,
+            errorText: "Value should be 5 digits"
+        }
     },
     {
         id: 'productName',
@@ -23,7 +22,8 @@ const formFields = [
         required: true,
         defaultValue: 'Nike T Shirt',
         error: false,
-        conditions: []
+        datatype: 'text',
+        conditions: {}
     },
     {
         id: 'email',
@@ -33,34 +33,35 @@ const formFields = [
         defaultValue: 'nike@nike.nike',
         type: 'email',
         error: false,
-        conditions: [
-            {
-                type: 'email',
-                errorText: 'not a valid email id'
-            }]
+        datatype: 'email',
+        conditions: {
+            errorText: 'not a valid email id'
+        }
     },
     {
         id: 'inStock',
         labelText: 'In Stock',
         disabled: false,
         error: false,
-        required: true,
-        conditions: [{
-            type: 'integer',
+        required: false,
+        datatype: 'integer',
+        conditions: {
             errorText: 'Value Should be a valid Number'
-        }]
+        }
     },
     {
         id: 'description',
         labelText: 'Description',
         error: false,
         required: false,
+        datatype: 'text',
     },
     {
         id: 'material',
         labelText: 'Material',
         error: false,
         required: false,
+        datatype: 'material',
         menuitems: [
             {
                 id: 1,
@@ -77,11 +78,11 @@ const formFields = [
         ]
     },
     {
-        id: 'sizes',
+        id: 'size',
         labelText: 'Size',
         error: false,
         required: true,
-        defaultValue: 5,
+        datatype: 'size',
         menuitems: [
             {
                 id: 1,

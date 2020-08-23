@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
-import formFields from '../../../demo/formFields';
+import formFields from '../../../demo/products';
 import StructureForm from '../../AddForm/structureForm'
 
 export class ProductStructure extends Component {

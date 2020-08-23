@@ -19,31 +19,32 @@ class CustomInput extends Component {
     };
   }
 
-  componentDidMount() {
-    const { value, conditions, required } = this.props;
-    const { isError } = this.validateUtil(value, conditions, required)
+  componentWillMount() {
+    const { value, condition, required, datatype } = this.props;
+    const { isError } = this.validateUtil(value, condition, required, datatype)
     this.props.changeErrorStatus(isError, this.props.id)
+    this.setState({ value });
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.validateNow !== prevProps.validateNow && this.props.validateNow) {
-      this.validate(this.props.value, this.props.conditions, this.props.required)
+      this.validate(this.props.value, this.props.condition, this.props.required, this.props.datatype)
     }
   }
 
-  validate = (value, conditions, required) => {
-    const { isError, errorText } = this.validateUtil(value, conditions, required)
+  validate = (value, condition, required, datatype) => {
+    const { isError, errorText } = this.validateUtil(value, condition, required, datatype)
     this.setState({ error: isError, errorText })
     this.props.changeErrorStatus(isError, this.props.id)
   }
 
   validateField = (event) => {
-    const { conditions, changeErrorStatus, required } = this.props;
+    const { condition, required, datatype } = this.props;
     const value = event.target.value;
-    this.validate(value, conditions, required)
+    this.validate(value, condition, required, datatype)
   }
 
-  validateUtil = (value, conditions, required) => {
+  validateUtil = (value, condition, required, datatype) => {
     let isError = false;
     let errorText = ''
 
@@ -53,42 +54,34 @@ class CustomInput extends Component {
         errorText = "Value cannot be empty";
       }
     }
-    else if (conditions !== undefined) {
-      conditions.forEach(condition => {
-        if (condition.type === 'integer') {
-          let minMaxCondition = {};
-          if (condition.min) minMaxCondition = { ...minMaxCondition, min: condition.min }
-          if (condition.max) minMaxCondition = { ...minMaxCondition, max: condition.max }
-          if (!validator.isInt(value, { ...minMaxCondition })) {
-            isError = true;
-            errorText = condition.errorText;
-            return;
-          }
-        }
 
-        else if (condition.type === 'float') {
-
-          // TODO min not working properly
-
-          let minMaxCondition = {};
-          if (condition.min) minMaxCondition = { ...minMaxCondition, min: condition.min }
-          if (condition.max) minMaxCondition = { ...minMaxCondition, max: condition.max }
-          if (!validator.isFloat(value, { ...minMaxCondition })) {
-            isError = true;
-            errorText = condition.errorText;
-            return;
-          }
-        }
-
-        else if (condition.type === 'email') {
-          if (!validator.isEmail(value)) {
-            isError = true;
-            errorText = condition.errorText;
-            return;
-          }
-        }
-      });
+    else if (datatype === 'integer') {
+      let minMaxCondition = {};
+      if (condition.min) minMaxCondition = { ...minMaxCondition, min: condition.min }
+      if (condition.max) minMaxCondition = { ...minMaxCondition, max: condition.max }
+      if (!validator.isInt(value, { ...minMaxCondition })) {
+        isError = true;
+        errorText = condition.errorText;
+      }
     }
+
+    else if (datatype === 'float') {
+      let minMaxCondition = {};
+      if (condition.min !== undefined) minMaxCondition = { ...minMaxCondition, min: condition.min }
+      if (condition.max !== undefined) minMaxCondition = { ...minMaxCondition, max: condition.max }
+      if (!validator.isFloat(value, { ...minMaxCondition })) {
+        isError = true;
+        errorText = condition.errorText;
+      }
+    }
+
+    else if (datatype === 'email') {
+      if (!validator.isEmail(value)) {
+        isError = true;
+        errorText = condition.errorText;
+      }
+    }
+
     return {
       isError: isError,
       errorText: isError ? errorText : ''
@@ -96,9 +89,18 @@ class CustomInput extends Component {
   }
 
   handleChange = (event) => {
-    const { handleChange } = this.props
-    console.log(event.target.id);
-    // this.setState({ forms })
+    const { handleChange, datatype } = this.props
+    const value = event.target.value;
+    if (datatype === 'integer' || datatype === 'float') {
+      if (!isNaN(value)) {
+        this.setState({ value })
+        handleChange(event)
+      }
+    }
+    else {
+      this.setState({ value })
+      handleChange(event)
+    }
   }
 
   render() {
@@ -106,8 +108,6 @@ class CustomInput extends Component {
     const {
       labelText,
       id,
-      value,
-      handleChange,
       disabled,
       required,
       classes,
@@ -137,8 +137,8 @@ class CustomInput extends Component {
             labelId={"select-item-" + id}
             name={id}
             id={"select-outlined-" + id}
-            onChange={handleChange}
-            value={value}
+            onChange={this.handleChange}
+            value={this.state.value}
             label={labelText}
           >
             <MenuItem value="">
@@ -156,12 +156,12 @@ class CustomInput extends Component {
         fullWidth="true"
         id={id}
         label={labelText}
-        value={value}
+        value={this.state.value}
         error={this.state.error}
         required={required}
         disabled={disabled}
         className={classes.textInput}
-        onChange={handleChange}
+        onChange={this.handleChange}
         helperText={this.state.error ? this.state.errorText : ''}
         onBlur={(e) => this.validateField(e)}
       />

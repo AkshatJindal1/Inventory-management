@@ -50,10 +50,8 @@ export class AddForm extends Component {
 
     handleChange = (event) => {
         let forms = this.state.forms;
-        console.log(event.target)
         let key = event.target.id;
         if (key === undefined) key = event.target.name
-        console.log(key)
         forms[key] = event.target.value
         this.setState({ forms })
     }
@@ -64,12 +62,14 @@ export class AddForm extends Component {
             return (
                 <GridItem key={index} xs={12} sm={12} md={6}>
                     <CustomInput
-                        conditions={field.conditions}
+                        condition={field.conditions}
+                        datatype={field.datatype}
                         id={field.id}
                         labelText={field.labelText}
                         value={this.state.forms[field.id]}
                         disabled={field.disabled}
                         required={field.required}
+                        errorText={field.errorText}
                         handleChange={this.handleChange}
                         validateNow={this.state.validateNow}
                         changeErrorStatus={this.changeErrorStatus}
