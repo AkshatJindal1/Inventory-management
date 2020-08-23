@@ -23,7 +23,6 @@ const formFields = [
         defaultValue: 'Nike T Shirt',
         error: false,
         datatype: 'text',
-        conditions: {}
     },
     {
         id: 'email',
@@ -46,6 +45,7 @@ const formFields = [
         required: false,
         datatype: 'integer',
         conditions: {
+            min: 100,
             errorText: 'Value Should be a valid Number'
         }
     },

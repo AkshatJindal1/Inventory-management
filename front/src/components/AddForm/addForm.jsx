@@ -62,14 +62,13 @@ export class AddForm extends Component {
             return (
                 <GridItem key={index} xs={12} sm={12} md={6}>
                     <CustomInput
-                        condition={field.conditions}
-                        datatype={field.datatype}
                         id={field.id}
                         labelText={field.labelText}
                         value={this.state.forms[field.id]}
                         disabled={field.disabled}
                         required={field.required}
-                        errorText={field.errorText}
+                        condition={field.conditions}
+                        datatype={field.datatype}
                         handleChange={this.handleChange}
                         validateNow={this.state.validateNow}
                         changeErrorStatus={this.changeErrorStatus}

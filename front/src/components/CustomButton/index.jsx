@@ -2,7 +2,7 @@ import React from 'react';
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { green, purple } from '@material-ui/core/colors';
-import { Send, CloudUpload, Delete, Save } from '@material-ui/icons';
+import { Send, CloudUpload, Delete, Save, Add } from '@material-ui/icons';
 
 const CustomButton = withStyles((theme) => ({
   // root: {
@@ -31,9 +31,10 @@ export default function CustomizedButtons(props) {
 
   const buttonIcon = (buttonType) => {
     if (buttonType === 'upload') return <CloudUpload />
-    if (buttonType === 'delete') return <Delete />
-    if (buttonType === 'save') return <Save />
-    if (buttonType === 'send') return <Send />
+    else if (buttonType === 'delete') return <Delete />
+    else if (buttonType === 'save') return <Save />
+    else if (buttonType === 'send') return <Send />
+    else if (buttonType === 'add') return <Add />
     return null;
   }
 

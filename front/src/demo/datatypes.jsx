@@ -4,69 +4,78 @@ const datatypes = {
     'integer': {
         id: 'integer',
         labelText: 'integer',
+        errorText: 'Not a valid Number',
         options: [
             {
                 id: 'min',
                 labelText: 'Minimum',
-                conditions: [{
-                    type: 'integer',
-                    errorText: 'Value Should be a valid Number'
-                }]
+                datatype: 'integer'
             },
             {
                 id: 'max',
                 labelText: 'Maximum',
-                conditions: [{
-                    type: 'integer',
-                    errorText: 'Value Should be a valid Number'
-                }]
+                datatype: 'integer'
+            },
+            {
+                id: 'errorText',
+                labelText: 'Error Text',
+                datatype: 'text'
             }
         ]
     },
     'float': {
         id: 'float',
         labelText: 'float',
+        errorText: 'Not a valid Number',
         options: [
             {
                 id: 'min',
                 labelText: 'Minimum',
-                conditions: [{
-                    type: 'integer',
-                    errorText: 'Value Should be a valid Number'
-                }]
+                datatype: 'float'
             },
             {
                 id: 'max',
                 labelText: 'Maximum',
-                conditions: [{
-                    type: 'integer',
-                    errorText: 'Value Should be a valid Number'
-                }]
+                datatype: 'float'
+            },
+            {
+                id: 'errorText',
+                labelText: 'Error Text',
+                datatype: 'text'
             }
         ]
     },
     'email': {
         id: 'email',
         labelText: 'email',
+        errorText: 'Not a valid Email Id',
+        options: [
+            {
+                id: 'errorText',
+                labelText: 'Error Text',
+                datatype: 'text'
+            }]
     },
     'text': {
         id: 'text',
         labelText: 'text',
+        errorText: 'Not a valid Text',
         options: [
             {
                 id: 'max',
                 labelText: 'Maximum Length',
-                conditions: [{
-                    type: 'integer',
-                    errorText: 'Value Should be a valid Number'
-                }]
+                datatype: 'integer'
+            },
+            {
+                id: 'errorText',
+                labelText: 'Error Text',
+                datatype: 'text'
             }
         ]
     },
     'material': {
         id: 'material',
-        labelText: 'Material',
-        options: []
+        labelText: 'Material'
     },
     'size': {
         id: 'size',

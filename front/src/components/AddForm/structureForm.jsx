@@ -16,10 +16,9 @@ export class StructureForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            forms: {},
             formFields: {},
             validateNow: false,
-            errorSet: new Set(),
+            errorSet: new Map(),
         };
     }
 
@@ -35,67 +34,73 @@ export class StructureForm extends Component {
     handleSubmit = (event) => {
         this.setState({ validateNow: true })
         console.log(this.state.errorSet)
-        if (this.state.errorSet.size === 0) console.log("Calling API", this.state.forms)
+        console.log(this.state.formFields)
+        if (this.state.errorSet.size === 0) console.log("Calling API")
         else console.log("Few Errors Exist")
     }
 
-    changeErrorStatus = (add, id) => {
+    addToMap(id) {
         let errorSet = this.state.errorSet;
-        if (add) errorSet.add(id)
-        else errorSet.delete(id)
+        let count = errorSet.has(id) ? errorSet.get(id) : 0;
+        count = count + 1;
+        errorSet.set(id, count);
         this.setState({ errorSet })
     }
 
-    handleChange = (event) => {
-        let forms = this.state.forms;
-        console.log(event.target)
-        let key = event.target.id;
-        if (key === undefined) key = event.target.name
-        console.log(key)
-        forms[key] = event.target.value
+    removeFromMap(id) {
+        let errorSet = this.state.errorSet;
+        let count = errorSet.has(id) ? errorSet.get(id) : 1;
+        count = count - 1;
+        if (count === 0) errorSet.delete(id);
+        else errorSet.set(id, count);
+        this.setState({ errorSet })
     }
 
-    getOption = (datatype, defaultCondition) => {
+    changeErrorStatus = (add, id) => {
+        if (add) this.addToMap(id)
+        else this.removeFromMap(id)
+    }
+
+    handleChange = (event, index, root) => {
+        let formFields = this.state.formFields;
+        let key = event.target.id;
+        console.log(key, event.target.id, event.target.value, index, root)
+        if (key === undefined) key = event.target.name
+        if (key === 'datatype') formFields[index].conditions = {}
+        if (formFields[index].conditions === undefined) formFields[index].conditions = {}
+        if (root === 'conditions') formFields[index].conditions[key] = event.target.value;
+        if (root === 'root') {
+            if (key === 'required') formFields[index][key] = event.target.value === 1 ? true : false
+            else formFields[index][key] = event.target.value;
+        }
+        this.setState({ formFields }, () => console.log(this.state.formFields))
+    }
+
+    addRow = () => {
+        let formFields = this.state.formFields;
+        formFields.push({
+            labelText: '',
+            disabled: false,
+            datatype: '',
+            required: false,
+            conditions: {
+            }
+        })
+        this.setState({ formFields })
+    }
+
+    getOption = (datatype, defaultCondition, required, formIndex) => {
 
         let options = []
-        // let oneOption = null;
-
-        if (datatypes[datatype].options) {
-            options.push(datatypes[datatype].options.map((option, index) => {
-                let value = defaultCondition !== undefined ? (defaultCondition[option.id] !== undefined ? defaultCondition[option.id] : '') : "";
-
-                return (
-                    <GridItem key={index} xs={12} sm={12} md={2}>
-                        <CustomInput
-                            id={option.id}
-                            labelText={option.labelText}
-                            conditions={option.conditions}
-                            value={value + ''}
-                            handleChange={this.handleChange}
-                            validateNow={this.state.validateNow}
-                            changeErrorStatus={this.changeErrorStatus}
-                        />
-                    </GridItem>
-                )
-            }));
-        }
-
-        // let oneOption = defaultCondition[option];
-        let oneOption = null;
-
-        let value = 1;
-        if (oneOption && oneOption.value) {
-            console.log(datatype, oneOption.value)
-            value = oneOption.value;
-        }
 
         options.push(
             <GridItem key="required" xs={12} sm={12} md={1}>
                 <CustomInput
-                    id={'required'}
+                    id='required'
                     labelText="Required"
-                    value={value}
-                    handleChange={this.handleChange}
+                    value={required ? 1 : 2}
+                    required
+                    handleChange={(event) => this.handleChange(event, formIndex, "root")}
                     validateNow={this.state.validateNow}
                     changeErrorStatus={this.changeErrorStatus}
                     menuitems={[
@@ -111,6 +116,31 @@ export class StructureForm extends Component {
                 />
             </GridItem>
         )
+
+        if (datatypes[datatype] !== undefined && datatypes[datatype].options) {
+            options.push(datatypes[datatype].options.map((option, index) => {
+
+                let value = defaultCondition !== undefined && defaultCondition[option.id] !== undefined ? defaultCondition[option.id] : '';
+
+                return (
+                    <GridItem key={index} xs={12} sm={12} md={2}>
+                        <CustomInput
+                            id={option.id}
+                            datatype={option.datatype}
+                            labelText={option.labelText}
+                            condition={{
+                                errorText: datatypes[option.datatype].errorText
+                            }}
+                            value={value + ''}
+                            handleChange={(event) => this.handleChange(event, formIndex, "conditions")}
+                            validateNow={this.state.validateNow}
+                            changeErrorStatus={this.changeErrorStatus}
+                        />
+                    </GridItem>
+                )
+            }));
+        }
+
         return options;
     }
 
@@ -118,31 +148,34 @@ export class StructureForm extends Component {
 
         const forms = this.state.formFields.map((field, index) => {
 
-            const options = this.getOption(field.datatype, field.conditions)
+            const options = this.getOption(field.datatype, field.conditions, field.required, index)
 
             return (
                 <GridContainer>
-                    <GridItem xs={12} sm={12} md={4}>
+                    <GridItem xs={12} sm={12} md={3}>
 
-                        {/* TODO add id */}
+                        {/* TODO add id, eg prodId , if new */}
 
                         <CustomInput
-                            id="fieldName"
+                            id="labelText"
                             labelText="Field Name"
                             value={field.labelText}
+                            datatype="text"
                             required={true}
-                            handleChange={this.handleChange}
+                            disabled={field.disabled}
+                            handleChange={(event) => this.handleChange(event, index, "root")}
                             validateNow={this.state.validateNow}
                             changeErrorStatus={this.changeErrorStatus}
                         />
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
+                    <GridItem xs={12} sm={12} md={2}>
                         <CustomInput
                             id="datatype"
                             labelText="Data Type"
                             value={field.datatype}
                             required={true}
-                            handleChange={this.handleChange}
+                            disabled={field.disabled}
+                            handleChange={(event) => this.handleChange(event, index, "root")}
                             validateNow={this.state.validateNow}
                             changeErrorStatus={this.changeErrorStatus}
                             menuitems={this.state.datatypesMenu}
@@ -158,13 +191,17 @@ export class StructureForm extends Component {
                 <form>
                     <CardContent>
                         <Fragment>
-
                             {forms}
-
-
                         </Fragment>
                     </CardContent>
                     <CardActions>
+                        <CustomButton
+                            handleSubmit={this.addRow}
+                            buttonType="add"
+                        >
+                            Add Another Field
+                        </CustomButton>
+
                         <CustomButton
                             handleSubmit={this.handleSubmit}
                             type="submit"

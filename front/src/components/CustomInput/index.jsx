@@ -27,8 +27,11 @@ class CustomInput extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.validateNow !== prevProps.validateNow && this.props.validateNow) {
-      this.validate(this.props.value, this.props.condition, this.props.required, this.props.datatype)
+    if (this.props.value !== prevProps.value) {
+      this.setState({ value: this.props.value })
+    }
+    if (this.props.validateNow !== prevProps.validateNow && this.props.validateNow === true) {
+      this.validate(prevProps.value, prevProps.condition, prevProps.required, prevProps.datatype)
     }
   }
 
@@ -141,7 +144,7 @@ class CustomInput extends Component {
             value={this.state.value}
             label={labelText}
           >
-            <MenuItem value="">
+            <MenuItem value="" disabled={required}>
               <em>Select {labelText}</em>
             </MenuItem>
             {menu}
