@@ -1,7 +1,8 @@
-import {GET_ALL_PRODUCTS, FALSE_RESPONSE} from '../actions/types';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_FORMS, FALSE_RESPONSE } from '../actions/types';
 
 const initialState = {
-  allProducts: []
+  allProducts: [],
+  formFields: []
 }
 
 export default function (state = initialState, action) {
@@ -16,7 +17,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         allProducts: action.payload
-      }  
+      }
+
+    case GET_ALL_PRODUCTS_FORMS:
+      return {
+        ...state,
+        formFields: action.payload
+      }
 
     default:
       return state;

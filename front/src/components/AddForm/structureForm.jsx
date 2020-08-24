@@ -11,8 +11,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CustomButton from '../CustomButton';
 import datatypes from '../../demo/datatypes'
 
-const camelCase = require('camelcase');
-
 export class StructureForm extends Component {
 
     constructor(props) {
@@ -21,6 +19,7 @@ export class StructureForm extends Component {
             formFields: {},
             validateNow: false,
             errorSet: new Map(),
+            refList: []
         };
     }
 
@@ -37,7 +36,9 @@ export class StructureForm extends Component {
         this.setState({ validateNow: true })
         console.log(this.state.errorSet)
         console.log(this.state.formFields)
-        if (this.state.errorSet.size === 0) console.log("Calling API")
+        if (this.state.errorSet.size === 0) {
+            this.props.updateUrl(this.state.formFields);
+        }
         else console.log("Few Errors Exist")
     }
 
@@ -89,6 +90,16 @@ export class StructureForm extends Component {
             }
         })
         this.setState({ formFields })
+    }
+
+    getNewRef = () => {
+
+        let refList = this.state.refList
+
+        const ref = React.createRef();
+        refList.push(ref);
+
+        this.setState({ refList })
     }
 
     getOption = (datatype, defaultCondition, required, formIndex) => {
@@ -160,6 +171,7 @@ export class StructureForm extends Component {
 
                         <CustomInput
                             id="labelText"
+                            // ref={ref1}
                             labelText="Field Name"
                             value={field.labelText}
                             datatype="text"
@@ -173,6 +185,7 @@ export class StructureForm extends Component {
                     <GridItem xs={12} sm={12} md={2}>
                         <CustomInput
                             id="datatype"
+                            // ref={ref2}
                             labelText="Data Type"
                             value={field.datatype}
                             required={true}
