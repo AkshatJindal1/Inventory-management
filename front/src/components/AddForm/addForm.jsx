@@ -2,21 +2,18 @@ import React, { Component } from 'react'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { connect } from "react-redux";
-import validator from 'validator';
 
 import Controls from "../controls/Controls";
 import { Form } from '../Forms';
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
 
-// import validateFields from './'
+import ValidateFields from './validate'
 
 const validateOnChange = true;
 
 export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
-
-        console.log()
 
         let temp = { ...this.state.errors }
         const errorConditions = this.state.errorCondition;
@@ -26,22 +23,16 @@ export class AddForm extends Component {
             const errorCondition = errorConditions[key];
 
             if (value === '') {
-                temp[key] = errorCondition.required ? errorCondition.conditions.errorText || "This field is required." : ""
+                temp = { ...temp, ...ValidateFields.isRequired(errorCondition, key) }
             }
             else if (errorCondition.datatype === 'number') {
-                if (isNaN(value)) {
-                    temp[key] = errorCondition.conditions.errorText || "The value should be a number.";
-                }
-                else if ((errorCondition.conditions.min != null && !isNaN(errorCondition.conditions.min) && parseInt(value) < parseInt(errorCondition.conditions.min))
-                    || (errorCondition.conditions.max != null && !isNaN(errorCondition.conditions.max) && parseInt(value) > parseInt(errorCondition.conditions.max))) {
-                    temp[key] = errorCondition.conditions.errorText || "Number not in a valid range.";
-                } else temp[key] = ""
+                temp = { ...temp, ...ValidateFields.numberValidation(value, errorCondition, key) }
             }
             else if (errorCondition.datatype === 'email') {
-                temp[key] = validator.isEmail(value) ? "" : errorCondition.conditions.errorText || "Not a valid Email ID."
+                temp = { ...temp, ...ValidateFields.emailValidation(value, errorCondition, key) }
             }
             else if (errorCondition.datatype === 'text') {
-                temp[key] = (errorCondition.conditions.max != null && !isNaN(errorCondition.conditions.max) && parseInt(value.length) > parseInt(errorCondition.conditions.max)) ? errorCondition.conditions.errorText || "Exceeds the max length of " + parseInt(errorCondition.conditions.max) + "." : ""
+                temp = { ...temp, ...ValidateFields.textValidation(value, errorCondition, key) }
             }
             else temp[key] = "";
         }
