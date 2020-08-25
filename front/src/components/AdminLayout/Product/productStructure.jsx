@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import StructureForm from '../../AddForm/structureForm'
 import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
+import formFields from '../../../demo/formFields'
 
 
 export class ProductStructure extends Component {
@@ -24,13 +25,14 @@ export class ProductStructure extends Component {
   }
 
   componentWillMount() {
-    this.props.getAllFields(this.isLoading);
+    // this.props.getAllFields(this.isLoading);
   }
 
   render() {
-    console.log(this.state)
-    if (this.state.loading) return <Loader />
-    else return < StructureForm formFields={this.state.formFields} updateUrl={this.updateUrl} />
+    // console.log(this.state)
+    // if (this.state.loading) return <Loader />
+    // else return < StructureForm formFields={this.state.formFields} updateUrl={this.updateUrl} />
+    return <StructureForm formFields={formFields} />
   }
 }
 

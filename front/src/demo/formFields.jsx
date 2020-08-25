@@ -65,7 +65,7 @@ const formFields = [
         id: 'material',
         labelText: 'Material',
         error: false,
-        required: false,
+        required: true,
         datatype: 'material',
         type: 'select',
         menuitems: [
