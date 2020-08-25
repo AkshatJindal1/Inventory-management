@@ -20,12 +20,6 @@ import SimplePopover from "../../Popover/SimplePopover";
 
 import { ThreeSixty, CheckBox } from "@material-ui/icons";
 
-const RenderRow = (props) => {
-  return props.keys.map((key, index) => {
-    return <td key={props.data[key]}>{props.data[key]}</td>;
-  });
-};
-
 export class ProductLanding extends Component {
   constructor(props) {
     super(props);
@@ -88,24 +82,25 @@ export class ProductLanding extends Component {
     };
   }
 
-  componentWillMount() {
-    this.props.getAllProducts();
-  }
+  // componentWillMount() {
+  //   this.props.getAllProducts();
+  // }
 
   componentDidMount() {
-    this.getData(`http://localhost:8080/prodcuts`, 0, this.state.rowsPerPage);
+    // this.getData(`http://localhost:8080/prodcuts`, 0, this.state.rowsPerPage);
+    this.props.getAllProducts()
   }
 
-  getData = (url, page, rowsPerPage) => {
-    this.setState({ isLoading: true });
-    this.xhrRequest(url, page, rowsPerPage).then((res) => {
-      this.setState({
-        data: res.data,
-        isLoading: false,
-        count: res.total,
-      });
-    });
-  };
+  // getData = (url, page, rowsPerPage) => {
+  //   this.setState({ isLoading: true });
+  //   this.xhrRequest(url, page, rowsPerPage).then((res) => {
+  //     this.setState({
+  //       data: res.data,
+  //       isLoading: false,
+  //       count: res.total,
+  //     });
+  //   });
+  // };
 
   sort = (page, searchText, sortOrder) => {
     this.setState({ isLoading: true });
@@ -435,7 +430,12 @@ export class ProductLanding extends Component {
   };
 
   render() {
-    const { order, orderBy, count, rowsPerPage, data, columns } = this.state;
+    const {count, rowsPerPage, columns} = this.state;
+    const {
+      products: data, 
+      isLoading
+    } = this.props;
+    
 
     const options = {
       // https://github.com/gregnb/mui-datatables
@@ -459,7 +459,7 @@ export class ProductLanding extends Component {
       jumpToPage: true,
       confirmFilters: true,
       onTableChange: (action, tableState) => {
-        console.log(action, tableState);
+        // console.log(action, tableState);
 
         // a developer could react to change on an action basis or
         // examine the state as a whole and do whatever they want
@@ -493,8 +493,6 @@ export class ProductLanding extends Component {
             console.log("action not handled.");
         }
       },
-
-      // Calling the applyNewFilters parameter applies the selected filters to the table
       customFilterDialogFooter: (currentFilterList, applyNewFilters) => {
         return (
           <div style={{ marginTop: "40px" }}>
@@ -507,14 +505,6 @@ export class ProductLanding extends Component {
           </div>
         );
       },
-      // onChangePage: this.handlePageChange,
-      // onChangeRowsPerPage: this.handlePageChange,
-      // onColumnSortChange: this.handlePageChange,
-      // onDownload: this.handlePageChange,
-      // onFilterChange: this.handlePageChange,
-      // onFilterConfirm: this.handleFilterSubmit,
-      // onRowClick: this.handlePageChange,
-      // onRowsDelete: this.handlePageChange,
       pagination: true,
       print: true,
       responsive: "vertical", // stacked, vertica, simple
@@ -560,24 +550,30 @@ export class ProductLanding extends Component {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
+        {!isLoading ? 
         <Card variant="outlined">
-          <SimplePopover />
+          <SimplePopover
+            filterOptions={columns} />
           <MUIDataTable
             title={"Employee List"}
             data={data}
             columns={columns}
             options={options}
           />
-        </Card>
+        </Card> : <Card>
+          Data is Loading
+        </Card>}
       </Fragment>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  products: state.product.allProducts,
-});
+const mapStateToProps = ({
+  product: {allProducts, isLoading},
+}) => ({
+    products: allProducts,
+    isLoading
+  }
+);
 
-export default connect(mapStateToProps, {
-  getAllProducts,
-})(ProductLanding);
+export default connect(mapStateToProps, {getAllProducts})(ProductLanding);
