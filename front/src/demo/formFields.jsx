@@ -7,8 +7,8 @@ const formFields = [
         error: false,
         disabled: true,
         required: true,
-        defaultValue: '11111',
-        datatype: 'integer',
+        datatype: 'number',
+        type: 'input',
         conditions: {
             min: 10000,
             max: 99999,
@@ -19,20 +19,23 @@ const formFields = [
         id: 'productName',
         labelText: 'Product Name',
         disabled: false,
-        required: true,
-        defaultValue: 'Nike T Shirt',
+        required: false,
         error: false,
+        type: 'input',
         datatype: 'text',
+        conditions: {
+            max: "15"
+        }
     },
     {
         id: 'email',
         labelText: 'Email',
         disabled: false,
-        required: true,
-        defaultValue: 'nike@nike.nike',
+        required: false,
         type: 'email',
         error: false,
         datatype: 'email',
+        type: 'input',
         conditions: {
             errorText: 'not a valid email id'
         }
@@ -43,9 +46,10 @@ const formFields = [
         disabled: false,
         error: false,
         required: false,
-        datatype: 'integer',
+        datatype: 'number',
+        type: 'input',
         conditions: {
-            min: 100,
+            min: "100",
             errorText: 'Value Should be a valid Number'
         }
     },
@@ -54,6 +58,7 @@ const formFields = [
         labelText: 'Description',
         error: false,
         required: false,
+        type: 'input',
         datatype: 'text',
     },
     {
@@ -62,18 +67,19 @@ const formFields = [
         error: false,
         required: false,
         datatype: 'material',
+        type: 'select',
         menuitems: [
             {
                 id: 1,
-                labelText: "Cotton"
+                title: "Cotton"
             },
             {
                 id: 2,
-                labelText: "Silicon"
+                title: "Silicon"
             },
             {
                 id: 3,
-                labelText: "Hosery"
+                title: "Hosery"
             }
         ]
     },
@@ -81,35 +87,44 @@ const formFields = [
         id: 'size',
         labelText: 'Size',
         error: false,
-        required: true,
+        required: false,
         datatype: 'size',
+        type: 'select',
         menuitems: [
             {
                 id: 1,
-                labelText: "XS"
+                title: "XS"
             },
             {
                 id: 2,
-                labelText: "S"
+                title: "S"
             },
             {
                 id: 3,
-                labelText: "M"
+                title: "M"
             },
             {
                 id: 4,
-                labelText: "L"
+                title: "L"
             },
             {
                 id: 5,
-                labelText: "XL"
+                title: "XL"
             },
             {
                 id: 6,
-                labelText: "XXL"
+                title: "XXL"
             }
 
         ]
+    },
+    {
+        id: 'required',
+        labelText: 'Required',
+        required: false,
+        datatype: 'checkbox',
+        type: 'checkbox',
+        disabled: false
     }
 ];
 

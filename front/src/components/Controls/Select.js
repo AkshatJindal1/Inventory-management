@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Select(props) {
 
-    const { name, label, value, error = null, onChange, options } = props;
+    const { name, label, value, error = null, onChange, options, ...other } = props;
     const classes = useStyles();
 
     return (
@@ -22,9 +22,8 @@ export default function Select(props) {
             className={classes.textInput}
             fullWidth="true"
             {...(error && { error: true })}
-        // disabled={true}
-        // onBlur={(e) => this.validateField(e)}
-        >
+            {...other}>
+
             <InputLabel>{label}</InputLabel>
             <MuiSelect
                 label={label}

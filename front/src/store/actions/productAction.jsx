@@ -1,4 +1,4 @@
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_FORMS, FALSE_RESPONSE } from './types';
+import { GET_ALL_PRODUCTS, FALSE_RESPONSE } from './types';
 
 import { BASE_URL } from './constants';
 import axios from 'axios';

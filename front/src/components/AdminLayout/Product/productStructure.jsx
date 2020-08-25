@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import formFields from '../../../demo/products';
 import StructureForm from '../../AddForm/structureForm'
 import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'

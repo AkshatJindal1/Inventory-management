@@ -4,7 +4,7 @@ import DateFnsUtils from "@date-io/date-fns";
 
 export default function DatePicker(props) {
 
-    const { name, label, value, onChange } = props
+    const { name, label, value, onChange, ...other } = props
 
 
     const convertToDefEventPara = (name, value) => ({
@@ -20,8 +20,8 @@ export default function DatePicker(props) {
                 format="MMM/dd/yyyy"
                 name={name}
                 value={value}
-                onChange={date =>onChange(convertToDefEventPara(name,date))}
-
+                onChange={date => onChange(convertToDefEventPara(name, date))}
+                {...other}
             />
         </MuiPickersUtilsProvider>
     )

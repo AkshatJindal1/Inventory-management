@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function RadioGroup(props) {
 
-    const { name, label, value, onChange, items } = props;
+    const { name, label, value, onChange, items, ...other } = props;
     const classes = useStyles();
 
     return (
@@ -23,7 +23,8 @@ export default function RadioGroup(props) {
             <MuiRadioGroup row
                 name={name}
                 value={value}
-                onChange={onChange}>
+                onChange={onChange}
+                {...other}>
                 {
                     items.map(
                         item => (

@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react";
 
 import formFields from '../../../demo/products';
 import AddForm from '../../AddForm/addForm'
 import EmployeeForm from "../../AddForm/EmployeeForm";
+import formStructure from '../../../demo/formFields';
+import productSample from '../../../demo/productsSample';
 
 export class ProductLanding extends Component {
   constructor(props) {
@@ -15,24 +16,10 @@ export class ProductLanding extends Component {
 
   render() {
 
-
-
-    const initialFValues = {
-      id: 0,
-      fullName: 'Shagun Bandi',
-      email: '',
-      mobile: '',
-      city: '',
-      gender: 'male',
-      departmentId: '',
-      hireDate: new Date(),
-      isPermanent: false,
-    }
-
     return (
       <>
-        <AddForm formFields={formFields} />
-        <EmployeeForm initialFValues={initialFValues} />
+        {/* <AddForm formFields={formFields} /> */}
+        <EmployeeForm initialFValues={productSample} formStructure={formStructure} />
       </>
     );
   }
