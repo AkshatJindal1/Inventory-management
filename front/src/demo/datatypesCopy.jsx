@@ -14,6 +14,10 @@ const datatypes = [
         title: "Text"
     },
     {
+        id: 'boolean',
+        title: "Boolean"
+    },
+    {
         id: 'size',
         title: "Sizes"
     },

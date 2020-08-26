@@ -14,7 +14,7 @@ import GetFields from './getFields'
 export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
 
-        let temp = { ...this.state.errors }
+        let temp = this.state.errors
 
         const errorConditionRequired = {
             required: true,
@@ -51,10 +51,7 @@ export class AddForm extends Component {
             temp[key] = thisTemp;
         }
 
-        this.setErrors({
-            ...temp
-        })
-
+        this.setErrors(temp)
 
         for (const [key, value] of Object.entries(temp)) {
             if (value.fieldName || value.datatype || value.conditions.min || value.conditions.max) return false
@@ -65,7 +62,7 @@ export class AddForm extends Component {
     handleSubmit = e => {
         e.preventDefault()
         if (this.validate()) {
-            this.resetForm()
+            // this.resetForm()
             let res = Object.values(this.state.values);
             console.log("Calling API", res)
         }
@@ -74,12 +71,13 @@ export class AddForm extends Component {
         }
     }
 
-    getDeafultValues = () => {
+    getDefaultValues = ({ id = "", labelText = "", datatype = "", required = false, conditions = { min: "", max: "", errorText: "" } }) => {
         return {
-            fieldName: "",
-            datatype: "",
-            required: false,
-            conditions: {}
+            fieldId: id,
+            fieldName: labelText,
+            datatype: datatype,
+            required: required,
+            conditions: conditions
         }
     }
 
@@ -91,26 +89,25 @@ export class AddForm extends Component {
 
     componentWillMount() {
         const matrix = this.props.formFields;
-        let values = {}
-        let initialFValues = {}
-        let errors = {}
+        let values = []
+        let errors = []
 
         const structure = matrix.map((field, index) => {
-            const row = [];
-
-            values[index] = this.getDeafultValues()
+            let row = [];
+            console.log(field)
+            values[index] = this.getDefaultValues(field)
+            if (values[index].datatype == 'number') row = GetFields.number;
+            else if (values[index].datatype == 'text') row = GetFields.text;
             errors[index] = this.getDefaultErrors()
             return row;
         })
 
-        initialFValues = { ...values }
-
-        this.setState({ values, errors, formStructure: structure, initialFValues, initialErrors: errors })
+        this.setState({ values, errors, formStructure: structure, initialFValues: [...values], initialErrors: [...errors] })
     }
 
     setValues = (values) => {
         this.setState({ values }, () => {
-            console.log(this.state)
+            // console.log(this.state)
         });
     }
 
@@ -150,12 +147,15 @@ export class AddForm extends Component {
     // }
 
     addField = () => {
-        let formStructure = this.state.formStructure;
+        let formStructure = [...this.state.formStructure];
         formStructure.push([])
-        // const values = this.state.values;
-        // values.push(this.getDeafultValues())
-        // errors.push(this.getDeafultValues())
-        // this.setState({ formStructure })
+        const values = [...this.state.values];
+        const errors = [...this.state.errors];
+
+        values.push(this.getDefaultValues({}))
+        errors.push(this.getDefaultErrors())
+
+        this.setState({ formStructure, values, errors })
     }
 
     render() {
