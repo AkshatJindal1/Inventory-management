@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
@@ -18,24 +19,30 @@ import lombok.Setter;
 @Getter
 @Setter
 @Document(collection = "forms")
+@ToString
 public class Form {
-	
-    @Id
-    private String _id;
-    
-    @Indexed(unique=true)
-    private String id;
-    
-    @NotBlank(message = "Product name must not be null or empty")
-    private String labelText;
-    
-    @NotBlank(message = "Product name must not be null or empty")
-    private String datatype="text";
-    
-    private Boolean error=false;
-    private Boolean disabled=false;
-    private Boolean requried=false;
-    private String defaultValue;
-    private Conditions conditions;
 
+	@Id
+	private String _id;
+
+	@Indexed(unique = true)
+	private String id;
+
+	@NotBlank(message = "Label cannot be empty")
+	private String labelText;
+
+	@NotBlank(message = "Datatype cannot be empty")
+	private String datatype = "text";
+
+	private Boolean error = false;
+	private Boolean disabled = false;
+	private Boolean required = false;
+	private String defaultValue;
+	private Conditions conditions = new Conditions();
+
+	public Form(String id, String labelText, String datatype) {
+		this.id = id;
+		this.labelText = labelText;
+		this.datatype = datatype;
+	}
 }
