@@ -2,9 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import StructureForm from '../../AddForm/structureForm'
+import StructureFormCopy from '../../AddForm/StructureFormCopy'
 import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
+
 import formFields from '../../../demo/formFields'
+import datatypes from '../../../demo/datatypesCopy'
 
 
 export class ProductStructure extends Component {
@@ -29,10 +32,12 @@ export class ProductStructure extends Component {
   }
 
   render() {
-    // console.log(this.state)
-    // if (this.state.loading) return <Loader />
-    // else return < StructureForm formFields={this.state.formFields} updateUrl={this.updateUrl} />
-    return <StructureForm formFields={formFields} />
+    return (
+      <>
+        {/* <StructureForm formFields={formFields} /> */}
+        <StructureFormCopy formFields={formFields} datatypes={datatypes} />
+      </>
+    )
   }
 }
 
