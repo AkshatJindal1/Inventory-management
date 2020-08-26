@@ -10,6 +10,9 @@ import GridItem from '../Grid/GridItem'
 
 import ValidateFields from './validate'
 import GetFields from './getFields'
+import getType from './typeDatatypeMap'
+
+import { saveForm } from '../../store/actions/productAction'
 
 export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
@@ -32,8 +35,8 @@ export class AddForm extends Component {
                 conditions: {}
             }
 
-            if (value.fieldName === '') {
-                thisTemp = { ...thisTemp, ...ValidateFields.isRequired(errorConditionRequired, 'fieldName') }
+            if (value.labelText === '') {
+                thisTemp = { ...thisTemp, ...ValidateFields.isRequired(errorConditionRequired, 'labelText') }
             }
 
             if (value.datatype === '') {
@@ -54,7 +57,7 @@ export class AddForm extends Component {
         this.setErrors(temp)
 
         for (const [key, value] of Object.entries(temp)) {
-            if (value.fieldName || value.datatype || value.conditions.min || value.conditions.max) return false
+            if (value.labelText || value.datatype || value.conditions.min || value.conditions.max) return false
         }
         return true;
     }
@@ -65,6 +68,8 @@ export class AddForm extends Component {
             // this.resetForm()
             let res = Object.values(this.state.values);
             console.log("Calling API", res)
+            this.props.saveForm((data) => console.log(data), res, this.props.requestPath)
+
         }
         else {
             console.log("Errors Exists")
@@ -73,8 +78,8 @@ export class AddForm extends Component {
 
     getDefaultValues = ({ id = "", labelText = "", datatype = "", required = false, conditions = { min: "", max: "", errorText: "" } }) => {
         return {
-            fieldId: id,
-            fieldName: labelText,
+            id: id,
+            labelText: labelText,
             datatype: datatype,
             required: required,
             conditions: conditions
@@ -89,6 +94,7 @@ export class AddForm extends Component {
 
     componentWillMount() {
         const matrix = this.props.formFields;
+        console.log(matrix)
         let values = []
         let errors = []
 
@@ -168,7 +174,7 @@ export class AddForm extends Component {
 
         const inputFields = formStructure.map((row, index) => {
             const fields = row.map((field, i) => {
-                if (field.type === 'input') {
+                if (getType(field.datatype) === 'input') {
                     return (
                         <GridItem xs={12} sm={12} md={2}>
                             <Controls.Input
@@ -181,7 +187,7 @@ export class AddForm extends Component {
                             />
                         </GridItem>
                     )
-                } else if (field.type === 'checkbox') {
+                } else if (getType(field.datatype) === 'checkbox') {
                     return (
                         <GridItem xs={12} sm={12} md={2}>
                             <Controls.Checkbox
@@ -201,11 +207,11 @@ export class AddForm extends Component {
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
-                            name="fieldName"
+                            name="labelText"
                             label="Field Label"
-                            value={values[index].fieldName}
+                            value={values[index].labelText}
                             onChange={(e) => handleInputChange(e, index)}
-                            error={errors[index].fieldName}
+                            error={errors[index].labelText}
                         // disabled={field[index].disabled}
                         />
                     </GridItem>
@@ -272,7 +278,9 @@ export class AddForm extends Component {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, {})(AddForm);
+export default connect(mapStateToProps, {
+    saveForm
+})(AddForm);
 
 
 // TODO RESET FORM

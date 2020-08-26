@@ -41,3 +41,26 @@ export const getAllFields = (isLoading) => dispatch => {
     })
 }
 
+export const saveForm = (isLoading, data, path) => dispatch => {
+  console.log("Calling API", BASE_URL + path)
+
+  const headers = {
+    'Content-Type': 'application/json',
+  }
+
+  axios
+    .post(BASE_URL + path, data, {
+      headers: headers
+    })
+    .then(response =>
+      isLoading(response.data)
+    )
+    .catch(err => {
+      console.log(err)
+      dispatch({
+        type: FALSE_RESPONSE,
+        payload: false
+      })
+    })
+}
+

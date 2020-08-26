@@ -9,6 +9,8 @@ import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
 
 import ValidateFields from './validate'
+import getType from './typeDatatypeMap'
+import { CardActions } from '@material-ui/core';
 
 const validateOnChange = true;
 
@@ -57,6 +59,8 @@ export class AddForm extends Component {
 
         const initialFValues = this.props.initialFValues ? this.props.initialFValues : []
         const formStructure = this.props.formStructure ? this.props.formStructure : [];
+
+        console.log(this.props.formStructure)
 
         // Store the output json, and default values
         let values = {};
@@ -127,7 +131,7 @@ export class AddForm extends Component {
         const resetForm = this.resetForm;
 
         const inputFields = formStructure.map((field, index) => {
-            if (field.type === 'input') {
+            if (getType(field.datatype) === 'input') {
                 return (
                     <GridItem xs={12} sm={12} md={6}>
                         <Controls.Input
@@ -140,7 +144,7 @@ export class AddForm extends Component {
                         />
                     </GridItem>
                 )
-            } else if (field.type === 'checkbox') {
+            } else if (getType(field.datatype) === 'checkbox') {
                 return (
                     <GridItem xs={12} sm={12} md={6}>
                         <Controls.Checkbox
@@ -153,7 +157,7 @@ export class AddForm extends Component {
                         />
                     </GridItem>
                 )
-            } else if (field.type === 'select') {
+            } else if (getType(field.datatype) === 'select') {
                 return (
                     <GridItem xs={12} sm={12} md={6}>
                         <Controls.Select
@@ -172,27 +176,26 @@ export class AddForm extends Component {
 
         return (
             <Card variant="outlined" >
-                <CardContent>
-                    <Form onSubmit={this.handleSubmit}>
-
+                <Form onSubmit={this.handleSubmit}>
+                    <CardContent>
                         <GridContainer>
-
                             {inputFields}
-
-                            <GridItem xs={12} sm={12} md={6}>
-                                <div>
-                                    <Controls.Button
-                                        type="submit"
-                                        text="Submit" />
-                                    <Controls.Button
-                                        text="Reset"
-                                        color="default"
-                                        onClick={resetForm} />
-                                </div>
-                            </GridItem>
                         </GridContainer>
-                    </Form >
-                </CardContent >
+                    </CardContent >
+                    <CardActions>
+                        <GridItem xs={12} sm={12} md={6}>
+                            <div>
+                                <Controls.Button
+                                    type="submit"
+                                    text="Submit" />
+                                <Controls.Button
+                                    text="Reset"
+                                    color="default"
+                                    onClick={resetForm} />
+                            </div>
+                        </GridItem>
+                    </CardActions>
+                </Form >
             </Card >
         )
     }
