@@ -31,9 +31,11 @@ public class FormService {
 
 	public List<Form> saveForm(@Valid List<Form> form) {
 		
-//		for(Form f: form) {
-//			System.out.println(f.toString());
-//		}
+		System.out.println("+++");
+		for(Form f: form) {
+			System.out.println(f.getId() + " " + f.getLabelText());
+		}
+		System.out.println("+++");
 		
 		Set<String> mandatoryIds = ProductUtils.getMandatoryIds();
 		Set<String> requestIds = form.stream().map(field -> ProductUtils.generateId(field.getLabelText(), field.getId())).collect(Collectors.toSet());
@@ -42,6 +44,7 @@ public class FormService {
 			// TODO Error Condition: Duplicate Keys present, Or too Similar Names
 			// TODO Handle the case seperatly or assign new ids dynamically
 
+			System.out.println(form.size() + " " + requestIds.size());
 			System.out.println(mandatoryIds.toString());
 			System.out.println(requestIds.toString());
 			System.out.println("Duplicate Keys");
@@ -62,6 +65,13 @@ public class FormService {
 			String id = ProductUtils.generateId(f.getLabelText(), f.getId());
 			f.setId(id);
 		}
+		
+		System.out.println("+++");
+		for(Form f: form) {
+			System.out.println(f.getId() + " " + f.getLabelText());
+		}
+		System.out.println("+++");
+		
 		return repository.saveAll(form);
 		
 	}

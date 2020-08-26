@@ -44,5 +44,6 @@ public class Form {
 		this.id = id;
 		this.labelText = labelText;
 		this.datatype = datatype;
+		this.disabled = true;
 	}
 }

@@ -41,7 +41,7 @@ public class ProductUtils {
 	}
 	
 	public static String generateId(String labelText, String id) {
-		if(id==null) return CaseUtils.toCamelCase(labelText, false);
+		if(id==null || id.trim().equalsIgnoreCase("")) return CaseUtils.toCamelCase(labelText, false);
 		return id;
 	}
 	
