@@ -13,8 +13,7 @@ import GetFields from './getFields'
 import getType from './typeDatatypeMap'
 
 import { saveForm } from '../../store/actions/productAction'
-import { Button, IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { CardActions } from '@material-ui/core';
 
 
 export class AddForm extends Component {
@@ -280,31 +279,23 @@ export class AddForm extends Component {
 
         return (
             <Card variant="outlined" >
-                <CardContent>
-                    <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.handleSubmit}>
+                    <CardContent>
 
                         {inputFields}
-                        <GridContainer>
-
-
-                            <GridItem xs={12} sm={12} md={6}>
-                                <div>
-                                    <Controls.Button
-                                        type="submit"
-                                        text="Submit" />
-                                    {/* <Controls.Button
-                                        text="Reset"
-                                        color="default"
-                                        onClick={this.resetForm} /> */}
-                                    <Controls.Button
-                                        text="Add Another Field"
-                                        color="default"
-                                        onClick={this.addField} />
-                                </div>
-                            </GridItem>
-                        </GridContainer>
-                    </Form >
-                </CardContent >
+                    </CardContent >
+                    <CardActions>
+                        <div>
+                            <Controls.Button
+                                type="submit"
+                                text="Submit" />
+                            <Controls.Button
+                                text="Add Another Field"
+                                color="default"
+                                onClick={this.addField} />
+                        </div>
+                    </CardActions>
+                </Form >
             </Card >
         )
     }
