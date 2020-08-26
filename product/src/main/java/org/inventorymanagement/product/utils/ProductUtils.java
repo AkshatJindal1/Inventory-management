@@ -44,5 +44,4 @@ public class ProductUtils {
 		if(id==null || id.trim().equalsIgnoreCase("")) return CaseUtils.toCamelCase(labelText, false);
 		return id;
 	}
-	
 }
