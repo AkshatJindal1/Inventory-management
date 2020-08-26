@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react";
 
-import formFields from '../../../demo/products';
-import AddForm from '../../AddForm/addForm'
+import EmployeeForm from "../../AddForm/AddForm";
+import formStructure from '../../../demo/formFields';
+import productSample from '../../../demo/productsSample';
 
 export class ProductLanding extends Component {
   constructor(props) {
@@ -13,8 +13,9 @@ export class ProductLanding extends Component {
   }
 
   render() {
+
     return (
-      <AddForm formFields={formFields} />
+      <EmployeeForm initialFValues={productSample} formStructure={formStructure} />
     );
   }
 }

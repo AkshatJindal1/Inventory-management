@@ -1,7 +1,8 @@
-import {GET_ALL_PRODUCTS, FALSE_RESPONSE,GET_ALL_PRODUCTS_INIT} from '../actions/types';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_FORMS, GET_ALL_PRODUCTS_INIT, FALSE_RESPONSE } from '../actions/types';
 
 const initialState = {
   allProducts: [],
+  formFields: [],
   isLoading: true,
 }
 
@@ -24,7 +25,13 @@ export default function (state = initialState, action) {
         ...state,
         allProducts: action.payload,
         isLoading: false
-      }  
+      }
+
+    case GET_ALL_PRODUCTS_FORMS:
+      return {
+        ...state,
+        formFields: action.payload
+      }
 
     default:
       return state;
