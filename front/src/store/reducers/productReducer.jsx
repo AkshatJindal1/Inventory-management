@@ -1,12 +1,19 @@
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_FORMS, FALSE_RESPONSE } from '../actions/types';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_FORMS, GET_ALL_PRODUCTS_INIT, FALSE_RESPONSE } from '../actions/types';
 
 const initialState = {
   allProducts: [],
-  formFields: []
+  formFields: [],
+  isLoading: true,
 }
 
 export default function (state = initialState, action) {
   switch (action.type) {
+
+    case GET_ALL_PRODUCTS_INIT:
+      return {
+        isLoading: true,
+        ...state
+      }
 
     case FALSE_RESPONSE:
       return {
@@ -16,7 +23,8 @@ export default function (state = initialState, action) {
     case GET_ALL_PRODUCTS:
       return {
         ...state,
-        allProducts: action.payload
+        allProducts: action.payload,
+        isLoading: false
       }
 
     case GET_ALL_PRODUCTS_FORMS:

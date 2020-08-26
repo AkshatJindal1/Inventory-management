@@ -1,9 +1,14 @@
-import { GET_ALL_PRODUCTS, FALSE_RESPONSE } from './types';
+import { GET_ALL_PRODUCTS, FALSE_RESPONSE, GET_ALL_PRODUCTS_INIT } from './types';
 
 import { BASE_URL } from './constants';
 import axios from 'axios';
 
 export const getAllProducts = () => dispatch => {
+
+  dispatch({
+    type: GET_ALL_PRODUCTS_INIT,
+  })
+
   axios
     .get(BASE_URL + '/products')
     .then(response =>

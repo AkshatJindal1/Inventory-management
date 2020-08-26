@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `Setup mock server`
+
+npm run mock:api
+
 ### `npm start`
 
 Runs the app in the development mode.<br />
