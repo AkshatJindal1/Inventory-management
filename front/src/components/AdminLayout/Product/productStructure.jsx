@@ -19,7 +19,7 @@ export class ProductStructure extends Component {
   }
 
   isLoading = (formFields) => {
-    console.log(formFields)
+    // console.log(formFields)
     this.setState({ loading: false, formFields })
   }
 
