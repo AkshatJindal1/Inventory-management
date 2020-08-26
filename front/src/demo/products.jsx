@@ -3,6 +3,7 @@
 const productSample = [
     {
         id: 'productId',
+        label: 'Product Id',
         disabled: true,
         value: '11111'
     },

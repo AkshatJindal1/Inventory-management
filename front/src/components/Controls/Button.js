@@ -4,7 +4,8 @@ import { Button as MuiButton, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        margin: theme.spacing(0.5)
+        margin: theme.spacing(0.5),
+        alignItems: 'center',
     },
     label: {
         textTransform: 'none'

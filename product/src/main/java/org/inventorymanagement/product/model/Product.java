@@ -54,5 +54,4 @@ public class Product {
 
     private Integer benchmark;
 
-
 }

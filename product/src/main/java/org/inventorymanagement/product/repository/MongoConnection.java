@@ -1,5 +1,9 @@
 package org.inventorymanagement.product.repository;
 
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.inventorymanagement.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +14,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 public interface MongoConnection extends MongoRepository<Product, String> {
 

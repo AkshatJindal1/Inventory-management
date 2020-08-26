@@ -3,12 +3,11 @@
 const formFields = [
     {
         id: 'productId',
-        labelText: 'Product Id',
+        labelText: 'Product Number',
         error: false,
         disabled: true,
         required: true,
         datatype: 'number',
-        type: 'input',
         conditions: {
             min: 10000,
             max: 99999,
@@ -21,7 +20,6 @@ const formFields = [
         disabled: false,
         required: false,
         error: false,
-        type: 'input',
         datatype: 'text',
         conditions: {
             max: "15"
@@ -32,10 +30,8 @@ const formFields = [
         labelText: 'Email',
         disabled: false,
         required: false,
-        type: 'email',
         error: false,
         datatype: 'email',
-        type: 'input',
         conditions: {
             errorText: 'not a valid email id'
         }
@@ -47,7 +43,6 @@ const formFields = [
         error: false,
         required: false,
         datatype: 'number',
-        type: 'input',
         conditions: {
             min: "100",
             errorText: 'Value Should be a valid Number'
@@ -58,7 +53,6 @@ const formFields = [
         labelText: 'Description',
         error: false,
         required: false,
-        type: 'input',
         datatype: 'text',
     },
     {
@@ -67,7 +61,6 @@ const formFields = [
         error: false,
         required: true,
         datatype: 'material',
-        type: 'select',
         menuitems: [
             {
                 id: 1,
@@ -85,11 +78,10 @@ const formFields = [
     },
     {
         id: 'size',
-        labelText: 'Size',
+        labelText: 'Size of T Shirt',
         error: false,
         required: false,
         datatype: 'size',
-        type: 'select',
         menuitems: [
             {
                 id: 1,
@@ -123,7 +115,6 @@ const formFields = [
         labelText: 'Required',
         required: false,
         datatype: 'boolean',
-        type: 'checkbox',
         disabled: false
     }
 ];

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import StructureFormCopy from '../../AddForm/StructureFormCopy'
+import StructureForm from '../../AddForm/StructureForm'
 import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
 
@@ -19,7 +19,7 @@ export class ProductStructure extends Component {
   }
 
   isLoading = (formFields) => {
-    console.log(formFields)
+    // console.log(formFields)
     this.setState({ loading: false, formFields })
   }
 
@@ -36,7 +36,7 @@ export class ProductStructure extends Component {
       <Loader />
     )
     else return (
-      <StructureFormCopy formFields={this.state.formFields} datatypes={datatypes} />
+      <StructureForm formFields={this.state.formFields} datatypes={datatypes} requestPath={"/forms"} />
     )
   }
 }

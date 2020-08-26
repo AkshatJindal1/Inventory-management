@@ -10,6 +10,12 @@ import GridItem from '../Grid/GridItem'
 
 import ValidateFields from './validate'
 import GetFields from './getFields'
+import getType from './typeDatatypeMap'
+
+import { saveForm } from '../../store/actions/productAction'
+import { Button, IconButton } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
@@ -32,8 +38,8 @@ export class AddForm extends Component {
                 conditions: {}
             }
 
-            if (value.fieldName === '') {
-                thisTemp = { ...thisTemp, ...ValidateFields.isRequired(errorConditionRequired, 'fieldName') }
+            if (value.labelText === '') {
+                thisTemp = { ...thisTemp, ...ValidateFields.isRequired(errorConditionRequired, 'labelText') }
             }
 
             if (value.datatype === '') {
@@ -54,7 +60,7 @@ export class AddForm extends Component {
         this.setErrors(temp)
 
         for (const [key, value] of Object.entries(temp)) {
-            if (value.fieldName || value.datatype || value.conditions.min || value.conditions.max) return false
+            if (value.labelText || value.datatype || value.conditions.min || value.conditions.max) return false
         }
         return true;
     }
@@ -65,19 +71,21 @@ export class AddForm extends Component {
             // this.resetForm()
             let res = Object.values(this.state.values);
             console.log("Calling API", res)
+            this.props.saveForm((data) => console.log(data), res, this.props.requestPath)
         }
         else {
             console.log("Errors Exists")
         }
     }
 
-    getDefaultValues = ({ id = "", labelText = "", datatype = "", required = false, conditions = { min: "", max: "", errorText: "" } }) => {
+    getDefaultValues = ({ id = "", labelText = "", datatype = "", required = false, disabled = false, conditions = { min: "", max: "", errorText: "" } }) => {
         return {
-            fieldId: id,
-            fieldName: labelText,
+            id: id,
+            labelText: labelText,
             datatype: datatype,
             required: required,
-            conditions: conditions
+            conditions: conditions,
+            disabled: disabled
         }
     }
 
@@ -89,8 +97,10 @@ export class AddForm extends Component {
 
     componentWillMount() {
         const matrix = this.props.formFields;
+        console.log(matrix)
         let values = []
         let errors = []
+        let disabled = []
 
         const structure = matrix.map((field, index) => {
             let row = [];
@@ -98,11 +108,14 @@ export class AddForm extends Component {
             if (values[index].datatype == 'number') row = GetFields.number;
             else if (values[index].datatype == 'text') row = GetFields.text;
             else row = []
+
             errors[index] = this.getDefaultErrors()
+            disabled[index] = field.disabled
+
             return row;
         })
 
-        this.setState({ values, errors, formStructure: structure, initialFValues: [...values], initialErrors: [...errors] })
+        this.setState({ values, errors, formStructure: structure, disabled })
     }
 
     setValues = (values) => {
@@ -139,12 +152,6 @@ export class AddForm extends Component {
 
     }
 
-    // resetForm = () => {
-    //     console.log(this.state.initialFValues)
-    //     this.setValues(this.state.initialFValues);
-    //     this.setErrors(this.state.initialErrors);
-    // }
-
     addField = () => {
         let formStructure = [...this.state.formStructure];
         formStructure.push([])
@@ -157,18 +164,41 @@ export class AddForm extends Component {
         this.setState({ formStructure, values, errors })
     }
 
+    handleDeleteButton = (event, index) => {
+        console.log(index, "BUtton Clicked")
+        const values = [...this.state.values]
+        const errors = [...this.state.errors]
+        const disabled = [...this.state.disabled]
+        const formStructure = [...this.state.formStructure]
+
+        console.log(values, errors, disabled, formStructure)
+
+        values.splice(index, 1);
+        errors.splice(index, 1);
+        disabled.splice(index, 1);
+        formStructure.splice(index, 1);
+
+        this.setState({ values, errors, disabled, formStructure })
+
+    }
+
     render() {
 
         const values = this.state.values;
         const errors = this.state.errors;
+        const disabled = this.state.disabled;
+
+        console.log(disabled)
+
         const formStructure = this.state.formStructure;
         const handleInputChange = this.handleInputChange;
+        const handleDeleteButton = this.handleDeleteButton;
         const resetForm = this.resetForm;
 
 
         const inputFields = formStructure.map((row, index) => {
             const fields = row.map((field, i) => {
-                if (field.type === 'input') {
+                if (getType(field.datatype) === 'input') {
                     return (
                         <GridItem xs={12} sm={12} md={2}>
                             <Controls.Input
@@ -181,7 +211,7 @@ export class AddForm extends Component {
                             />
                         </GridItem>
                     )
-                } else if (field.type === 'checkbox') {
+                } else if (getType(field.datatype) === 'checkbox') {
                     return (
                         <GridItem xs={12} sm={12} md={2}>
                             <Controls.Checkbox
@@ -199,14 +229,23 @@ export class AddForm extends Component {
 
             return (
                 <GridContainer>
+                    <GridItem>
+                        <Controls.Button
+                            text="Delete"
+                            variant="outlined"
+                            size="medium"
+                            disabled={disabled[index]}
+                            color="secondary"
+                            onClick={(e) => handleDeleteButton(e, index)} />
+                    </GridItem>
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
-                            name="fieldName"
+                            name="labelText"
                             label="Field Label"
-                            value={values[index].fieldName}
+                            value={values[index].labelText}
                             onChange={(e) => handleInputChange(e, index)}
-                            error={errors[index].fieldName}
-                        // disabled={field[index].disabled}
+                            error={errors[index].labelText}
+                            disabled={disabled[index]}
                         />
                     </GridItem>
 
@@ -218,10 +257,12 @@ export class AddForm extends Component {
                             value={values[index].datatype}
                             onChange={(e) => handleInputChange(e, index)}
                             error={errors[index].datatype}
-                        // disabled={field[index].disabled}
+                            disabled={disabled[index]}
                         />
                     </GridItem>
+
                     {fields}
+
                     <GridItem>
                         <Controls.Checkbox
                             name="required"
@@ -272,7 +313,9 @@ export class AddForm extends Component {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, {})(AddForm);
+export default connect(mapStateToProps, {
+    saveForm
+})(AddForm);
 
 
 // TODO RESET FORM
