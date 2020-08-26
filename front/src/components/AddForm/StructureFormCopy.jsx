@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { connect } from "react-redux";
 
-import Controls from "../controls/Controls";
+import Controls from "../Controls/Controls";
 import { Form } from '../Forms';
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
@@ -94,10 +94,10 @@ export class AddForm extends Component {
 
         const structure = matrix.map((field, index) => {
             let row = [];
-            console.log(field)
             values[index] = this.getDefaultValues(field)
             if (values[index].datatype == 'number') row = GetFields.number;
             else if (values[index].datatype == 'text') row = GetFields.text;
+            else row = []
             errors[index] = this.getDefaultErrors()
             return row;
         })
@@ -106,9 +106,7 @@ export class AddForm extends Component {
     }
 
     setValues = (values) => {
-        this.setState({ values }, () => {
-            // console.log(this.state)
-        });
+        this.setState({ values });
     }
 
     setErrors = (errors) => {
@@ -116,12 +114,13 @@ export class AddForm extends Component {
     }
 
     setOptionalFields = (index, value) => {
-        const formStructure = this.state.formStructure;
+        const formStructure = [...this.state.formStructure];
         if (value === 'number') {
             formStructure[index] = GetFields.number
         } else if (value === 'text') {
             formStructure[index] = GetFields.text
         }
+        else formStructure[index] = []
         this.setState({ formStructure })
     }
 

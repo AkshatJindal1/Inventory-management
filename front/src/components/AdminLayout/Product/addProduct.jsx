@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-import EmployeeForm from "../../AddForm/AddForm";
+import AddForm from "../../AddForm/addForm";
 import formStructure from '../../../demo/formFields';
-import productSample from '../../../demo/productsSample';
+import product from '../../../demo/products';
 
 export class ProductLanding extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ export class ProductLanding extends Component {
   render() {
 
     return (
-      <EmployeeForm initialFValues={productSample} formStructure={formStructure} />
+      <AddForm initialFValues={product} formStructure={formStructure} />
     );
   }
 }

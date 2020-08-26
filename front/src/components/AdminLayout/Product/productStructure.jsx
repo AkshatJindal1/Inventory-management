@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import StructureForm from '../../AddForm/structureForm'
 import StructureFormCopy from '../../AddForm/StructureFormCopy'
 import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
 
-import formFields from '../../../demo/formFields'
-import datatypes from '../../../demo/datatypesCopy'
+// import formFields from '../../../demo/formFields'
+import datatypes from '../../../demo/datatypes'
 
 
 export class ProductStructure extends Component {
@@ -20,6 +19,7 @@ export class ProductStructure extends Component {
   }
 
   isLoading = (formFields) => {
+    console.log(formFields)
     this.setState({ loading: false, formFields })
   }
 
@@ -28,15 +28,15 @@ export class ProductStructure extends Component {
   }
 
   componentWillMount() {
-    // this.props.getAllFields(this.isLoading);
+    this.props.getAllFields(this.isLoading);
   }
 
   render() {
-    return (
-      <>
-        {/* <StructureForm formFields={formFields} /> */}
-        <StructureFormCopy formFields={formFields} datatypes={datatypes} />
-      </>
+    if (this.state.loading) return (
+      <Loader />
+    )
+    else return (
+      <StructureFormCopy formFields={this.state.formFields} datatypes={datatypes} />
     )
   }
 }

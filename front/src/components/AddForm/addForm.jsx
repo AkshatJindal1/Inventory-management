@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { connect } from "react-redux";
 
-import Controls from "../controls/Controls";
+import Controls from "../Controls/Controls";
 import { Form } from '../Forms';
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
