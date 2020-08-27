@@ -7,7 +7,8 @@ const ProductStructure = React.lazy(() => import('../components/AdminLayout/Prod
 const routes = [
     { path: '/products', exact: true, name: 'Product Index', component: Product },
     { path: '/add-product', exact: true, name: 'Add Product', component: AddProduct },
-    { path: '/product-structure', exact: true, name: 'Add Product', component: ProductStructure }
+    { path: '/product-structure', exact: true, name: 'Add Product', component: ProductStructure },
+    { path: '/edit-structure/:productUrl', exact: true, name: 'Add Product', component: ProductStructure }
 ];
 
 export default routes;

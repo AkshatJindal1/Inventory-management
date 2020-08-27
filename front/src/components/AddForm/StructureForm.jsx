@@ -13,7 +13,7 @@ import GetFields from './getFields'
 import getType from './typeDatatypeMap'
 
 import { saveForm } from '../../store/actions/productAction'
-import { CardActions } from '@material-ui/core';
+import { CardActions, CardHeader } from '@material-ui/core';
 
 
 export class AddForm extends Component {
@@ -61,16 +61,19 @@ export class AddForm extends Component {
         for (const [key, value] of Object.entries(temp)) {
             if (value.labelText || value.datatype || value.conditions.min || value.conditions.max) return false
         }
+        if (this.state.headingDetails.value == "" || this.state.headingDetails.value == null) {
+            this.setHeadingError(true);
+            return false
+        }
         return true;
     }
 
     handleSubmit = e => {
         e.preventDefault()
         if (this.validate()) {
-            // this.resetForm()
             let res = Object.values(this.state.values);
             console.log("Calling API", res)
-            this.props.saveForm((data) => console.log(data), res, this.props.requestPath)
+            this.props.saveForm((data) => console.log(data), res, this.state.headingDetails.value, this.props.formId)
         }
         else {
             console.log("Errors Exists")
@@ -101,6 +104,13 @@ export class AddForm extends Component {
         let errors = []
         let disabled = []
 
+        const headingDetails = {
+            id: "formName",
+            label: "Form Name",
+            value: this.props.formName,
+            error: ""
+        }
+
         const structure = matrix.map((field, index) => {
             let row = [];
             values[index] = this.getDefaultValues(field)
@@ -114,7 +124,7 @@ export class AddForm extends Component {
             return row;
         })
 
-        this.setState({ values, errors, formStructure: structure, disabled })
+        this.setState({ values, errors, formStructure: structure, disabled, headingDetails })
     }
 
     setValues = (values) => {
@@ -123,6 +133,18 @@ export class AddForm extends Component {
 
     setErrors = (errors) => {
         this.setState({ errors });
+    }
+
+    setHeadingError = (isError) => {
+        const headingDetails = this.state.headingDetails;
+        headingDetails.error = isError ? "Form name cannot be empty." : "";
+        this.setState({ headingDetails });
+    }
+
+    setHeadingValue = (value) => {
+        const headingDetails = this.state.headingDetails;
+        headingDetails.value = value;
+        this.setState({ headingDetails });
     }
 
     setOptionalFields = (index, value) => {
@@ -148,6 +170,13 @@ export class AddForm extends Component {
         this.setValues(values)
         if (name === 'datatype')
             this.setOptionalFields(index, value)
+
+    }
+
+    handleHeadingChange = (e) => {
+        const { name, value } = e.target;
+        this.setHeadingValue(value);
+        this.setHeadingError(value == null || value == "");
 
     }
 
@@ -186,11 +215,10 @@ export class AddForm extends Component {
         const values = this.state.values;
         const errors = this.state.errors;
         const disabled = this.state.disabled;
-
-        console.log(disabled)
-
+        const headingDetails = this.state.headingDetails;
         const formStructure = this.state.formStructure;
         const handleInputChange = this.handleInputChange;
+        const handleHeadingChange = this.handleHeadingChange;
         const handleDeleteButton = this.handleDeleteButton;
         const resetForm = this.resetForm;
 
@@ -269,7 +297,7 @@ export class AddForm extends Component {
                             value={values[index].required}
                             onChange={(e) => handleInputChange(e, index)}
                             error={errors[index].required}
-                        // disabled={field[index].disabled}
+                            disabled={disabled[index]}
                         />
                     </GridItem>
                 </GridContainer>
@@ -281,7 +309,19 @@ export class AddForm extends Component {
             <Card variant="outlined" >
                 <Form onSubmit={this.handleSubmit}>
                     <CardContent>
-
+                        <GridContainer>
+                            <GridItem xs={12} sm={12} md={4}>
+                                <Controls.Input
+                                    name={headingDetails.id}
+                                    label={headingDetails.label}
+                                    value={headingDetails.value}
+                                    onChange={(e) => handleHeadingChange(e)}
+                                    error={headingDetails.error}
+                                />
+                            </GridItem>
+                        </GridContainer>
+                    </CardContent>
+                    <CardContent>
                         {inputFields}
                     </CardContent >
                     <CardActions>

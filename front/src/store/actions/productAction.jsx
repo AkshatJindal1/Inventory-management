@@ -41,15 +41,43 @@ export const getAllFields = (isLoading) => dispatch => {
     })
 }
 
-export const saveForm = (isLoading, data, path) => dispatch => {
-  console.log("Calling API", BASE_URL + path)
+export const getFormData = (isLoading, onError, productUrl) => dispatch => {
+  axios
+    .get(BASE_URL + '/forms/url?url=' + productUrl)
+    .then(response =>
+      isLoading(response.data)
+    )
+    .catch(err => {
+      onError(err.message)
+    })
+}
+
+export const getDefaultFormData = (isLoading, onError) => dispatch => {
+
+  const url = BASE_URL + "/forms/default"
+
+  axios
+    .get(url)
+    .then(response =>
+      isLoading(response.data)
+    )
+    .catch(err => {
+      onError(err.message)
+    })
+}
+
+export const saveForm = (isLoading, data, formName, formId) => dispatch => {
 
   const headers = {
     'Content-Type': 'application/json',
   }
 
+  const url = `${BASE_URL}/forms?formId=${formId}&formName=${formName}`
+
+  console.log("Calling API", url)
+
   axios
-    .post(BASE_URL + path, data, {
+    .post(url, data, {
       headers: headers
     })
     .then(response =>

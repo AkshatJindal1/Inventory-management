@@ -83,7 +83,7 @@ class Navigation extends Component {
           {this.getBrand()}
           <Divider />
 
-          <NavLink to="add-product" activeClassName="active" key="add-product">
+          <NavLink to="/add-product" activeClassName="active" key="add-product">
             <List>
               <ListItem button key="add-product">
                 <ListItemIcon>
@@ -95,7 +95,7 @@ class Navigation extends Component {
           </NavLink>
 
           <NavLink
-            to='product-structure'
+            to='/product-structure'
             key='product-structure'
           >
 
@@ -112,7 +112,7 @@ class Navigation extends Component {
 
 
           <NavLink
-            to='products'
+            to='/products'
             activeClassName="active"
             key='products'
           >

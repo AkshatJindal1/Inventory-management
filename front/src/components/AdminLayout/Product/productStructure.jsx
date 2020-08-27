@@ -2,25 +2,42 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import StructureForm from '../../AddForm/StructureForm'
-import { getAllFields } from "../../../store/actions/productAction";
+import { getFormData, getDefaultFormData } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
 
-// import formFields from '../../../demo/formFields'
 import datatypes from '../../../demo/datatypes'
 
+// TODO Wrong URL
 
 export class ProductStructure extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      formFields: []
+      failed: false,
+      errorMsg: "Something went wrong",
+      formFields: [],
+      formName: "",
+      formId: ""
     };
   }
 
-  isLoading = (formFields) => {
-    // console.log(formFields)
+  existingFormLoader = (form) => {
+    console.log(form);
+    const formName = form.name
+    const formFields = form.fields
+    const formId = form.formId;
+    this.setState({ loading: false, formFields, formName, formId })
+  }
+
+  newFormLoader = (form) => {
+    const formFields = form;
     this.setState({ loading: false, formFields })
+  }
+
+  onError = (err) => {
+    console.log(err);
+    this.setState({ failed: true, loading: false, errorMsg: err })
   }
 
   updateUrl = (formFields) => {
@@ -28,15 +45,22 @@ export class ProductStructure extends Component {
   }
 
   componentWillMount() {
-    this.props.getAllFields(this.isLoading);
+    if (this.props.match.params.productUrl === 'new-form') this.props.getDefaultFormData(this.newFormLoader, this.onError);
+    else this.props.getFormData(this.existingFormLoader, this.onError, this.props.match.params.productUrl);
   }
 
   render() {
     if (this.state.loading) return (
       <Loader />
     )
+    else if (this.state.failed) return <span>{this.state.errorMsg}</span>
     else return (
-      <StructureForm formFields={this.state.formFields} datatypes={datatypes} requestPath={"/forms"} />
+      <StructureForm
+        formFields={this.state.formFields}
+        datatypes={datatypes}
+        formName={this.state.formName}
+        formId={this.state.formId}
+      />
     )
   }
 }
@@ -44,5 +68,6 @@ export class ProductStructure extends Component {
 const mapStateToProps = (state) => ({});
 
 export default connect(mapStateToProps, {
-  getAllFields,
+  getFormData,
+  getDefaultFormData
 })(ProductStructure);
