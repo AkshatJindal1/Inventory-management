@@ -19,6 +19,7 @@ export class ProductStructure extends Component {
             formFields: [],
             formName: '',
             formId: '',
+            option: false,
         }
     }
 
@@ -26,16 +27,26 @@ export class ProductStructure extends Component {
         const formName = form.name
         const formFields = form.fields
         const formId = form.formId
-        this.setState({ loading: false, formFields, formName, formId })
+        const option = form.option ? 'option' : 'product'
+        this.setState({
+            loading: false,
+            formFields,
+            formName,
+            formId,
+            option,
+        })
     }
 
     newFormLoader = (form) => {
         const formFields = form
-        this.setState({ loading: false, formFields })
+        this.setState({
+            loading: false,
+            formFields,
+            option: this.props.match.params.option,
+        })
     }
 
     onError = (err) => {
-        console.log(err)
         this.setState({ failed: true, loading: false, errorMsg: err })
     }
 
@@ -45,12 +56,17 @@ export class ProductStructure extends Component {
 
     componentWillMount() {
         if (this.props.match.params.productUrl === 'new-form')
-            this.props.getDefaultFormData(this.newFormLoader, this.onError)
+            this.props.getDefaultFormData(
+                this.newFormLoader,
+                this.onError,
+                this.props.match.params.option
+            )
         else
             this.props.getFormData(
                 this.existingFormLoader,
                 this.onError,
-                this.props.match.params.productUrl
+                this.props.match.params.productUrl,
+                this.props.match.params.option
             )
     }
 
@@ -64,6 +80,7 @@ export class ProductStructure extends Component {
                     datatypes={datatypes}
                     formName={this.state.formName}
                     formId={this.state.formId}
+                    option={this.state.option}
                 />
             )
     }

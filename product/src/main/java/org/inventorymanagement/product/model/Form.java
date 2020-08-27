@@ -28,14 +28,17 @@ public class Form {
 	@JsonProperty("formId")
 	private String _id;
 	private String url;
+	private Boolean option;
 	private String name;
 	private List<Field> fields;
-
-	public Form(String url, String name, List<Field> fields) {
+	
+	public Form(String url, Boolean option, String name, List<Field> fields) {
 		super();
 		this.url = url;
+		this.option = option;
 		this.name = name;
 		this.fields = fields;
 	}
+
 	
 }

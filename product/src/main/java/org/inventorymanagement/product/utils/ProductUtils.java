@@ -11,22 +11,32 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
+import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Field;
 
 public class ProductUtils {
 
-	public static String[][] getDefaultValuesArray() {
-		String[][] defaultForms = { { "productId", "Product Id", "text" }, { "description", "Description", "text" },
+	public static String[][] getDefaultOptionValuesArray() {
+		String[][] defaultForms = { { "optionName", "Option Name", "text" } };
+		return defaultForms;
+	}
+
+	public static String[][] getDefaultProductValuesArray() {
+		String[][] defaultForms = { { "optionName", "Option Name", "text" }, { "description", "Description", "text" },
 				{ "image", "Image", "text" }, { "cost", "Cost", "number" },
 				{ "quantityInStock", "Quantity in Stock", "number" },
 				{ "quantityInTransit", "Quantity in Transit", "number" }, { "benchmark", "Benchmark", "number" } };
 		return defaultForms;
 	}
 
-	public static List<Field> getDefaultForms() {
+	public static String[][] getDefaultValuesArray(Boolean option) {
+		return option ? getDefaultOptionValuesArray() : getDefaultProductValuesArray();
+	}
+
+	public static List<Field> getDefaultForms(Boolean option) {
 		ArrayList<Field> forms = new ArrayList<>();
 
-		String[][] defaultForms = getDefaultValuesArray();
+		String[][] defaultForms = getDefaultValuesArray(option);
 
 		for (int i = 0; i < defaultForms.length; i++) {
 			forms.add(new Field(defaultForms[i][0], defaultForms[i][1], defaultForms[i][2]));
@@ -34,8 +44,8 @@ public class ProductUtils {
 		return forms;
 	}
 
-	public static Set<String> getMandatoryIds() {
-		List<String[]> defaultProductArray = Arrays.asList(ProductUtils.getDefaultValuesArray());
+	public static Set<String> getMandatoryIds(Boolean option) {
+		List<String[]> defaultProductArray = Arrays.asList(ProductUtils.getDefaultValuesArray(option));
 		return defaultProductArray.stream().map(field -> field[0]).collect(Collectors.toSet());
 	}
 
@@ -50,16 +60,27 @@ public class ProductUtils {
 	}
 
 	public static String toSlug(String input) {
-		
+
 		// Find a better slugify-algo
 
 		final Pattern NONLATIN = Pattern.compile("[^\\w-]");
 		final Pattern WHITESPACE = Pattern.compile("[\\s]");
-		
+
 		String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
 		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
 		String slug = NONLATIN.matcher(normalized).replaceAll("");
 		return slug.toLowerCase(Locale.ENGLISH);
+	}
+
+	public static Boolean getOptions(String category) {
+		Boolean option;
+		if (category.equals("option"))
+			option = true;
+		else if (category.equals("product"))
+			option = false;
+		else
+			throw new ProductNotFoundException("Wrong Category");
+		return option;
 	}
 
 }

@@ -34,11 +34,16 @@ public class FormService {
 	@Autowired
 	private FormRepository repository;
 
-	public List<Field> getDefaultForms() {
-		return ProductUtils.getDefaultForms();
+	public List<Field> getDefaultForms(String category) {
+		
+		Boolean option = ProductUtils.getOptions(category);
+		
+		return ProductUtils.getDefaultForms(option);
 	}
 
-	public Form saveForm(List<Field> fields, String name, String id) {
+	public Form saveForm(List<Field> fields, String name, String id, String category) {
+		
+		Boolean option = ProductUtils.getOptions(category);
 
 		// Check if Form Name is null or blank
 
@@ -46,7 +51,7 @@ public class FormService {
 			throw new ProductNotFoundException("Form Name Cannot be null");
 		}
 
-		Set<String> mandatoryIds = ProductUtils.getMandatoryIds();
+		Set<String> mandatoryIds = ProductUtils.getMandatoryIds(option);
 		Set<String> requestIds = fields.stream()
 				.map(field -> ProductUtils.generateId(field.getLabelText(), field.getId())).collect(Collectors.toSet());
 
@@ -79,7 +84,7 @@ public class FormService {
 			
 			// If new Form let mongo generate a new Id and create a new form
 
-			form = new Form(ProductUtils.toSlug(name), name, fields);
+			form = new Form(ProductUtils.toSlug(name), option, name, fields);
 		}
 
 		else {
@@ -91,7 +96,7 @@ public class FormService {
 				throw new ProductNotFoundException("Product with that id could not be found");
 			}
 				
-			form = new Form(id, ProductUtils.toSlug(name), name, fields);
+			form = new Form(id, ProductUtils.toSlug(name), option, name, fields);
 		}
 
 		return repository.save(form);
@@ -111,11 +116,20 @@ public class FormService {
 		return deletedForm;
 	}
 
-	public Form getByUrl(String url) {
-		Form form = repository.findByUrl(url);
+	public Form getByUrl(String url, String category) {
+		
+		Boolean option = ProductUtils.getOptions(category);
+		
+		Form form = repository.findByUrlAndOption(url, option);
+		
 		if(form == null )
 			throw new ProductNotFoundException("URL NOT FOUND");
 		return form;
+	}
+	
+	public List<List<String>> getAllDatatypes() {
+		repository.getDatatypes();
+		return null;
 	}
 
 }

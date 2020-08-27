@@ -9,10 +9,30 @@ const ProductStructure = React.lazy(() =>
 )
 
 const routes = [
-    { path: '/products', exact: true, name: 'Product Index', component: Product },
-    { path: '/edit-product/:productUrl', exact: true, name: 'Add Product', component: AddProduct },
-    { path: '/product-structure', exact: true, name: 'Add Product', component: ProductStructure },
-    { path: '/edit-structure/:productUrl', exact: true, name: 'Add Product', component: ProductStructure }
-];
+    {
+        path: '/products',
+        exact: true,
+        name: 'Product Index',
+        component: Product,
+    },
+    {
+        path: '/form/:option/:productUrl',
+        exact: true,
+        name: 'Add Product',
+        component: AddProduct,
+    },
+    {
+        path: '/product-structure',
+        exact: true,
+        name: 'Add Product',
+        component: ProductStructure,
+    },
+    {
+        path: '/structure/:option/:productUrl',
+        exact: true,
+        name: 'Add Product',
+        component: ProductStructure,
+    },
+]
 
 export default routes
