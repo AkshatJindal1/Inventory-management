@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
-import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.Field;
 
 public class ProductUtils {
 
@@ -24,13 +24,13 @@ public class ProductUtils {
 		return defaultForms;
 	}	
 	
-	public static List<Form> getDefaultForms() {
-		ArrayList<Form> forms = new ArrayList<>();
+	public static List<Field> getDefaultForms() {
+		ArrayList<Field> forms = new ArrayList<>();
 		
 		String[][] defaultForms = getDefaultValuesArray();
 		
 		for(int i=0;i<defaultForms.length;i++) {
-			forms.add(new Form(defaultForms[i][0], defaultForms[i][1], defaultForms[i][2]));
+			forms.add(new Field(defaultForms[i][0], defaultForms[i][1], defaultForms[i][2]));
 		}
 		return forms;
 	}
@@ -44,4 +44,9 @@ public class ProductUtils {
 		if(id==null || id.trim().equalsIgnoreCase("")) return CaseUtils.toCamelCase(labelText, false);
 		return id;
 	}
+	
+	public static String generateId(String labelText) {
+		return generateId(labelText, null);
+	}
+	
 }
