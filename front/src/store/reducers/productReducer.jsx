@@ -1,32 +1,52 @@
-import {GET_ALL_PRODUCTS, FALSE_RESPONSE,GET_ALL_PRODUCTS_INIT} from '../actions/types';
+import {
+    GET_ALL_PRODUCTS,
+    FALSE_RESPONSE,
+    GET_ALL_PRODUCTS_INIT,
+    GET_CATEGORIES,
+    GET_CATEGORIES_INIT,
+} from '../actions/types'
 
 const initialState = {
-  allProducts: [],
-  isLoading: true,
+    allProducts: [],
+    isLoading: true,
+    isCategoriesLoading: true,
+    allCategories: [],
 }
 
 export default function (state = initialState, action) {
-  switch (action.type) {
+    switch (action.type) {
+        case GET_ALL_PRODUCTS_INIT:
+            return {
+                isLoading: true,
+                ...state,
+            }
 
-    case GET_ALL_PRODUCTS_INIT:
-      return {
-        isLoading: true,
-        ...state
-      }
+        case FALSE_RESPONSE:
+            return {
+                ...state,
+            }
 
-    case FALSE_RESPONSE:
-      return {
-        ...state
-      }
+        case GET_ALL_PRODUCTS:
+            return {
+                ...state,
+                allProducts: action.payload,
+                isLoading: false,
+            }
 
-    case GET_ALL_PRODUCTS:
-      return {
-        ...state,
-        allProducts: action.payload,
-        isLoading: false
-      }  
+        case GET_CATEGORIES_INIT:
+            return {
+                isCategoriesLoading: true,
+                ...state,
+            }
 
-    default:
-      return state;
-  }
+        case GET_CATEGORIES:
+            return {
+                ...state,
+                allCategories: action.payload,
+                isCategoriesLoading: false,
+            }
+
+        default:
+            return state
+    }
 }

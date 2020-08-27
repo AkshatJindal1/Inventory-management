@@ -1,22 +1,20 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
+import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 
-import formFields from '../../../demo/products';
+import formFields from '../../../demo/products'
 import StructureForm from '../../AddForm/structureForm'
 
 export class ProductStructure extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      forms: {},
-    };
-  }
+    constructor(props) {
+        super(props)
+        this.state = {
+            forms: {},
+        }
+    }
 
-  render() {
-    return (
-      <StructureForm formFields={formFields} />
-    );
-  }
+    render() {
+        return <StructureForm formFields={formFields} />
+    }
 }
 
-export default ProductStructure;
+export default ProductStructure

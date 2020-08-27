@@ -12,8 +12,8 @@ const formFields = [
         conditions: {
             min: 10000,
             max: 99999,
-            errorText: "Value should be 5 digits"
-        }
+            errorText: 'Value should be 5 digits',
+        },
     },
     {
         id: 'productName',
@@ -34,8 +34,8 @@ const formFields = [
         error: false,
         datatype: 'email',
         conditions: {
-            errorText: 'not a valid email id'
-        }
+            errorText: 'not a valid email id',
+        },
     },
     {
         id: 'inStock',
@@ -46,8 +46,8 @@ const formFields = [
         datatype: 'integer',
         conditions: {
             min: 100,
-            errorText: 'Value Should be a valid Number'
-        }
+            errorText: 'Value Should be a valid Number',
+        },
     },
     {
         id: 'description',
@@ -65,17 +65,17 @@ const formFields = [
         menuitems: [
             {
                 id: 1,
-                labelText: "Cotton"
+                labelText: 'Cotton',
             },
             {
                 id: 2,
-                labelText: "Silicon"
+                labelText: 'Silicon',
             },
             {
                 id: 3,
-                labelText: "Hosery"
-            }
-        ]
+                labelText: 'Hosery',
+            },
+        ],
     },
     {
         id: 'size',
@@ -86,31 +86,30 @@ const formFields = [
         menuitems: [
             {
                 id: 1,
-                labelText: "XS"
+                labelText: 'XS',
             },
             {
                 id: 2,
-                labelText: "S"
+                labelText: 'S',
             },
             {
                 id: 3,
-                labelText: "M"
+                labelText: 'M',
             },
             {
                 id: 4,
-                labelText: "L"
+                labelText: 'L',
             },
             {
                 id: 5,
-                labelText: "XL"
+                labelText: 'XL',
             },
             {
                 id: 6,
-                labelText: "XXL"
-            }
-
-        ]
-    }
-];
+                labelText: 'XXL',
+            },
+        ],
+    },
+]
 
 export default formFields

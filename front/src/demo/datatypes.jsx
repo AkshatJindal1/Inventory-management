@@ -1,7 +1,7 @@
 // TODO Take it from web server
 
 const datatypes = {
-    'integer': {
+    integer: {
         id: 'integer',
         labelText: 'integer',
         errorText: 'Not a valid Number',
@@ -9,21 +9,21 @@ const datatypes = {
             {
                 id: 'min',
                 labelText: 'Minimum',
-                datatype: 'integer'
+                datatype: 'integer',
             },
             {
                 id: 'max',
                 labelText: 'Maximum',
-                datatype: 'integer'
+                datatype: 'integer',
             },
             {
                 id: 'errorText',
                 labelText: 'Error Text',
-                datatype: 'text'
-            }
-        ]
+                datatype: 'text',
+            },
+        ],
     },
-    'float': {
+    float: {
         id: 'float',
         labelText: 'float',
         errorText: 'Not a valid Number',
@@ -31,21 +31,21 @@ const datatypes = {
             {
                 id: 'min',
                 labelText: 'Minimum',
-                datatype: 'float'
+                datatype: 'float',
             },
             {
                 id: 'max',
                 labelText: 'Maximum',
-                datatype: 'float'
+                datatype: 'float',
             },
             {
                 id: 'errorText',
                 labelText: 'Error Text',
-                datatype: 'text'
-            }
-        ]
+                datatype: 'text',
+            },
+        ],
     },
-    'email': {
+    email: {
         id: 'email',
         labelText: 'email',
         errorText: 'Not a valid Email Id',
@@ -53,10 +53,11 @@ const datatypes = {
             {
                 id: 'errorText',
                 labelText: 'Error Text',
-                datatype: 'text'
-            }]
+                datatype: 'text',
+            },
+        ],
     },
-    'text': {
+    text: {
         id: 'text',
         labelText: 'text',
         errorText: 'Not a valid Text',
@@ -64,23 +65,23 @@ const datatypes = {
             {
                 id: 'max',
                 labelText: 'Maximum Length',
-                datatype: 'integer'
+                datatype: 'integer',
             },
             {
                 id: 'errorText',
                 labelText: 'Error Text',
-                datatype: 'text'
-            }
-        ]
+                datatype: 'text',
+            },
+        ],
     },
-    'material': {
+    material: {
         id: 'material',
-        labelText: 'Material'
+        labelText: 'Material',
     },
-    'size': {
+    size: {
         id: 'size',
         labelText: 'Size',
-    }
-};
+    },
+}
 
 export default datatypes
