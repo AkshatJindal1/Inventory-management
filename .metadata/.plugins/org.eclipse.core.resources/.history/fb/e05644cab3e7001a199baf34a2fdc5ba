@@ -1,0 +1,5 @@
+package org.inventorymanagement.product.utils;
+
+public class ProductUtils {
+
+}

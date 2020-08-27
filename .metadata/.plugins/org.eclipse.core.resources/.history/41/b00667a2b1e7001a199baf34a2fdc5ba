@@ -1,0 +1,72 @@
+package org.inventorymanagement.product.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
+
+import org.apache.commons.text.CaseUtils;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Document(collection = "forms")
+public class Form {
+
+	@Id
+	private String _id;
+
+	@Indexed(unique = true)
+	private String id;
+
+	@NotBlank(message = "Label cannot be empty")
+	private String labelText;
+
+	@NotBlank(message = "Datatype cannot be empty")
+	private String datatype = "text";
+
+	private Boolean error = false;
+	private Boolean disabled = false;
+	private Boolean requried = false;
+	private String defaultValue;
+	private Conditions conditions = new Conditions();
+
+	public Form(String id, String labelText, String datatype) {
+		this.id = CaseUtils.toCamelCase(labelText, false);
+		this.labelText = labelText;
+		this.datatype = datatype;
+	}
+
+	@JsonIgnore
+	public static List<Form> getDefaultProductForm() {
+		ArrayList<Form> forms = new ArrayList<>();
+		
+		String[][] defaultForms = {
+				{ "productId", "text"},
+				{ "description", "text"},
+				{ "image", "text"},
+				{ "cost", "number"},
+				{ "quantityInStock", "number"},
+				{ "quantityInTransit", "number"},
+				{ "benchmark", "number"}
+		};
+		
+		for(int i=0;i<defaultForms.length;i++) {
+			forms.add(new Form(defaultForms[i][0], defaultForms[i][1]));
+		}
+		return forms;
+	}
+}

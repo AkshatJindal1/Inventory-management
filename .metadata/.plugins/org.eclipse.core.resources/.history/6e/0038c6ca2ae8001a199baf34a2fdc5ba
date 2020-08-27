@@ -1,0 +1,63 @@
+package org.inventorymanagement.product.service;
+
+import java.util.List;
+
+import org.inventorymanagement.product.model.Field;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.repository.FormRepository;
+import org.inventorymanagement.product.utils.ProductUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FormService {
+
+	@Autowired
+	private FormRepository repository;
+	
+	public List<Field> getDefaultForms() {
+		return ProductUtils.getDefaultForms();
+	}
+	
+	public Form saveForm(List<Field> form, String formName, String formId) {
+		Form form = new Form(formId, formId, formName, form);
+		
+	}
+	
+//	public List<Field> saveForm(@Valid List<Field> form, String formName, String formId) {
+//
+//		Set<String> mandatoryIds = ProductUtils.getMandatoryIds();
+//		Set<String> requestIds = form.stream()
+//				.map(field -> ProductUtils.generateId(field.getLabelText(), field.getId())).collect(Collectors.toSet());
+//
+//		if (requestIds.size() != form.size()) {
+//			System.out.println("Duplicate Keys >>>>>>>>>>>>");
+//			System.out.println(form.size() + " " + requestIds.size());
+//			System.out.println(mandatoryIds.toString());
+//			System.out.println(requestIds.toString());
+//			System.out.println("<<<<<<<<<<<<<<<<");
+//			throw new ProductNotFoundException("Duplicate Key Error");
+//		}
+//
+//		if (!requestIds.containsAll(mandatoryIds)) {
+//			// TODO Error Condition: All Mandatory IDs not found
+//			System.out.println("Mandatory Missing >>>>>>>>>>>>");
+//			System.out.println(mandatoryIds.toString());
+//			System.out.println(requestIds.toString());
+//			System.out.println("<<<<<<<<<<<<<<<<");
+//			throw new ProductNotFoundException("Mandatory Field Missing");
+//		}
+//
+//		repository.deleteAll();
+//
+//		for (Field f : form) {
+//			String id = ProductUtils.generateId(f.getLabelText(), f.getId());
+//			f.setId(id);
+//		}
+//
+////		return repository.saveAll(form);
+//		return null;
+//
+//	}
+
+}

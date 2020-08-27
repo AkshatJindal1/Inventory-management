@@ -1,0 +1,63 @@
+package org.inventorymanagement.product.service;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import javax.validation.Valid;
+
+import org.apache.commons.text.CaseUtils;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.repository.FormRepository;
+import org.inventorymanagement.product.utils.ProductUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FormService {
+	
+	@Autowired
+	private FormRepository repository;
+
+	public Form addField(@Valid Form form) {
+		String id = CaseUtils.toCamelCase(form.getLabelText(), false);
+		form.setId(id);
+		return repository.save(form);
+	}
+
+	public List<Form> findAllForms() {
+		return repository.findAll();
+	}
+
+	public List<Form> saveForm(@Valid List<Form> form) {
+		
+		String[][] defaultProductArray = ProductUtils.getDefaultValuesArray();
+		
+
+		String[] ids = Arrays.stream(from).map(x -> x[address]).toArray(Object[]::new);
+		
+		Set<String> s1 = new HashSet<String>(Arrays.asList(ids));
+		Set<String> s2 = new HashSet<String>(Arrays.asList(array2));
+		s1.retainAll(s2);
+
+		Integer[] result = s1.toArray(new Integer[s1.size()]);
+		
+
+		
+//		repository.deleteAll();
+		
+//		for(Form f: form) {
+//			String id = CaseUtils.toCamelCase(f.getLabelText(), false);
+//			f.setId(id);
+//		}
+//		return repository.saveAll(form);
+		
+		return null;
+	}
+
+	public List<Form> getDefaultForms() {
+		return ProductUtils.getDefaultForms();
+	}
+}

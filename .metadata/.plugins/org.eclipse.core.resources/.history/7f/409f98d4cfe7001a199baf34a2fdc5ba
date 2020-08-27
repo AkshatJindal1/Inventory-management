@@ -1,0 +1,10 @@
+package org.inventorymanagement.product.repository;
+
+
+import org.inventorymanagement.product.model.Field;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+
+public interface FormRepository extends MongoRepository<Field, String> {
+	
+}

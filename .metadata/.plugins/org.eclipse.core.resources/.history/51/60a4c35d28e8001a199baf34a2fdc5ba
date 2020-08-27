@@ -1,0 +1,15 @@
+package org.inventorymanagement.product.service;
+
+import org.inventorymanagement.product.repository.FormRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FormService {
+
+	@Autowired
+	private FormRepository repository;
+	
+	
+
+}

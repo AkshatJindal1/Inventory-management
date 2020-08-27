@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 import Loader from '../../Loader'
 import StructureForm from '../../AddForm/StructureForm'
-import StructureForm from '../../AddForm/StructureForm'
 import datatypes from '../../../demo/datatypes'
 import { getFormData, getDefaultFormData } from "../../../store/actions/productAction";
 

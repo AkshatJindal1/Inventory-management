@@ -1,0 +1,16 @@
+package org.inventorymanagement.product.service;
+
+import javax.validation.Valid;
+
+import org.inventorymanagement.product.model.Form;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FormService {
+
+	public Form saveForm(@Valid Form form) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

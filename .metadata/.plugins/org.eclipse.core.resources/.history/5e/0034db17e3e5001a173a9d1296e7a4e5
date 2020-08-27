@@ -1,0 +1,5 @@
+package org.inventorymanagement.product.model;
+
+public class Form {
+
+}

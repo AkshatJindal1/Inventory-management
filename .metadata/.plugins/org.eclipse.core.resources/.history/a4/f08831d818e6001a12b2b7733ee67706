@@ -1,0 +1,5 @@
+package org.inventorymanagement.product.repository;
+
+public interface FormConnection {
+
+}

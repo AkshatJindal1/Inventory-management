@@ -1,0 +1,37 @@
+package org.inventorymanagement.product.service;
+
+import java.util.List;
+
+import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Field;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.repository.FormRepository;
+import org.inventorymanagement.product.utils.ProductUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FormService {
+
+	@Autowired
+	private FormRepository repository;
+	
+	public List<Field> getDefaultForms() {
+		return ProductUtils.getDefaultForms();
+	}
+	
+	public Form saveForm(List<Field> fields, String formName, String formId) {
+		
+		if(formId == null || formId.trim().equals("")) {
+			throw new ProductNotFoundException("Form Id Cannot be null");
+		}
+		if(formName == null || formName.trim().equals("")) {
+			throw new ProductNotFoundException("Form Name Cannot be null");
+		}
+		
+		
+		Form form = new Form(formId, formName, fields);
+		return repository.save(form);
+	}
+
+}
