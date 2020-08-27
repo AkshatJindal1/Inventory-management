@@ -46,6 +46,11 @@ public class FormController {
 		return service.getDefaultForms();
 	}
 	
+	@GetMapping(value="url") 
+	public Form getFormByUrl(@RequestParam String url) {
+		return service.getByUrl(url);
+	}
+	
 	@DeleteMapping
 	public Form deleteForm(@RequestParam String formId) {
 		return service.deleteForm(formId);

@@ -23,6 +23,12 @@ public class FormService {
 	 * for new field if collides with other, use random number generator, replace
 	 * text with number for id, like the mongo one
 	 * 
+	 * TODO can use Hash generator for generating ids
+	 * 
+	 * TODO Error Condition: All Mandatory IDs not found, throw proper error
+	 * 
+	 * TODO Unique Slugs for all fields
+	 * 
 	 */
 
 	@Autowired
@@ -32,11 +38,11 @@ public class FormService {
 		return ProductUtils.getDefaultForms();
 	}
 
-	public Form saveForm(List<Field> fields, String formName, String formId) {
+	public Form saveForm(List<Field> fields, String name, String id) {
 
-		// Check if Form Id and Form Name are not null or blank
+		// Check if Form Name is null or blank
 
-		if (formName == null || formName.trim().equals("")) {
+		if (name == null || name.trim().equals("")) {
 			throw new ProductNotFoundException("Form Name Cannot be null");
 		}
 
@@ -47,46 +53,45 @@ public class FormService {
 		// Check if Duplicate Keys are sent
 
 		if (requestIds.size() != fields.size()) {
-			System.out.println("Duplicate Keys >>>>>>>>>>>>");
-			System.out.println(fields.size() + " " + requestIds.size());
-			System.out.println(mandatoryIds.toString());
-			System.out.println(requestIds.toString());
-			System.out.println("<<<<<<<<<<<<<<<<");
-			throw new ProductNotFoundException("Duplicate Key Error");
+			throw new ProductNotFoundException("Duplicate Key Error\nMandatory Ids: " + mandatoryIds.toString()
+					+ "\nRequestedIds: " + requestIds.toString());
 		}
 
 		// Check if All Mandatory Fields are present
 
 		if (!requestIds.containsAll(mandatoryIds)) {
-			// TODO Error Condition: All Mandatory IDs not found
-			System.out.println("Mandatory Missing >>>>>>>>>>>>");
-			System.out.println(mandatoryIds.toString());
-			System.out.println(requestIds.toString());
-			System.out.println("<<<<<<<<<<<<<<<<");
-			throw new ProductNotFoundException("Mandatory Field Missing");
+			throw new ProductNotFoundException("Mandatory Field Missing\nMandatory Ids: " + mandatoryIds.toString()
+					+ "\nRequestedIds: " + requestIds.toString());
 		}
 
 		// Generate Ids for new fields
 
 		for (Field f : fields) {
-			String id = ProductUtils.generateId(f.getLabelText(), f.getId());
-			f.setId(id);
+			String generatedId = ProductUtils.generateId(f.getLabelText(), f.getId());
+			f.setId(generatedId);
 		}
 
 		// Update the Form Object
 
-		Form form;
-		if (formId == null) {
+		Form form = null;
 
+		if (id == null || id.trim().equals("")) {
+			
 			// If new Form let mongo generate a new Id and create a new form
 
-			form = new Form(formName, fields);
-		} else {
+			form = new Form(ProductUtils.toSlug(name), name, fields);
+		}
+
+		else {
 
 			// If updating a Form delete the previous form and create a identical new form
 
-			repository.deleteById(formId);
-			form = new Form(formId, formName, fields);
+			Form deletedForm = deleteForm(id);
+			if(deletedForm == null) {
+				throw new ProductNotFoundException("Product with that id could not be found");
+			}
+				
+			form = new Form(id, ProductUtils.toSlug(name), name, fields);
 		}
 
 		return repository.save(form);
@@ -104,6 +109,13 @@ public class FormService {
 		Form deletedForm = repository.findById(formId).orElse(null);
 		repository.deleteById(formId);
 		return deletedForm;
+	}
+
+	public Form getByUrl(String url) {
+		Form form = repository.findByUrl(url);
+		if(form == null )
+			throw new ProductNotFoundException("URL NOT FOUND");
+		return form;
 	}
 
 }
