@@ -1,134 +1,157 @@
 import React, { Component } from 'react'
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import { connect } from "react-redux";
 
-import Controls from "../Controls/Controls";
-import { Form } from '../Forms';
+import Card from '@material-ui/core/Card'
+import { CardActions } from '@material-ui/core'
+import CardContent from '@material-ui/core/CardContent'
+import Controls from '../Controls/Controls'
+import { Form } from '../Forms'
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
-
 import ValidateFields from './validate'
+import { connect } from 'react-redux'
 import getType from './typeDatatypeMap'
-import { CardActions } from '@material-ui/core';
 
-const validateOnChange = true;
+const validateOnChange = true
 
 export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
-
         let temp = { ...this.state.errors }
-        const errorConditions = this.state.errorCondition;
+        const errorConditions = this.state.errorCondition
 
         for (const [key, value] of Object.entries(fieldValues)) {
-
-            const errorCondition = errorConditions[key];
+            const errorCondition = errorConditions[key]
 
             if (value === '') {
-                temp = { ...temp, ...ValidateFields.isRequired(errorCondition, key) }
-            }
-            else if (errorCondition.datatype === 'number') {
-                temp = { ...temp, ...ValidateFields.numberValidation(value, errorCondition, key) }
-            }
-            else if (errorCondition.datatype === 'email') {
-                temp = { ...temp, ...ValidateFields.emailValidation(value, errorCondition, key) }
-            }
-            else if (errorCondition.datatype === 'text') {
-                temp = { ...temp, ...ValidateFields.textValidation(value, errorCondition, key) }
-            }
-            else temp[key] = "";
+                temp = {
+                    ...temp,
+                    ...ValidateFields.isRequired(errorCondition, key),
+                }
+            } else if (errorCondition.datatype === 'number') {
+                temp = {
+                    ...temp,
+                    ...ValidateFields.numberValidation(
+                        value,
+                        errorCondition,
+                        key
+                    ),
+                }
+            } else if (errorCondition.datatype === 'email') {
+                temp = {
+                    ...temp,
+                    ...ValidateFields.emailValidation(
+                        value,
+                        errorCondition,
+                        key
+                    ),
+                }
+            } else if (errorCondition.datatype === 'text') {
+                temp = {
+                    ...temp,
+                    ...ValidateFields.textValidation(
+                        value,
+                        errorCondition,
+                        key
+                    ),
+                }
+            } else temp[key] = ''
         }
 
         this.setErrors({
-            ...temp
+            ...temp,
         })
 
         if (fieldValues === this.state.values)
-            return Object.values(temp).every(x => x === "")
+            return Object.values(temp).every((x) => x === '')
     }
 
-    handleSubmit = e => {
+    handleSubmit = (e) => {
         e.preventDefault()
         if (this.validate()) {
             this.resetForm()
-            console.log("Calling API", this.state.values)
+            console.log('Calling API', this.state.values)
         }
     }
 
     componentWillMount() {
-
-        const initialFValues = this.props.initialFValues ? this.props.initialFValues : []
-        const formStructure = this.props.formStructure ? this.props.formStructure : [];
+        const initialFValues = this.props.initialFValues
+            ? this.props.initialFValues
+            : []
+        const formStructure = this.props.formStructure
+            ? this.props.formStructure
+            : []
 
         console.log(this.props.formStructure)
 
         // Store the output json, and default values
-        let values = {};
+        let values = {}
 
         // Stores Conditions for errors
-        let errorCondition = {};
+        let errorCondition = {}
 
         // Store the Structure and Default Values for the Forms
         let structure = formStructure.map((field) => {
-            const value = initialFValues.find(value => value.id === field.id)
+            const value = initialFValues.find((value) => value.id === field.id)
             if (value !== undefined) {
-                field.disabled = value.disabled ? true : false;
-                field.value = value.value ? value.value : "";
-                values[field.id] = field.value;
-            }
-            else {
-                field.disabled = false;
-                field.value = ""
-                values[field.id] = ""
+                field.disabled = value.disabled ? true : false
+                field.value = value.value ? value.value : ''
+                values[field.id] = field.value
+            } else {
+                field.disabled = false
+                field.value = ''
+                values[field.id] = ''
             }
             errorCondition[field.id] = {
                 datatype: field.datatype,
                 required: field.required ? true : false,
-                conditions: field.conditions ? field.conditions : {}
-            };
+                conditions: field.conditions ? field.conditions : {},
+            }
 
             if (field.datatype === 'checkbox') {
                 field.value = field.value ? field.value : false
                 values[field.id] = field.value
             }
 
-            return field;
+            return field
         })
 
-        this.setState({ values, errors: {}, formStructure: structure, initialFValues: values, errorCondition })
+        this.setState({
+            values,
+            errors: {},
+            formStructure: structure,
+            initialFValues: values,
+            errorCondition,
+        })
     }
 
     setValues = (values) => {
-        this.setState({ values });
+        this.setState({ values })
     }
 
     setErrors = (errors) => {
-        this.setState({ errors });
+        this.setState({ errors })
     }
 
-    handleInputChange = e => {
+    handleInputChange = (e) => {
         const { name, value } = e.target
         this.setValues({
             ...this.state.values,
-            [name]: value
+            [name]: value,
         })
-        if (validateOnChange)
-            this.validate({ [name]: value })
+        if (validateOnChange) this.validate({ [name]: value })
     }
 
     resetForm = () => {
         console.log(this.state.initialFValues)
-        this.setValues(this.state.initialFValues);
+        this.setValues(this.state.initialFValues)
         this.setErrors({})
     }
 
     render() {
-
-        const values = this.state.values;
-        const errors = this.state.errors;
-        const formStructure = this.state.formStructure;
-        const handleInputChange = this.handleInputChange;
-        const resetForm = this.resetForm;
+        const values = this.state.values
+        const errors = this.state.errors
+        const formStructure = this.state.formStructure
+        const handleInputChange = this.handleInputChange
+        const resetForm = this.resetForm
 
         const inputFields = formStructure.map((field, index) => {
             if (getType(field.datatype) === 'input') {
@@ -150,7 +173,7 @@ export class AddForm extends Component {
                         <Controls.Checkbox
                             name={field.id}
                             label={field.labelText}
-                            value={values[field.id] == "" ? false : true}
+                            value={values[field.id] == '' ? false : true}
                             onChange={handleInputChange}
                             error={errors[field.id]}
                             disabled={field.disabled}
@@ -175,33 +198,29 @@ export class AddForm extends Component {
         })
 
         return (
-            <Card variant="outlined" >
+            <Card variant="outlined">
                 <Form onSubmit={this.handleSubmit}>
                     <CardContent>
-                        <GridContainer>
-                            {inputFields}
-                        </GridContainer>
-                    </CardContent >
+                        <GridContainer>{inputFields}</GridContainer>
+                    </CardContent>
                     <CardActions>
                         <GridItem xs={12} sm={12} md={6}>
                             <div>
-                                <Controls.Button
-                                    type="submit"
-                                    text="Submit" />
+                                <Controls.Button type="submit" text="Submit" />
                                 <Controls.Button
                                     text="Reset"
                                     color="default"
-                                    onClick={resetForm} />
+                                    onClick={resetForm}
+                                />
                             </div>
                         </GridItem>
                     </CardActions>
-                </Form >
-            </Card >
+                </Form>
+            </Card>
         )
     }
 }
 
+const mapStateToProps = (state) => ({})
 
-const mapStateToProps = (state) => ({});
-
-export default connect(mapStateToProps, {})(AddForm);
+export default connect(mapStateToProps, {})(AddForm)

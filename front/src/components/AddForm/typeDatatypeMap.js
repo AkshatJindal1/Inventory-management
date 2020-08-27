@@ -1,6 +1,6 @@
-import datatypes from "../../demo/datatypes";
+import datatypes from '../../demo/datatypes'
 
-const input = ['number', 'text', 'email'];
+const input = ['number', 'text', 'email']
 const checkbox = ['boolean']
 
 export default function getType(datatype) {

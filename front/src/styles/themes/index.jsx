@@ -2,15 +2,15 @@
 import adminPortal from './adminPortal'
 
 const themes = {
-  default: {
-    button: {
-      action: {},
+    default: {
+        button: {
+            action: {},
+        },
+        form: {},
+        banner: {},
+        navigation: {},
     },
-    form: {},
-    banner: {},
-    navigation: {},
-  },
-  ...adminPortal,
+    ...adminPortal,
 }
 
 export default themes

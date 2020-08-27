@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
-import StructureForm from '../../AddForm/StructureForm'
-import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
-
+import StructureForm from '../../AddForm/StructureForm'
+import { connect } from "react-redux";
 // import formFields from '../../../demo/formFields'
 import datatypes from '../../../demo/datatypes'
-
+import { getAllFields } from "../../../store/actions/productAction";
 
 export class ProductStructure extends Component {
   constructor(props) {

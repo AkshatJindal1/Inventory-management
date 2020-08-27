@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
 import AddForm from "../../AddForm/addForm";
-import product from '../../../demo/products';
-import { getAllFields } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
+import { connect } from "react-redux";
 import formStructure from '../../../demo/formFields';
+import { getAllFields } from "../../../store/actions/productAction";
+import product from '../../../demo/products';
 
 export class ProductLanding extends Component {
   constructor(props) {

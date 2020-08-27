@@ -6,6 +6,7 @@ In the project directory, you can run:
 
 ### `Setup mock server`
 
+npm i -g json-server
 npm run mock:api
 
 ### `npm start`

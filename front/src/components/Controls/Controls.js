@@ -1,9 +1,9 @@
-import Input from "./Input";
-import RadioGroup from "./RadioGroup";
-import Select from "./Select";
-import Checkbox from "./Checkbox";
-import DatePicker from "./DatePicker";
-import Button from "./Button";
+import Input from './Input'
+import RadioGroup from './RadioGroup'
+import Select from './Select'
+import Checkbox from './Checkbox'
+import DatePicker from './DatePicker'
+import Button from './Button'
 
 const Controls = {
     Input,
@@ -11,7 +11,7 @@ const Controls = {
     Select,
     Checkbox,
     DatePicker,
-    Button
+    Button,
 }
 
-export default Controls;
+export default Controls
