@@ -5,11 +5,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -106,8 +108,10 @@ public class FormService {
 		return repository.findById(formId).orElse(null);
 	}
 
-	public List<Form> getAllForms() {
-		return repository.findAll();
+	public Pair<List<Form>, List<Datatype>> getAllForms() {
+		Pair<List<Form>, List<Datatype>> pair = Pair.of(repository.findAll(), repository.getDatatypes());
+	
+		return pair;
 	}
 
 	public Form deleteForm(String formId) {
@@ -127,9 +131,8 @@ public class FormService {
 		return form;
 	}
 	
-	public List<List<String>> getAllDatatypes() {
-		repository.getDatatypes();
-		return null;
+	public List<Datatype> getAllDatatypes() {
+		return repository.getDatatypes();
 	}
 
 }

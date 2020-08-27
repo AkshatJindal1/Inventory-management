@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +40,7 @@ public class FormController {
 	}
 
 	@GetMapping(path = "all", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Form> getAllForms() {
+	public Pair<List<Form>, List<Datatype>> getAllForms() {
 		return service.getAllForms();
 	}
 
@@ -55,6 +57,11 @@ public class FormController {
 	@DeleteMapping
 	public Form deleteForm(@RequestParam String formId) {
 		return service.deleteForm(formId);
+	}
+	
+	@GetMapping(path = "datatypes")
+	public List<Datatype> getAllDatatypes() {
+		return service.getAllDatatypes();
 	}
 
 }
