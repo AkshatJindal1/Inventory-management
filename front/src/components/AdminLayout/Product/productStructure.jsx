@@ -1,20 +1,46 @@
-import React, { Component, Fragment } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react";
 
-import formFields from '../../../demo/products'
-import StructureForm from '../../AddForm/structureForm'
+import Loader from '../../Loader'
+import StructureForm from '../../AddForm/StructureForm'
+import { connect } from "react-redux";
+// import formFields from '../../../demo/formFields'
+import datatypes from '../../../demo/datatypes'
+import { getAllFields } from "../../../store/actions/productAction";
 
 export class ProductStructure extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            forms: {},
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      formFields: []
+    };
+  }
 
-    render() {
-        return <StructureForm formFields={formFields} />
-    }
+  isLoading = (formFields) => {
+    // console.log(formFields)
+    this.setState({ loading: false, formFields })
+  }
+
+  updateUrl = (formFields) => {
+    console.log("Calling API with ", formFields);
+  }
+
+  componentWillMount() {
+    this.props.getAllFields(this.isLoading);
+  }
+
+  render() {
+    if (this.state.loading) return (
+      <Loader />
+    )
+    else return (
+      <StructureForm formFields={this.state.formFields} datatypes={datatypes} requestPath={"/forms"} />
+    )
+  }
 }
 
-export default ProductStructure
+const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, {
+  getAllFields,
+})(ProductStructure);

@@ -1,6 +1,6 @@
 import {
-    GET_ALL_PRODUCTS,
     FALSE_RESPONSE,
+    GET_ALL_PRODUCTS,
     GET_ALL_PRODUCTS_INIT,
     GET_CATEGORIES,
     GET_CATEGORIES_INIT,
@@ -11,6 +11,7 @@ const initialState = {
     isLoading: true,
     isCategoriesLoading: true,
     allCategories: [],
+    formFields: [],
 }
 
 export default function (state = initialState, action) {
@@ -37,6 +38,12 @@ export default function (state = initialState, action) {
             return {
                 isCategoriesLoading: true,
                 ...state,
+            }
+
+        case GET_ALL_PRODUCTS_FORMS:
+            return {
+                ...state,
+                formFields: action.payload,
             }
 
         case GET_CATEGORIES:
