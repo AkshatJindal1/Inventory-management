@@ -4,6 +4,7 @@ import {
     GET_ALL_PRODUCTS_INIT,
     GET_CATEGORIES,
     GET_CATEGORIES_INIT,
+    GET_ALL_PRODUCTS_FORMS
 } from '../actions/types'
 
 const initialState = {
