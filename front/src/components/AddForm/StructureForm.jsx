@@ -297,7 +297,7 @@ export class AddForm extends Component {
                             value={values[index].required}
                             onChange={(e) => handleInputChange(e, index)}
                             error={errors[index].required}
-                            disabled={disabled[index]}
+                        // disabled={disabled[index]}
                         />
                     </GridItem>
                 </GridContainer>

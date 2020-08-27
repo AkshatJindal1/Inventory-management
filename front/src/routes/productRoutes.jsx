@@ -10,7 +10,7 @@ const ProductStructure = React.lazy(() =>
 
 const routes = [
     { path: '/products', exact: true, name: 'Product Index', component: Product },
-    { path: '/add-product', exact: true, name: 'Add Product', component: AddProduct },
+    { path: '/edit-product/:productUrl', exact: true, name: 'Add Product', component: AddProduct },
     { path: '/product-structure', exact: true, name: 'Add Product', component: ProductStructure },
     { path: '/edit-structure/:productUrl', exact: true, name: 'Add Product', component: ProductStructure }
 ];

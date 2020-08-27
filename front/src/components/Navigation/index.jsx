@@ -74,16 +74,16 @@ class Navigation extends Component {
           <Divider />
 
           <NavLink
-            to="/add-product"
+            to="/edit-product"
             activeClassName="active"
-            key="add-product"
+            key="edit-product"
           >
             <List>
-              <ListItem button key="add-product">
+              <ListItem button key="edit-product">
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Add Product" />
+                <ListItemText primary="Edit Product" />
               </ListItem>
             </List>
           </NavLink>
