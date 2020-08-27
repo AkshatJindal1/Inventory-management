@@ -3,28 +3,28 @@
 const datatypes = [
     {
         id: 'number',
-        title: "Number"
+        title: 'Number',
     },
     {
         id: 'email',
-        title: "Email"
+        title: 'Email',
     },
     {
         id: 'text',
-        title: "Text"
+        title: 'Text',
     },
     {
         id: 'boolean',
-        title: "Boolean"
+        title: 'Boolean',
     },
     {
-        id: 'size',
-        title: "Sizes"
+        id: '23876987689',
+        title: 'Sizes',
     },
     {
         id: 'material',
-        title: "Material"
-    }
+        title: 'Material',
+    },
 ]
 
 export default datatypes

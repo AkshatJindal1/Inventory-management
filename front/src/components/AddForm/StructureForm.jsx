@@ -99,7 +99,6 @@ export class AddForm extends Component {
 
     componentWillMount() {
         const matrix = this.props.formFields;
-        console.log(matrix)
         let values = []
         let errors = []
         let disabled = []
