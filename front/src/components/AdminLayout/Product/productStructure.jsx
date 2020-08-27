@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import StructureForm from '../../AddForm/StructureForm'
-import { getFormData, getDefaultFormData } from "../../../store/actions/productAction";
 import Loader from '../../Loader'
-
+import StructureForm from '../../AddForm/StructureForm'
+import StructureForm from '../../AddForm/StructureForm'
 import datatypes from '../../../demo/datatypes'
-
-// TODO Wrong URL
+import { getFormData, getDefaultFormData } from "../../../store/actions/productAction";
 
 export class ProductStructure extends Component {
   constructor(props) {

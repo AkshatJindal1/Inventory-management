@@ -1,16 +1,15 @@
-import { TOGGLE_DRAWER } from '../actions/types'
+import { TOGGLE_POPOVER } from '../actions/types'
 
 const initialState = {
-    isDrawerOpen: false,
-    companyName: 'MY APP',
+    isPopoverOpen: false,
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case TOGGLE_DRAWER:
+        case TOGGLE_POPOVER:
             return {
                 ...state,
-                isDrawerOpen: !state.isDrawerOpen,
+                isPopoverOpen: action.payload,
             }
 
         default:

@@ -10,7 +10,7 @@ const number = [
         labelText: 'Maximum Value',
         datatype: 'number',
         type: 'input',
-    }
+    },
 ]
 
 const text = [
@@ -19,12 +19,12 @@ const text = [
         labelText: 'Maximum Length',
         datatype: 'number',
         type: 'input',
-    }
+    },
 ]
 
 const GetFields = {
     number,
-    text
+    text,
 }
 
-export default GetFields;
+export default GetFields

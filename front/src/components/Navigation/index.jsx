@@ -1,44 +1,44 @@
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { withStyles } from "@material-ui/core/styles";
-import withWidth from "@material-ui/core/withWidth";
-import MailIcon from "@material-ui/icons/Mail";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import { NavLink } from "react-router-dom";
-import clsx from "clsx";
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
+import React, { Component, Fragment } from 'react'
 
-import { toggleDrawer } from "../../store/actions/appAction";
-import { useStyles } from "../../assets/jss/navigationStyle";
+import Divider from '@material-ui/core/Divider'
+import Drawer from '@material-ui/core/Drawer'
+import InboxIcon from '@material-ui/icons/MoveToInbox'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import MailIcon from '@material-ui/icons/Mail'
+import { NavLink } from 'react-router-dom'
+import clsx from 'clsx'
+import { connect } from 'react-redux'
+import { toggleDrawer } from '../../store/actions/appAction'
+import { useStyles } from '../../assets/jss/navigationStyle'
+import { withStyles } from '@material-ui/core/styles'
+import withWidth from '@material-ui/core/withWidth'
 
 class Navigation extends Component {
   handleDrawerClose = () => {
-    this.props.toggleDrawer();
-  };
+    this.props.toggleDrawer()
+  }
 
   responsiveDrawer = () => {
-    const { width } = this.props;
-
-    const isSmallScreen = /xs/.test(width);
+    const { width } = this.props
+    console.log(this.props)
+    const isSmallScreen = /xs/.test(width)
     var drawerProps = {
-      variant: isSmallScreen ? "tempporary" : "permanent",
-    };
+      variant: isSmallScreen ? 'tempporary' : 'permanent',
+    }
     if (isSmallScreen)
       drawerProps = {
         open: this.props.isDrawerOpen,
         onClose: this.handleDrawerClose,
         ...drawerProps,
-      };
-    return drawerProps;
-  };
+      }
+    return drawerProps
+  }
 
   getBrand = () => {
-    const { logoText } = this.props;
+    const { logoText } = this.props
 
     const brand = (
       <List>
@@ -49,12 +49,12 @@ class Navigation extends Component {
           <ListItemText primary={logoText} />
         </ListItem>
       </List>
-    );
-    return brand;
-  };
+    )
+    return brand
+  }
 
   render() {
-    const { classes, isDrawerOpen } = this.props;
+    const { classes, isDrawerOpen } = this.props
     return (
       <Fragment>
         <Drawer
@@ -70,20 +70,14 @@ class Navigation extends Component {
             }),
           }}
         >
-          {/* <List>
-            {["MY APP"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List> */}
           {this.getBrand()}
           <Divider />
 
-          <NavLink to="/add-product" activeClassName="active" key="add-product">
+          <NavLink
+            to="add-product"
+            activeClassName="active"
+            key="add-product"
+          >
             <List>
               <ListItem button key="add-product">
                 <ListItemIcon>
@@ -94,29 +88,22 @@ class Navigation extends Component {
             </List>
           </NavLink>
 
-          <NavLink
-            to='/product-structure'
-            key='product-structure'
-          >
-
+          <NavLink to="product-structure" key="product-structure">
             <List>
-              <ListItem button key='product-structure'>
+              <ListItem button key="product-structure">
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary='Product Structure' />
+                <ListItemText primary="Product Structure" />
               </ListItem>
             </List>
-
           </NavLink>
 
-
           <NavLink
-            to='/products'
+            to="products"
             activeClassName="active"
-            key='products'
+            key="products"
           >
-
             <List>
               <ListItem button key="products">
                 <ListItemIcon>
@@ -129,21 +116,31 @@ class Navigation extends Component {
 
           <Divider />
           <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
+            {['Inbox', 'Starred', 'Send email', 'Drafts'].map(
+              (text, index) => (
+                <ListItem button key={text}>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? (
+                      <InboxIcon />
+                    ) : (
+                        <MailIcon />
+                      )}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              )
+            )}
           </List>
           <Divider />
           <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
+            {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {index % 2 === 0 ? (
+                    <InboxIcon />
+                  ) : (
+                      <MailIcon />
+                    )}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
@@ -151,15 +148,15 @@ class Navigation extends Component {
           </List>
         </Drawer>
       </Fragment>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   isDrawerOpen: state.app.isDrawerOpen,
   logoText: state.app.companyName,
-});
+})
 
 export default connect(mapStateToProps, { toggleDrawer })(
   withWidth()(withStyles(useStyles, { withTheme: true })(Navigation))
-);
+)
