@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -40,7 +41,7 @@ public class FormController {
 	}
 
 	@GetMapping(path = "all", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Pair<List<Form>, List<Datatype>> getAllForms() {
+	public List<Form> getAllForms() {
 		return service.getAllForms();
 	}
 
@@ -60,7 +61,7 @@ public class FormController {
 	}
 	
 	@GetMapping(path = "datatypes")
-	public List<Datatype> getAllDatatypes() {
+	public Pair<List<Datatype>, List<Datatype>> getAllDatatypes() {
 		return service.getAllDatatypes();
 	}
 

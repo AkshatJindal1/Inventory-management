@@ -58,11 +58,21 @@ export const getFormData = (isLoading, onError, productUrl, option) => (
 ) => {
     const url = `${BASE_URL}/forms/${option}/url?url=${productUrl}`
 
-    axios
-        .get(url)
-        .then((response) => isLoading(response.data))
-        .catch((err) => {
-            onError(err.message)
+    Promise.all([fetch(url), fetch(`${BASE_URL}/forms/datatypes`)])
+        .then(function (responses) {
+            // Get a JSON object from each of the responses
+            return Promise.all(
+                responses.map(function (response) {
+                    if (response.status !== 200) throw '404 Not Found'
+                    return response.json()
+                })
+            )
+        })
+        .then(function (data) {
+            isLoading(data[0], data[1])
+        })
+        .catch(function (error) {
+            onError(error)
         })
 }
 
@@ -71,11 +81,21 @@ export const getDefaultFormData = (isLoading, onError, option) => (
 ) => {
     const url = `${BASE_URL}/forms/${option}/default`
 
-    axios
-        .get(url)
-        .then((response) => isLoading(response.data))
-        .catch((err) => {
-            onError(err.message)
+    Promise.all([fetch(url), fetch(`${BASE_URL}/forms/datatypes`)])
+        .then(function (responses) {
+            // Get a JSON object from each of the responses
+            return Promise.all(
+                responses.map(function (response) {
+                    if (response.status !== 200) throw '404 Not Found'
+                    return response.json()
+                })
+            )
+        })
+        .then(function (data) {
+            isLoading(data[0], data[1])
+        })
+        .catch(function (error) {
+            onError(error)
         })
 }
 

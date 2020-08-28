@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 
 public class ProductUtils {
@@ -81,6 +82,12 @@ public class ProductUtils {
 		else
 			throw new ProductNotFoundException("Wrong Category");
 		return option;
+	}
+
+	public static List<Datatype> getDefaultDatatype() {
+		List<Datatype> defaultTypes = Arrays.asList(new Datatype("number", "Number"), new Datatype("text", "Text"),
+				new Datatype("boolean", "Boolean"), new Datatype("email", "Email"));
+		return defaultTypes;
 	}
 
 }

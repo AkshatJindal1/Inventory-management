@@ -173,12 +173,28 @@ export class AddForm extends Component {
             return row
         })
 
+        const datatypes = []
+        for (const [key, value] of Object.entries(this.props.datatypes)) {
+            datatypes.push({
+                id: '',
+                title: key,
+                disabled: true,
+            })
+            datatypes.push(
+                ...value.map((v, index) => {
+                    return { ...v, disabled: false }
+                })
+            )
+        }
+
+        console.log(datatypes)
         this.setState({
             values,
             errors,
             formStructure: structure,
             disabled,
             headingDetails,
+            datatypes,
         })
     }
 
@@ -331,7 +347,7 @@ export class AddForm extends Component {
                         <Controls.Select
                             name="datatype"
                             label="Data Type"
-                            options={this.props.datatypes}
+                            options={this.state.datatypes}
                             value={values[index].datatype}
                             onChange={(e) => handleInputChange(e, index)}
                             error={errors[index].datatype}

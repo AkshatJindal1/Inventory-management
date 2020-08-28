@@ -17,146 +17,146 @@ import { withStyles } from '@material-ui/core/styles'
 import withWidth from '@material-ui/core/withWidth'
 
 class Navigation extends Component {
-  handleDrawerClose = () => {
-    this.props.toggleDrawer()
-  }
-
-  responsiveDrawer = () => {
-    const { width } = this.props
-    console.log(this.props)
-    const isSmallScreen = /xs/.test(width)
-    var drawerProps = {
-      variant: isSmallScreen ? 'tempporary' : 'permanent',
+    handleDrawerClose = () => {
+        this.props.toggleDrawer()
     }
-    if (isSmallScreen)
-      drawerProps = {
-        open: this.props.isDrawerOpen,
-        onClose: this.handleDrawerClose,
-        ...drawerProps,
-      }
-    return drawerProps
-  }
 
-  getBrand = () => {
-    const { logoText } = this.props
+    responsiveDrawer = () => {
+        const { width } = this.props
+        // console.log(this.props)
+        const isSmallScreen = /xs/.test(width)
+        var drawerProps = {
+            variant: isSmallScreen ? 'tempporary' : 'permanent',
+        }
+        if (isSmallScreen)
+            drawerProps = {
+                open: this.props.isDrawerOpen,
+                onClose: this.handleDrawerClose,
+                ...drawerProps,
+            }
+        return drawerProps
+    }
 
-    const brand = (
-      <List>
-        <ListItem>
-          <ListItemIcon>
-            <MailIcon />
-          </ListItemIcon>
-          <ListItemText primary={logoText} />
-        </ListItem>
-      </List>
-    )
-    return brand
-  }
+    getBrand = () => {
+        const { logoText } = this.props
 
-  render() {
-    const { classes, isDrawerOpen } = this.props
-    return (
-      <Fragment>
-        <Drawer
-          {...this.responsiveDrawer()}
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: isDrawerOpen,
-            [classes.drawerClose]: !isDrawerOpen,
-          })}
-          classes={{
-            paper: clsx(classes.drawer, {
-              [classes.drawerOpen]: isDrawerOpen,
-              [classes.drawerClose]: !isDrawerOpen,
-            }),
-          }}
-        >
-          {this.getBrand()}
-          <Divider />
-
-          <NavLink
-            to="/edit-product/sizes"
-            activeClassName="active"
-            key="edit-product"
-          >
+        const brand = (
             <List>
-              <ListItem button key="edit-product">
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Edit Product" />
-              </ListItem>
-            </List>
-          </NavLink>
-
-          <NavLink to="/edit-structure/sizes" key="product-structure">
-            <List>
-              <ListItem button key="product-structure">
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Product Structure" />
-              </ListItem>
-            </List>
-          </NavLink>
-
-          <NavLink
-            to="/products"
-            activeClassName="active"
-            key="products"
-          >
-            <List>
-              <ListItem button key="products">
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="products" />
-              </ListItem>
-            </List>
-          </NavLink>
-
-          <Divider />
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map(
-              (text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? (
-                      <InboxIcon />
-                    ) : (
+                <ListItem>
+                    <ListItemIcon>
                         <MailIcon />
-                      )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
+                    </ListItemIcon>
+                    <ListItemText primary={logoText} />
                 </ListItem>
-              )
-            )}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? (
-                    <InboxIcon />
-                  ) : (
-                      <MailIcon />
-                    )}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-      </Fragment>
-    )
-  }
+            </List>
+        )
+        return brand
+    }
+
+    render() {
+        const { classes, isDrawerOpen } = this.props
+        return (
+            <Fragment>
+                <Drawer
+                    {...this.responsiveDrawer()}
+                    className={clsx(classes.drawer, {
+                        [classes.drawerOpen]: isDrawerOpen,
+                        [classes.drawerClose]: !isDrawerOpen,
+                    })}
+                    classes={{
+                        paper: clsx(classes.drawer, {
+                            [classes.drawerOpen]: isDrawerOpen,
+                            [classes.drawerClose]: !isDrawerOpen,
+                        }),
+                    }}
+                >
+                    {this.getBrand()}
+                    <Divider />
+
+                    <NavLink
+                        to="/edit-product/sizes"
+                        activeClassName="active"
+                        key="edit-product"
+                    >
+                        <List>
+                            <ListItem button key="edit-product">
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Edit Product" />
+                            </ListItem>
+                        </List>
+                    </NavLink>
+
+                    <NavLink to="/edit-structure/sizes" key="product-structure">
+                        <List>
+                            <ListItem button key="product-structure">
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Product Structure" />
+                            </ListItem>
+                        </List>
+                    </NavLink>
+
+                    <NavLink
+                        to="/products"
+                        activeClassName="active"
+                        key="products"
+                    >
+                        <List>
+                            <ListItem button key="products">
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="products" />
+                            </ListItem>
+                        </List>
+                    </NavLink>
+
+                    <Divider />
+                    <List>
+                        {['Inbox', 'Starred', 'Send email', 'Drafts'].map(
+                            (text, index) => (
+                                <ListItem button key={text}>
+                                    <ListItemIcon>
+                                        {index % 2 === 0 ? (
+                                            <InboxIcon />
+                                        ) : (
+                                            <MailIcon />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text} />
+                                </ListItem>
+                            )
+                        )}
+                    </List>
+                    <Divider />
+                    <List>
+                        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                            <ListItem button key={text}>
+                                <ListItemIcon>
+                                    {index % 2 === 0 ? (
+                                        <InboxIcon />
+                                    ) : (
+                                        <MailIcon />
+                                    )}
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
+            </Fragment>
+        )
+    }
 }
 
 const mapStateToProps = (state) => ({
-  isDrawerOpen: state.app.isDrawerOpen,
-  logoText: state.app.companyName,
+    isDrawerOpen: state.app.isDrawerOpen,
+    logoText: state.app.companyName,
 })
 
 export default connect(mapStateToProps, { toggleDrawer })(
-  withWidth()(withStyles(useStyles, { withTheme: true })(Navigation))
+    withWidth()(withStyles(useStyles, { withTheme: true })(Navigation))
 )
