@@ -7,7 +7,7 @@ import datatypes from '../../../demo/datatypes'
 import {
     getFormData,
     getDefaultFormData,
-} from '../../../store/actions/productAction'
+} from '../../../store/actions/formAction'
 
 export class ProductStructure extends Component {
     constructor(props) {
@@ -23,10 +23,13 @@ export class ProductStructure extends Component {
         }
     }
 
-    existingFormLoader = (form) => {
+    existingFormLoader = (form, datatypes) => {
+        if (form == null || datatypes == null)
+            return this.onError('Something Went Wrong')
         const formName = form.name
         const formFields = form.fields
         const formId = form.formId
+        const datatypeList = this.getDataTypeList(datatypes)
         const option = form.option ? 'option' : 'product'
         this.setState({
             loading: false,
@@ -34,19 +37,32 @@ export class ProductStructure extends Component {
             formName,
             formId,
             option,
+            datatypes: datatypeList,
         })
     }
 
-    newFormLoader = (form) => {
+    getDataTypeList = (datatypes) => {
+        return {
+            System: datatypes.second,
+            Custom: datatypes.first,
+        }
+    }
+
+    newFormLoader = (form, datatypes) => {
+        if (form == null || datatypes == null)
+            return this.onError('Something Went Wrong')
+        const datatypeList = this.getDataTypeList(datatypes)
         const formFields = form
         this.setState({
             loading: false,
             formFields,
             option: this.props.match.params.option,
+            datatypes: datatypeList,
         })
     }
 
     onError = (err) => {
+        console.log(err)
         this.setState({ failed: true, loading: false, errorMsg: err })
     }
 
@@ -77,7 +93,7 @@ export class ProductStructure extends Component {
             return (
                 <StructureForm
                     formFields={this.state.formFields}
-                    datatypes={datatypes}
+                    datatypes={this.state.datatypes}
                     formName={this.state.formName}
                     formId={this.state.formId}
                     option={this.state.option}

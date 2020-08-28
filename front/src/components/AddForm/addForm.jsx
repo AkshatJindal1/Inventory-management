@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Card from '@material-ui/core/Card'
 import { CardActions } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import CardContent from '@material-ui/core/CardContent'
 import Controls from '../Controls/Controls'
 import { Form } from '../Forms'
@@ -10,6 +11,8 @@ import GridItem from '../Grid/GridItem'
 import ValidateFields from './validate'
 import { connect } from 'react-redux'
 import getType from './typeDatatypeMap'
+
+import { saveProduct } from '../../store/actions/productAction'
 
 const validateOnChange = true
 
@@ -68,19 +71,36 @@ export class AddForm extends Component {
         e.preventDefault()
         if (this.validate()) {
             this.resetForm()
-            console.log('Calling API', this.state.values)
+
+            const values = this.state.values
+
+            // Set uid
+            values.uid =
+                this.props.initialFValues != null
+                    ? this.props.initialFValues.uid
+                    : ''
+
+            values.formId = this.props.formId
+
+            this.props.saveProduct(
+                (data) => {
+                    console.log('Success', data)
+                },
+                (data) => {
+                    console.log('Error', data)
+                },
+                values
+            )
         }
     }
 
     componentWillMount() {
+        console.log(this.props.initialFValues)
+
         const initialFValues = this.props.initialFValues
             ? this.props.initialFValues
             : []
         const formStructure = this.props.formStructure
-            ? this.props.formStructure
-            : []
-
-        console.log(this.props.formStructure)
 
         // Store the output json, and default values
         let values = {}
@@ -90,23 +110,19 @@ export class AddForm extends Component {
 
         // Store the Structure and Default Values for the Forms
         let structure = formStructure.map((field) => {
-            const value = initialFValues.find((value) => value.id === field.id)
-            if (value !== undefined) {
-                field.disabled = value.disabled ? true : false
-                field.value = value.value ? value.value : ''
-                values[field.id] = field.value
-            } else {
-                field.disabled = false
-                field.value = ''
-                values[field.id] = ''
-            }
+            const value =
+                initialFValues[field.id] == null ? '' : initialFValues[field.id]
+
+            field.value = value
+            values[field.id] = field.value
+
             errorCondition[field.id] = {
                 datatype: field.datatype,
                 required: field.required ? true : false,
                 conditions: field.conditions ? field.conditions : {},
             }
 
-            if (field.datatype === 'checkbox') {
+            if (field.datatype === 'boolean') {
                 field.value = field.value ? field.value : false
                 values[field.id] = field.value
             }
@@ -141,7 +157,6 @@ export class AddForm extends Component {
     }
 
     resetForm = () => {
-        console.log(this.state.initialFValues)
         this.setValues(this.state.initialFValues)
         this.setErrors({})
     }
@@ -163,7 +178,7 @@ export class AddForm extends Component {
                             value={values[field.id]}
                             onChange={handleInputChange}
                             error={errors[field.id]}
-                            disabled={field.disabled}
+                            // disabled={field.disabled}
                         />
                     </GridItem>
                 )
@@ -176,7 +191,7 @@ export class AddForm extends Component {
                             value={values[field.id] == '' ? false : true}
                             onChange={handleInputChange}
                             error={errors[field.id]}
-                            disabled={field.disabled}
+                            // disabled={field.disabled}
                         />
                     </GridItem>
                 )
@@ -190,7 +205,7 @@ export class AddForm extends Component {
                             onChange={handleInputChange}
                             options={field.menuitems}
                             error={errors[field.id]}
-                            disabled={field.disabled}
+                            // disabled={field.disabled}
                         />
                     </GridItem>
                 )
@@ -200,6 +215,11 @@ export class AddForm extends Component {
         return (
             <Card variant="outlined">
                 <Form onSubmit={this.handleSubmit}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h3" component="h5">
+                            {this.props.formName}
+                        </Typography>
+                    </CardContent>
                     <CardContent>
                         <GridContainer>{inputFields}</GridContainer>
                     </CardContent>
@@ -223,4 +243,6 @@ export class AddForm extends Component {
 
 const mapStateToProps = (state) => ({})
 
-export default connect(mapStateToProps, {})(AddForm)
+export default connect(mapStateToProps, {
+    saveProduct,
+})(AddForm)

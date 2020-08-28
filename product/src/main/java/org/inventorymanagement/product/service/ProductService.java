@@ -18,6 +18,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductService {
+	
+	/*
+	 * 
+	 * TODO Verify fields before saving
+	 * 
+	 */
 
     @Autowired
     private MongoOperations mongoOps;

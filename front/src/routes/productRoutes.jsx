@@ -16,6 +16,12 @@ const routes = [
         component: Product,
     },
     {
+        path: '/form/:option/:productUrl/:productId',
+        exact: true,
+        name: 'Add Product',
+        component: AddProduct,
+    },
+    {
         path: '/form/:option/:productUrl',
         exact: true,
         name: 'Add Product',

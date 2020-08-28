@@ -179,10 +179,7 @@
                 "minimumValue": 0,
                 "maximumValue": 1000
             },
-            "selected": [
-                0,
-                100
-            ]
+            "selected": [0, 100]
         },
         {
             "id": "productDetails.size",
@@ -190,11 +187,7 @@
             "options": {
                 "dataType": "string",
                 "isContinuous": false,
-                "optionList": [
-                    "S",
-                    "M",
-                    "L"
-                ]
+                "optionList": ["S", "M", "L"]
             },
             "selected": []
         },
@@ -207,10 +200,7 @@
                 "minimumValue": 23,
                 "maximumValue": 4000
             },
-            "selected": [
-                2,
-                70
-            ]
+            "selected": [2, 70]
         },
         {
             "id": "ratings",
@@ -218,13 +208,7 @@
             "options": {
                 "dataType": "number",
                 "isContinuous": false,
-                "optionList": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ]
+                "optionList": [1, 2, 3, 4, 5]
             },
             "selected": []
         },

@@ -53,40 +53,12 @@ export const getCategories = () => (dispatch) => {
         })
 }
 
-export const getFormData = (isLoading, onError, productUrl, option) => (
-    dispatch
-) => {
-    const url = `${BASE_URL}/forms/${option}/url?url=${productUrl}`
-
-    axios
-        .get(url)
-        .then((response) => isLoading(response.data))
-        .catch((err) => {
-            onError(err.message)
-        })
-}
-
-export const getDefaultFormData = (isLoading, onError, option) => (
-    dispatch
-) => {
-    const url = `${BASE_URL}/forms/${option}/default`
-
-    axios
-        .get(url)
-        .then((response) => isLoading(response.data))
-        .catch((err) => {
-            onError(err.message)
-        })
-}
-
-export const saveForm = (isLoading, data, formName, formId, option) => (
-    dispatch
-) => {
+export const saveProduct = (isLoading, onError, data) => (dispatch) => {
     const headers = {
         'Content-Type': 'application/json',
     }
 
-    const url = `${BASE_URL}/forms/${option}?formId=${formId}&formName=${formName}`
+    const url = `${BASE_URL}/products`
 
     console.log('Calling API', url)
 
@@ -96,10 +68,19 @@ export const saveForm = (isLoading, data, formName, formId, option) => (
         })
         .then((response) => isLoading(response.data))
         .catch((err) => {
-            console.log(err)
+            onError(err)
             dispatch({
                 type: FALSE_RESPONSE,
                 payload: false,
             })
         })
+}
+
+export const getProduct = (onSuccess, onError, productId) => (dispatch) => {
+    const url = `${BASE_URL}/products/${productId}`
+
+    axios
+        .get(url)
+        .then((response) => onSuccess(response.data))
+        .catch((err) => onError(err))
 }

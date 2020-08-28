@@ -3,25 +3,30 @@ import React, { Component } from 'react'
 import AddForm from '../../AddForm/addForm'
 import Loader from '../../Loader'
 import { connect } from 'react-redux'
-import formStructure from '../../../demo/formFields'
-import { getFormData } from '../../../store/actions/productAction'
-// import product from '../../../demo/products';
+import { getFormData } from '../../../store/actions/formAction'
+import { getProduct } from '../../../store/actions/productAction'
 
 export class ProductLanding extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            loading: true,
-            failed: false,
-            errorMsg: 'Something went wrong',
             formFields: [],
             formName: '',
             formId: '',
+
+            // Fetching Structure State
+            loading: true,
+            failed: false,
+            errorMsg: 'Something went wrong',
+
+            // Fetching Data State
+            fetchedData: {},
+            fetchingDataError: false,
+            fetchingLoading: true,
         }
     }
 
     isLoading = (form) => {
-        console.log(form)
         const formName = form.name
         const formFields = form.fields
         const formId = form.formId
@@ -34,6 +39,22 @@ export class ProductLanding extends Component {
         this.setState({ failed: true, loading: false, errorMsg: err })
     }
 
+    onFetchDataSuccess = (fetchedData) => {
+        this.setState({
+            fetchedData,
+            fetchingDataError: false,
+            fetchingLoading: false,
+        })
+    }
+
+    onFetchDataError = (error) => {
+        console.log(error)
+        this.setState({
+            fetchingDataError: true,
+            fetchingLoading: false,
+        })
+    }
+
     componentWillMount() {
         this.props.getFormData(
             this.isLoading,
@@ -41,17 +62,28 @@ export class ProductLanding extends Component {
             this.props.match.params.productUrl,
             this.props.match.params.option
         )
+        if (this.props.match.params.productId != null)
+            this.props.getProduct(
+                this.onFetchDataSuccess,
+                this.onFetchDataError,
+                this.props.match.params.productId
+            )
+        else {
+            this.setState({ fetchingLoading: false })
+        }
     }
 
     render() {
-        if (this.state.loading) return <Loader />
-        else if (this.state.failed) return <span>{this.state.errorMsg}</span>
+        if (this.state.loading || this.state.fetchingLoading) return <Loader />
+        else if (this.state.failed || this.state.fetchingDataError)
+            return <span>{this.state.errorMsg}</span>
         else
             return (
                 <AddForm
-                    initialFValues={this.props.initialFValues}
+                    initialFValues={this.state.fetchedData}
                     formStructure={this.state.formFields}
-                    option={this.state.option}
+                    formName={this.state.formName}
+                    formId={this.state.formId}
                 />
             )
     }
@@ -61,4 +93,5 @@ const mapStateToProps = (state) => ({})
 
 export default connect(mapStateToProps, {
     getFormData,
+    getProduct,
 })(ProductLanding)

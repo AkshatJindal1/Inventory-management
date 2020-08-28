@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 
 public class ProductUtils {
@@ -22,7 +23,8 @@ public class ProductUtils {
 	}
 
 	public static String[][] getDefaultProductValuesArray() {
-		String[][] defaultForms = { { "optionName", "Option Name", "text" }, { "description", "Description", "text" },
+		String[][] defaultForms = { { "productId", "Product Id", "text" },
+				{ "productName", "Product Name", "text" }, { "description", "Description", "text" },
 				{ "image", "Image", "text" }, { "cost", "Cost", "number" },
 				{ "quantityInStock", "Quantity in Stock", "number" },
 				{ "quantityInTransit", "Quantity in Transit", "number" }, { "benchmark", "Benchmark", "number" } };
@@ -81,6 +83,12 @@ public class ProductUtils {
 		else
 			throw new ProductNotFoundException("Wrong Category");
 		return option;
+	}
+
+	public static List<Datatype> getDefaultDatatype() {
+		List<Datatype> defaultTypes = Arrays.asList(new Datatype("number", "Number"), new Datatype("text", "Text"),
+				new Datatype("boolean", "Boolean"), new Datatype("email", "Email"));
+		return defaultTypes;
 	}
 
 }
