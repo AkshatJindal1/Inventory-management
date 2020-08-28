@@ -31,7 +31,8 @@ public class Field {
 	private Boolean disabled = false;
 	private Boolean required = false;
 	private Conditions conditions = new Conditions();
-
+	private Datatype menuitems;
+	
 	public Field(String id, String labelText, String datatype) {
 		this.id = id;
 		this.labelText = labelText;

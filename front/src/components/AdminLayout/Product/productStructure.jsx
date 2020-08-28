@@ -7,7 +7,7 @@ import datatypes from '../../../demo/datatypes'
 import {
     getFormData,
     getDefaultFormData,
-} from '../../../store/actions/productAction'
+} from '../../../store/actions/formAction'
 
 export class ProductStructure extends Component {
     constructor(props) {

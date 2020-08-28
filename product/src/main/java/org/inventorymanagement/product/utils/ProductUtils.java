@@ -23,7 +23,8 @@ public class ProductUtils {
 	}
 
 	public static String[][] getDefaultProductValuesArray() {
-		String[][] defaultForms = { { "optionName", "Option Name", "text" }, { "description", "Description", "text" },
+		String[][] defaultForms = { { "productId", "Product Id", "text" },
+				{ "productName", "Product Name", "text" }, { "description", "Description", "text" },
 				{ "image", "Image", "text" }, { "cost", "Cost", "number" },
 				{ "quantityInStock", "Quantity in Stock", "number" },
 				{ "quantityInTransit", "Quantity in Transit", "number" }, { "benchmark", "Benchmark", "number" } };

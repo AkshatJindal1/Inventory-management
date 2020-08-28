@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,6 +23,7 @@ import java.util.List;
 @Document(collection = "products")
 public class Product {
     @Id
+    @JsonProperty("uid")
     private String _id;
 
     //TODO: make id unique
@@ -35,12 +38,12 @@ public class Product {
 
     private String image;
 
-    @NotNull(message = "Product cost must not be null")
+//    @NotNull(message = "Product cost must not be null")
     private Double cost;
 
     HashMap<String, String> productDetails;
 
-    @NotNull(message = "Quantity in stock must not be null")
+//    @NotNull(message = "Quantity in stock must not be null")
     private Integer quantityInStock;
 
     private Integer quantityInTransit;
@@ -53,5 +56,8 @@ public class Product {
     private List<String> reviews;
 
     private Integer benchmark;
+    
+    @NotNull(message = "Form Id cannot be null")
+    private String formId;
 
 }

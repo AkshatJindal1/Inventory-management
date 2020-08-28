@@ -12,7 +12,7 @@ import ValidateFields from './validate'
 import GetFields from './getFields'
 import getType from './typeDatatypeMap'
 
-import { saveForm } from '../../store/actions/productAction'
+import { saveForm } from '../../store/actions/formAction'
 import { CardActions, CardHeader } from '@material-ui/core'
 
 export class AddForm extends Component {
