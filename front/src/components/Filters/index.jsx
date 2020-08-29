@@ -7,7 +7,6 @@ import FilterProperties from './FilterProperties'
 import SimplePopover from '../Popover/SimplePopover'
 import { Switch } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
-import { changeFilterOption } from '../../store/actions/filterAction'
 import { connect } from 'react-redux'
 import { togglePopover } from '../../store/actions/popoverAction'
 import { withStyles } from '@material-ui/core/styles'
@@ -32,19 +31,20 @@ class Filters extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            filterCategories: [],
+            isPopoverOpen: false,
+            selectedFilterIndex: 0,
             options: [],
         }
     }
 
-    componentDidMount() {
-        const { filterOptions } = this.props
-        let options = filterOptions.map((option, index) => option.selected)
-        this.setState({ options })
+    changeFilterCategory = (index) => {
+        this.setState({ selectedFilterIndex: index })
     }
 
     toggleCheckBox = (index, option) => {
         let { options } = this.state
-        const array = options[index]
+        let array = options[index]
         const position = array.indexOf(option)
         if (position === -1) {
             array.push(option)
@@ -61,31 +61,54 @@ class Filters extends Component {
         this.setState({ options })
     }
 
-    handleFilterOpen = () => {
-        this.props.togglePopover(true)
-    }
-
-    handleFilterClose = () => {
-        this.props.togglePopover(false)
-    }
-
     changeDate = (index, fromOrTo, newDate) => {
         let { options } = this.state
         options[index][fromOrTo] = newDate
         this.setState({ options })
     }
 
+    handleFilterOpen = () => {
+        const { filterCategories } = this.props
+        const categories = JSON.parse(JSON.stringify(filterCategories))
+        this.setState(
+            {
+                filterCategories: categories,
+                selectedFilterIndex: 0,
+            },
+            () => {
+                const options = this.state.filterCategories.map(
+                    (option, index) => option.selected
+                )
+                this.setState({ options }, this.togglePopover(true))
+            }
+        )
+    }
+
+    handleFilterCancel = () => {
+        this.togglePopover(false)
+    }
+
+    handleFilterSubmit = () => {
+        let { filterCategories, options } = this.state
+        filterCategories.forEach((category, index) => category.selected = options[index])
+
+        console.log(filterCategories)
+        this.togglePopover(false)
+    }
+
+    togglePopover = (isPopoverOpen) => {
+        this.setState({ isPopoverOpen })
+    }
+
     render() {
+        const { classes, popupTitle } = this.props
         const {
-            classes,
-            filterOptions,
-            selectedFilterIndex,
-            changeFilterOption,
-            togglePopover,
             isPopoverOpen,
-        } = this.props
-        const { options } = this.state
-        console.log(options)
+            options,
+            selectedFilterIndex,
+            filterCategories,
+        } = this.state
+        // console.log(options)
         return (
             <Fragment>
                 <IconButton
@@ -97,24 +120,25 @@ class Filters extends Component {
 
                 <SimplePopover
                     isPopoverOpen={isPopoverOpen}
-                    popupTitle="Filters"
-                    togglePopover={togglePopover}
-                    handleFilterCancel={this.handleFilterClose}
-                    handleFilterSubmit={this.handleFilterClose}
+                    popupTitle={popupTitle}
+                    handleCancel={this.handleFilterCancel}
+                    handleSubmit={this.handleFilterSubmit}
                     renderComponent={
                         <Fragment>
                             <div className={classes.root}>
                                 <FilterList
-                                    filterOptions={filterOptions}
+                                    filterCategories={filterCategories}
                                     selectedIndex={selectedFilterIndex}
-                                    onChangeOption={changeFilterOption}
+                                    onCategoryChange={this.changeFilterCategory}
                                 />
                                 <main className={classes.content}>
                                     <div className={classes.toolbar} />
                                     <FilterProperties
                                         selectedIndex={selectedFilterIndex}
-                                        filterOption={
-                                            filterOptions[selectedFilterIndex]
+                                        filterCategory={
+                                            filterCategories[
+                                                selectedFilterIndex
+                                            ]
                                         }
                                         selectedOptions={
                                             options[selectedFilterIndex]
@@ -135,11 +159,9 @@ class Filters extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    selectedFilterIndex: state.filter.selectedFilterIndex,
-    isPopoverOpen: state.popover.isPopoverOpen,
-})
+const mapStateToProps = (state) => ({})
 
-export default connect(mapStateToProps, { changeFilterOption, togglePopover })(
-    withStyles(useStyles, { withTheme: true })(Filters)
-)
+export default connect(
+    mapStateToProps,
+    {}
+)(withStyles(useStyles, { withTheme: true })(Filters))

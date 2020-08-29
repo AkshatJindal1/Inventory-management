@@ -1,9 +1,10 @@
-import React from 'react'
 import {
-    MuiPickersUtilsProvider,
     KeyboardDatePicker,
+    MuiPickersUtilsProvider,
 } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
+
+import DateFnsUtils from 'date-fns'
+import React from 'react'
 
 export default function DatePicker(props) {
     const { name, label, value, onChange, ...other } = props

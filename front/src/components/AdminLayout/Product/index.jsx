@@ -537,7 +537,10 @@ export class ProductLanding extends Component {
                 {!isLoading ? (
                     <Card variant="outlined">
                         {!isCategoriesLoading ? (
-                            <Filters filterOptions={categories} />
+                            <Filters
+                                filterCategories={categories}
+                                popupTitle="Products FIlter"
+                            />
                         ) : null}
                         <MUIDataTable
                             title={'Employee List'}

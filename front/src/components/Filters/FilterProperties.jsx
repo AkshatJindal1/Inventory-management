@@ -14,7 +14,7 @@ import {
 } from '@material-ui/pickers'
 import React, { Component, Fragment } from 'react'
 
-import DateFnsUtils from '@date-io/date-fns'
+import DateRangePicker from '../DateRangePicker'
 import Divider from '@material-ui/core/Divider'
 import DraftsIcon from '@material-ui/icons/Drafts'
 import Grid from '@material-ui/core/Grid'
@@ -89,10 +89,14 @@ const IOSSlider = withStyles({
 })(Slider)
 
 class FilterProperties extends Component {
+    state = {
+        calendarOpen: true,
+        dateRange: {},
+    }
     getRenderType = () => {
-        const { filterOption } = this.props
-        const dataType = filterOption.options.dataType
-        const isContinuous = filterOption.options.isContinuous
+        const { filterCategory } = this.props
+        const dataType = filterCategory.options.dataType
+        const isContinuous = filterCategory.options.isContinuous
 
         if (dataType === 'string') return 'checkbox'
         if (dataType === 'number' && isContinuous) return 'slider'
@@ -166,43 +170,48 @@ class FilterProperties extends Component {
 
     renderDateRangePicker = (selectedDate) => {
         return (
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container justify="space-around">
-                    <KeyboardDatePicker
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        margin="normal"
-                        label="From Date"
-                        value={selectedDate[0] || new Date()}
-                        onChange={this.handleFromDateChange}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change from date',
-                        }}
-                    />
-                    <KeyboardDatePicker
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        margin="normal"
-                        label="To Date"
-                        value={selectedDate[1] || new Date()}
-                        onChange={this.handleToDateChange}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change to date',
-                        }}
-                    />
-                </Grid>
-            </MuiPickersUtilsProvider>
+            <DateRangePicker
+                paperElevation={0}
+                open={this.state.calendarOpen}
+                onChange={(range) => this.setState({ dateRange: range })}
+            />
+            // <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            //     <Grid container justify="space-around">
+            //         <KeyboardDatePicker
+            //             variant="inline"
+            //             format="MM/dd/yyyy"
+            //             margin="normal"
+            //             label="From Date"
+            //             value={selectedDate[0] || new Date()}
+            //             onChange={this.handleFromDateChange}
+            //             KeyboardButtonProps={{
+            //                 'aria-label': 'change from date',
+            //             }}
+            //         />
+            //         <KeyboardDatePicker
+            //             variant="inline"
+            //             format="MM/dd/yyyy"
+            //             margin="normal"
+            //             label="To Date"
+            //             value={selectedDate[1] || new Date()}
+            //             onChange={this.handleToDateChange}
+            //             KeyboardButtonProps={{
+            //                 'aria-label': 'change to date',
+            //             }}
+            //         />
+            //     </Grid>
+            // </MuiPickersUtilsProvider>
         )
     }
 
     render() {
-        const { selectedIndex, filterOption, selectedOptions } = this.props
+        const { selectedIndex, filterCategory, selectedOptions } = this.props
 
         return (
             <Typography>
                 {this.getRenderType() === 'checkbox'
                     ? this.renderCheckbox(
-                          filterOption,
+                          filterCategory,
                           selectedOptions,
                           selectedIndex
                       )

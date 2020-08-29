@@ -16,9 +16,6 @@ const useStyles = (theme) => ({
 })
 
 class SimplePopover extends Component {
-    handleClose = () => {
-        this.props.togglePopover(false)
-    }
     render() {
         const {
             isPopoverOpen,
@@ -37,7 +34,7 @@ class SimplePopover extends Component {
                     classes={{ paper: classes.paper }}
                     fullScreen={fullScreen}
                     open={isPopoverOpen}
-                    onClose={this.handleClose}
+                    onClose={this.props.handleCancel}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
@@ -47,13 +44,13 @@ class SimplePopover extends Component {
                     <DialogActions>
                         <Button
                             autoFocus
-                            onClick={this.props.handleFilterCancel}
+                            onClick={this.props.handleCancel}
                             color="primary"
                         >
                             Cancel
                         </Button>
                         <Button
-                            onClick={this.props.handleFilterSubmit}
+                            onClick={this.props.handleSubmit}
                             color="primary"
                             autoFocus
                         >

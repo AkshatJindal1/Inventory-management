@@ -22,18 +22,18 @@ const useStyles = (theme) => ({
 
 class FilterList extends Component {
     handleListItemClick = (event, index) => {
-        const { onChangeOption } = this.props
-        onChangeOption(index)
+        const { onCategoryChange } = this.props
+        onCategoryChange(index)
         // this.setState({ selectedIndex: index })
     }
 
     render() {
-        const { classes, filterOptions, selectedIndex } = this.props
+        const { classes, filterCategories, selectedIndex } = this.props
 
         return (
             <div className={classes.root}>
                 <List component="nav" aria-label="secondary mailbox folder">
-                    {filterOptions.map((option, index) => (
+                    {filterCategories.map((option, index) => (
                         <ListItem
                             key={index}
                             button
