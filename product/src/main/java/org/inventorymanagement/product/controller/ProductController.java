@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController()
 @CrossOrigin
 @RequestMapping("/products")
-public class Controller {
+public class ProductController {
 
     @Autowired
     ProductService service;
@@ -32,8 +32,15 @@ public class Controller {
     public Product addProduct(@Valid @RequestBody Product product) {
         return service.insertProduct(product);
     }
+    
 
-    @GetMapping("/{productId}")
+    @GetMapping("/{formUrl}/{productUrl}")
+    public Product getOptionByOptionName(@PathVariable("formUrl") String formUrl, @PathVariable("productUrl") String productUrl) {
+        return service.getProductByUrl(formUrl, productUrl);
+    }
+
+    
+    @GetMapping("{productId}")
     public Product getProductById(@PathVariable("productId") String productId) {
 
         Product product = service.getProductById(productId);

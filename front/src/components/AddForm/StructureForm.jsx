@@ -112,7 +112,7 @@ export class AddForm extends Component {
             let res = Object.values(this.state.values)
             console.log('Calling API', res)
             this.props.saveForm(
-                alert('data has been saved'),
+                () => alert('data has been saved'),
                 res,
                 this.state.headingDetails.value,
                 this.props.formId,

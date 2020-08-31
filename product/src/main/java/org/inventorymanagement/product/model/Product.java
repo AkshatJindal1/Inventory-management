@@ -59,5 +59,7 @@ public class Product {
     
     @NotNull(message = "Form Id cannot be null")
     private String formId;
+    
+    private String url;
 
 }

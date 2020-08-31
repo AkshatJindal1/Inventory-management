@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
+import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.model.Product;
+import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.MongoConnection;
+import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,18 +25,21 @@ public class ProductService {
 	/*
 	 * 
 	 * TODO Verify fields before saving
+	 * TODO Error Occurs when saving twice on the same form
 	 * 
 	 */
+	
+	@Autowired
+	private FormRepository formRepository;
 
     @Autowired
     private MongoOperations mongoOps;
-
 
     @Autowired
     MongoConnection repository;
 
     public Product insertProduct(Product product) {
-
+    	product.setUrl(ProductUtils.toSlug(product.getProductName()));
         return repository.save(product);
     }
 
@@ -81,5 +87,12 @@ public class ProductService {
         product.set_id(oldProduct.get_id());
         return repository.save(product);
     }
+    
+
+	public Product getProductByUrl(String formUrl, String productUrl) {
+		String formId = formRepository.findByUrlAndOption(formUrl, true).get_id();
+    	System.out.println(formId);
+        return repository.findByUrlAndFormId(productUrl, formId);
+	}
 
 }

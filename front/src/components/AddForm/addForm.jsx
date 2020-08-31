@@ -89,7 +89,8 @@ export class AddForm extends Component {
                 (data) => {
                     console.log('Error', data)
                 },
-                values
+                values,
+                this.props.option
             )
         }
     }

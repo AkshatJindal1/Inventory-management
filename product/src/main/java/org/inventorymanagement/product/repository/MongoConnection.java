@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -38,5 +39,7 @@ public interface MongoConnection extends MongoRepository<Product, String> {
                     );
         }
     }
+
+	Product findByUrlAndFormId(String url, String formId);
 
 }

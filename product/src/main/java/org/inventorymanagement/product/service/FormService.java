@@ -1,7 +1,5 @@
 package org.inventorymanagement.product.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -125,10 +123,6 @@ public class FormService {
 		Boolean option = ProductUtils.getOptions(category);
 
 		Form form = repository.findByUrlAndOption(url, option);
-//		List<Field> allFields = form.getFields();
-//		for(Field field: allFields) {
-//			if(field.getDatatype())
-//		}
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");

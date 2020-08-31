@@ -76,9 +76,9 @@ public class ProductUtils {
 
 	public static Boolean getOptions(String category) {
 		Boolean option;
-		if (category.equals("option"))
+		if (category.equals("options"))
 			option = true;
-		else if (category.equals("product"))
+		else if (category.equals("products"))
 			option = false;
 		else
 			throw new ProductNotFoundException("Wrong Category");
