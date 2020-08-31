@@ -13,6 +13,7 @@ export const getFormData = (isLoading, onError, productUrl, option) => (
     dispatch
 ) => {
     const url = `${BASE_URL}/forms/${option}/url?url=${productUrl}`
+    console.log(url)
 
     Promise.all([fetch(url), fetch(`${BASE_URL}/forms/datatypes`)])
         .then(function (responses) {
@@ -67,11 +68,5 @@ export const saveForm = (isLoading, data, formName, formId, option) => (
             headers: headers,
         })
         .then((response) => isLoading(response.data))
-        .catch((err) => {
-            console.log(err)
-            dispatch({
-                type: FALSE_RESPONSE,
-                payload: false,
-            })
-        })
+        .catch((err) => console.log(err))
 }

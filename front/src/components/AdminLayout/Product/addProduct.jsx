@@ -30,7 +30,7 @@ export class ProductLanding extends Component {
         const formName = form.name
         const formFields = form.fields
         const formId = form.formId
-        const option = form.option ? 'option' : 'product'
+        const option = form.option ? 'options' : 'products'
         this.setState({ loading: false, formFields, formName, formId, option })
     }
 
@@ -59,14 +59,16 @@ export class ProductLanding extends Component {
         this.props.getFormData(
             this.isLoading,
             this.onError,
-            this.props.match.params.productUrl,
+            this.props.match.params.formUrl,
             this.props.match.params.option
         )
-        if (this.props.match.params.productId != null)
+        if (this.props.match.params.itemId != null)
             this.props.getProduct(
                 this.onFetchDataSuccess,
                 this.onFetchDataError,
-                this.props.match.params.productId
+                this.props.match.params.option,
+                this.props.match.params.formUrl,
+                this.props.match.params.itemId
             )
         else {
             this.setState({ fetchingLoading: false })
@@ -84,6 +86,7 @@ export class ProductLanding extends Component {
                     formStructure={this.state.formFields}
                     formName={this.state.formName}
                     formId={this.state.formId}
+                    option={this.props.match.params.option}
                 />
             )
     }

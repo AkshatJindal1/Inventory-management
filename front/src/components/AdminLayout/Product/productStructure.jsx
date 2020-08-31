@@ -30,7 +30,7 @@ export class ProductStructure extends Component {
         const formFields = form.fields
         const formId = form.formId
         const datatypeList = this.getDataTypeList(datatypes)
-        const option = form.option ? 'option' : 'product'
+        const option = form.option ? 'options' : 'products'
         this.setState({
             loading: false,
             formFields,
@@ -71,7 +71,8 @@ export class ProductStructure extends Component {
     }
 
     componentWillMount() {
-        if (this.props.match.params.productUrl === 'new-form')
+        console.log(this.props.match.params.itemUrl)
+        if (this.props.match.params.itemUrl == undefined)
             this.props.getDefaultFormData(
                 this.newFormLoader,
                 this.onError,
@@ -81,7 +82,7 @@ export class ProductStructure extends Component {
             this.props.getFormData(
                 this.existingFormLoader,
                 this.onError,
-                this.props.match.params.productUrl,
+                this.props.match.params.itemUrl,
                 this.props.match.params.option
             )
     }

@@ -1,7 +1,5 @@
 package org.inventorymanagement.product.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +9,7 @@ import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.repository.FormRepository;
+import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -38,6 +37,9 @@ public class FormService {
 	@Autowired
 	private FormRepository repository;
 
+	@Autowired
+	private OptionRepository optionRepository;
+	
 	public List<Field> getDefaultForms(String category) {
 
 		Boolean option = ProductUtils.getOptions(category);
@@ -125,13 +127,14 @@ public class FormService {
 		Boolean option = ProductUtils.getOptions(category);
 
 		Form form = repository.findByUrlAndOption(url, option);
-//		List<Field> allFields = form.getFields();
-//		for(Field field: allFields) {
-//			if(field.getDatatype())
-//		}
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");
+		
+		for(Field f: form.getFields()) {
+			f.setMenuitems(optionRepository.findByFormId(f.getDatatype()));
+		}
+		
 		return form;
 	}
 

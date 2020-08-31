@@ -53,12 +53,12 @@ export const getCategories = () => (dispatch) => {
         })
 }
 
-export const saveProduct = (isLoading, onError, data) => (dispatch) => {
+export const saveProduct = (isLoading, onError, data, option) => (dispatch) => {
     const headers = {
         'Content-Type': 'application/json',
     }
 
-    const url = `${BASE_URL}/products`
+    const url = `${BASE_URL}/${option}`
 
     console.log('Calling API', url)
 
@@ -76,8 +76,12 @@ export const saveProduct = (isLoading, onError, data) => (dispatch) => {
         })
 }
 
-export const getProduct = (onSuccess, onError, productId) => (dispatch) => {
-    const url = `${BASE_URL}/products/${productId}`
+export const getProduct = (onSuccess, onError, option, formUrl, itemUrl) => (
+    dispatch
+) => {
+    const url = `${BASE_URL}/${option}/${formUrl}/${itemUrl}`
+
+    console.log(url)
 
     axios
         .get(url)

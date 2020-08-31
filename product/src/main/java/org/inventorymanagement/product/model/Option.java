@@ -1,8 +1,9 @@
 package org.inventorymanagement.product.model;
 
-import java.util.List;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,24 +21,21 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(collection = "forms")
 @ToString
-public class Form {
+@Document(collection = "options")
+public class Option {
 	
-	@Id
-	@JsonProperty("formId")
-	private String _id;
-	private String url;
-	private Boolean option;
-	private String name;
-	private List<Field> fields;
-	
-	public Form(String url, Boolean option, String name, List<Field> fields) {
-		super();
-		this.url = url;
-		this.option = option;
-		this.name = name;
-		this.fields = fields;
-	}
-	
+    @Id
+    @JsonProperty("uid")
+    private String _id;
+    
+    private String optionUrl;
+
+    @NotBlank(message = "Option name must not be null or empty")
+    @JsonProperty("optionName")
+    private String name;
+    
+    @NotNull(message = "Form Id cannot be null")
+    private String formId;
+
 }

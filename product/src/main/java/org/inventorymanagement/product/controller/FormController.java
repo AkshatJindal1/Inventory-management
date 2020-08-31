@@ -1,6 +1,5 @@
 package org.inventorymanagement.product.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -40,7 +39,7 @@ public class FormController {
 		return service.saveForm(fields, formName, formId, category);
 	}
 
-	@GetMapping(path = "all", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "all")
 	public List<Form> getAllForms() {
 		return service.getAllForms();
 	}
