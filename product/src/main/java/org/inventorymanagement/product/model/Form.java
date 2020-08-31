@@ -39,6 +39,5 @@ public class Form {
 		this.name = name;
 		this.fields = fields;
 	}
-
 	
 }

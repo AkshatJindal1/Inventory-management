@@ -32,7 +32,8 @@ public class Option {
     private String optionUrl;
 
     @NotBlank(message = "Option name must not be null or empty")
-    private String optionName;
+    @JsonProperty("optionName")
+    private String name;
     
     @NotNull(message = "Form Id cannot be null")
     private String formId;

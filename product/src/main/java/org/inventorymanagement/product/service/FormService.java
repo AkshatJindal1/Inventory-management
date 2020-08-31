@@ -9,6 +9,7 @@ import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.repository.FormRepository;
+import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -36,6 +37,9 @@ public class FormService {
 	@Autowired
 	private FormRepository repository;
 
+	@Autowired
+	private OptionRepository optionRepository;
+	
 	public List<Field> getDefaultForms(String category) {
 
 		Boolean option = ProductUtils.getOptions(category);
@@ -126,6 +130,11 @@ public class FormService {
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");
+		
+		for(Field f: form.getFields()) {
+			f.setMenuitems(optionRepository.findByFormId(f.getDatatype()));
+		}
+		
 		return form;
 	}
 

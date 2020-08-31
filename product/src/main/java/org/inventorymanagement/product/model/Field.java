@@ -1,5 +1,7 @@
 package org.inventorymanagement.product.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
@@ -31,7 +33,7 @@ public class Field {
 	private Boolean disabled = false;
 	private Boolean required = false;
 	private Conditions conditions = new Conditions();
-	private Datatype menuitems;
+	private List<Datatype> menuitems;
 	
 	public Field(String id, String labelText, String datatype) {
 		this.id = id;

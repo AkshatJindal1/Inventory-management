@@ -204,7 +204,7 @@ export class AddForm extends Component {
                             label={field.labelText}
                             value={values[field.id]}
                             onChange={handleInputChange}
-                            options={field.menuitems}
+                            options={field.menuitems || []}
                             error={errors[field.id]}
                             // disabled={field.disabled}
                         />

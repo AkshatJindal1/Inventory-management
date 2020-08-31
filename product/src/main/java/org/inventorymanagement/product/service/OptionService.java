@@ -1,6 +1,9 @@
 package org.inventorymanagement.product.service;
 
+import java.util.List;
+
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.repository.FormRepository;
@@ -26,7 +29,7 @@ public class OptionService {
     FormRepository formRepository;
     
     public Option insertOption(Option option) {
-    	option.setOptionUrl(ProductUtils.toSlug(option.getOptionName()));
+    	option.setOptionUrl(ProductUtils.toSlug(option.getName()));
     	return repository.save(option);
     }
 
@@ -50,5 +53,5 @@ public class OptionService {
     	}
     	return option;
     }
-
+    
 }
