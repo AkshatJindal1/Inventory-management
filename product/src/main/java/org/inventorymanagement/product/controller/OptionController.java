@@ -31,12 +31,6 @@ public class OptionController {
     public Option addOption(@Valid @RequestBody Option option) {
         return service.insertOption(option);
     }
-
-//    @GetMapping("/{optionId}")
-//    public Option getOptionById(@PathVariable("optionId") String optionId) {
-//        return service.getOptionById(optionId);
-//    }
-//    
     
     @GetMapping("/{formUrl}/{optionUrl}")
     public Option getOptionByOptionName(@PathVariable("formUrl") String formUrl, @PathVariable("optionUrl") String optionUrl) {
