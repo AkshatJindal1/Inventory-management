@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.service.ProductService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Slf4j
 @RestController()
 @CrossOrigin
 @RequestMapping("/products")
@@ -40,20 +42,21 @@ public class ProductController {
     }
 
     
-    @GetMapping("{productId}")
-    public Product getProductById(@PathVariable("productId") String productId) {
-
-        Product product = service.getProductById(productId);
-        if(product == null)
-            throw new ProductNotFoundException("Product with given ID not present");
-        return product;
-    }
+//    @GetMapping("{productId}")
+//    public Product getProductById(@PathVariable("productId") String productId) {
+//
+//        Product product = service.getProductById(productId);
+//        if(product == null)
+//            throw new ProductNotFoundException("Product with given ID not present");
+//        return product;
+//    }
 
     //TODO: Add pagenation for number of products
-    @GetMapping
-    public Map<String, Object> getProducts(@RequestBody Map<String, Object> req) {
-
+    @GetMapping("/{formUrl}")
+    public Map<String, Object> getProducts(@RequestBody Map<String, Object> req, @PathVariable("formUrl") String formUrl) {
+        log.info("formurl: {}", formUrl);
         return service.getProducts(
+                formUrl,
                 Integer.parseInt(req.getOrDefault("pageNumber","0").toString()),
                 Integer.parseInt(req.getOrDefault("recordsPerPage", "5").toString()),
                 req.getOrDefault("sortBy", "productId").toString(),

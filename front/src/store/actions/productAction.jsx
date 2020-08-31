@@ -4,18 +4,21 @@ import {
     GET_ALL_PRODUCTS_INIT,
     GET_CATEGORIES,
     GET_CATEGORIES_INIT,
+    SET_SELECTED_CATEGORIES,
 } from './types'
 
 import { BASE_URL } from './constants'
 import axios from 'axios'
 
-export const getAllProducts = () => (dispatch) => {
+export const getAllProducts = (option, formUrl, filterOptions = {}) => (
+    dispatch
+) => {
     dispatch({
         type: GET_ALL_PRODUCTS_INIT,
     })
 
     axios
-        .get(BASE_URL + '/products')
+        .get(`${BASE_URL}/${formUrl}`, filterOptions)
         .then((response) =>
             dispatch({
                 type: GET_ALL_PRODUCTS,
@@ -51,6 +54,13 @@ export const getCategories = () => (dispatch) => {
                 payload: false,
             })
         })
+}
+
+export const setCategories = (categories) => (dispatch) => {
+    dispatch({
+        type: SET_SELECTED_CATEGORIES,
+        payload: categories,
+    })
 }
 
 export const saveProduct = (isLoading, onError, data, option) => (dispatch) => {
