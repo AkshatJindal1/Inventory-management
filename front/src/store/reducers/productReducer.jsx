@@ -1,10 +1,11 @@
 import {
     FALSE_RESPONSE,
     GET_ALL_PRODUCTS,
+    GET_ALL_PRODUCTS_FORMS,
     GET_ALL_PRODUCTS_INIT,
     GET_CATEGORIES,
     GET_CATEGORIES_INIT,
-    GET_ALL_PRODUCTS_FORMS
+    SET_SELECTED_CATEGORIES,
 } from '../actions/types'
 
 const initialState = {
@@ -52,6 +53,12 @@ export default function (state = initialState, action) {
                 ...state,
                 allCategories: action.payload,
                 isCategoriesLoading: false,
+            }
+
+        case SET_SELECTED_CATEGORIES:
+            return {
+                ...state,
+                allCategories: action.payload,
             }
 
         default:

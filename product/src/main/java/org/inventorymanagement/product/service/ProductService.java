@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.model.Product;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 public class ProductService {
 	
@@ -44,6 +46,7 @@ public class ProductService {
     }
 
     public Map<String, Object> getProducts(
+            String formUrl,
             Integer pageNumber,
             Integer recordsPerPage,
             String sortBy,
@@ -56,6 +59,9 @@ public class ProductService {
 
         Query query = new Query();
         Criteria expression = new Criteria();
+        String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
+        log.info("formid: {}", formId);
+        expression.andOperator(Criteria.where("formId").is(formId));
         for(Map.Entry<String, List<String>> entry: filter.entrySet()) {
             String key = entry.getKey();
             List<String> values = entry.getValue();
