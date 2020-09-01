@@ -14,6 +14,7 @@ import React, { Component, Fragment } from 'react'
 import {
     getAllProducts,
     getCategories,
+    getColumns,
     setCategories,
 } from '../../../store/actions/productAction'
 
@@ -34,61 +35,62 @@ export class ProductLanding extends Component {
             count: 1,
             rowsPerPage: 5,
             isLoading: false,
-            columns: [
-                {
-                    name: 'productId',
-                    label: 'Product ID',
-                    options: {
-                        sort: true,
-                    },
-                },
-                {
-                    name: 'productName',
-                    label: 'Name',
-                    options: {
-                        sort: true,
-                    },
-                },
-                {
-                    name: 'description',
-                    label: 'Description',
-                    options: {
-                        sort: true,
-                    },
-                },
-                {
-                    name: 'cost',
-                    label: 'Cost',
-                    options: {
-                        sort: true,
-                    },
-                },
-                {
-                    name: 'productDetails.size',
-                    label: 'Size',
-                    options: {
-                        sort: true,
-                    },
-                },
-                {
-                    name: 'quantityInStock',
-                    label: 'Quantity In Stock',
-                    options: {
-                        sort: true,
-                    },
-                },
-                {
-                    name: 'ratings',
-                    label: 'Ratings',
-                    empty: true,
-                },
-            ],
+            // columns: [
+            //     {
+            //         name: 'productId',
+            //         label: 'Product ID',
+            //         options: {
+            //             sort: true,
+            //         },
+            //     },
+            //     {
+            //         name: 'productName',
+            //         label: 'Name',
+            //         options: {
+            //             sort: true,
+            //         },
+            //     },
+            //     {
+            //         name: 'description',
+            //         label: 'Description',
+            //         options: {
+            //             sort: true,
+            //         },
+            //     },
+            //     {
+            //         name: 'cost',
+            //         label: 'Cost',
+            //         options: {
+            //             sort: true,
+            //         },
+            //     },
+            //     {
+            //         name: 'productDetails.size',
+            //         label: 'Size',
+            //         options: {
+            //             sort: true,
+            //         },
+            //     },
+            //     {
+            //         name: 'quantityInStock',
+            //         label: 'Quantity In Stock',
+            //         options: {
+            //             sort: true,
+            //         },
+            //     },
+            //     {
+            //         name: 'ratings',
+            //         label: 'Ratings',
+            //         empty: true,
+            //     },
+            // ],
         }
     }
 
     componentDidMount() {
+        this.props.getColumns('products', 'clothing')
         this.props.getAllProducts('products', 'clothing')
-        this.props.getCategories()
+        // this.props.getCategories()
     }
 
     getAllProducts = (filterOptions) => {
@@ -101,16 +103,17 @@ export class ProductLanding extends Component {
 
     filterSubmit = (filterCategories) => {
         this.props.setCategories(filterCategories)
-        getAllProducts()
+        getAllProducts(filterCategories)
     }
 
     render() {
-        const { columns } = this.state
+        // const { columns } = this.state
         const {
             categories,
             products: data,
             isLoading,
             isCategoriesLoading,
+            columns,
         } = this.props
 
         const options = {
@@ -142,7 +145,7 @@ export class ProductLanding extends Component {
                     options={options}
                     filterTitle="Products Filter"
                     tableTitle="Products"
-                    isTableLoading={isCategoriesLoading || isLoading}
+                    isTableLoading={isLoading}
                     getAllProducts={this.getAllProducts}
                     deleteRows={this.deleteRows}
                     onFilterSubmit={this.filterSubmit}
@@ -153,16 +156,26 @@ export class ProductLanding extends Component {
 }
 
 const mapStateToProps = ({
-    product: { allProducts, isLoading, isCategoriesLoading, allCategories },
+    product: {
+        allProducts,
+        isLoading,
+        isCategoriesLoading,
+        allCategories,
+        totalProducts,
+        columns,
+    },
 }) => ({
     products: allProducts,
     isLoading,
     isCategoriesLoading,
     categories: allCategories,
+    totalRows: totalProducts,
+    columns,
 })
 
 export default connect(mapStateToProps, {
     getAllProducts,
     getCategories,
     setCategories,
+    getColumns,
 })(ProductLanding)

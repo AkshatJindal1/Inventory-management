@@ -4,11 +4,14 @@ import {
     GET_ALL_PRODUCTS_INIT,
     GET_CATEGORIES,
     GET_CATEGORIES_INIT,
+    GET_COLUMN_DETAILS,
+    GET_COLUMN_INIT,
     SET_SELECTED_CATEGORIES,
 } from './types'
 
 import { BASE_URL } from './constants'
 import axios from 'axios'
+import store from '../store'
 
 export const getAllProducts = (option, formUrl, filterOptions = {}) => (
     dispatch
@@ -18,7 +21,7 @@ export const getAllProducts = (option, formUrl, filterOptions = {}) => (
     })
 
     axios
-        .get(`${BASE_URL}/${formUrl}`, filterOptions)
+        .post(`${BASE_URL}/${option}/${formUrl}`, filterOptions)
         .then((response) =>
             dispatch({
                 type: GET_ALL_PRODUCTS,
@@ -97,4 +100,33 @@ export const getProduct = (onSuccess, onError, option, formUrl, itemUrl) => (
         .get(url)
         .then((response) => onSuccess(response.data))
         .catch((err) => onError(err))
+}
+
+export const getColumns = (option, formUrl) => (dispatch) => {
+    dispatch({
+        type: GET_COLUMN_INIT,
+    })
+
+    axios
+        .get(`${BASE_URL}/forms/${option}/url?url=${formUrl}`)
+        .then((response) => {
+            const fields = response.data.fields.filter(
+                (resp) => resp.datatype === 'number'
+            ).map(field => field.id)
+            
+            axios.get(`${BASE_URL}/products/${formUrl}/min-max/?sortFields=${fields.join()}`).then((resp) => {
+                return dispatch({
+                    type: GET_COLUMN_DETAILS,
+                    payload: [response.data, resp.data],
+                })
+            })
+        })
+        .then(console.log('hello', store.getState().product.allCategories))
+        .catch((err) => {
+            console.log(err)
+            dispatch({
+                type: FALSE_RESPONSE,
+                payload: false,
+            })
+        })
 }
