@@ -61,9 +61,9 @@ class Filters extends Component {
         this.setState({ options })
     }
 
-    changeDate = (index, fromOrTo, newDate) => {
+    changeDate = (index, dateRange) => {
         let { options } = this.state
-        options[index][fromOrTo] = newDate
+        options[index] = dateRange
         this.setState({ options })
     }
 
