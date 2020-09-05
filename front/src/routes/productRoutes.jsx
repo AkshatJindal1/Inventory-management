@@ -14,7 +14,7 @@ const ProductLanding = React.lazy(() =>
 
 const routes = [
     {
-        path: '/products/:formUrl',
+        path: '/data/:options/:formUrl',
         exact: true,
         name: 'Product Index',
         component: Product,
