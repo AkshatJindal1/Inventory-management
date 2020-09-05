@@ -11,6 +11,7 @@ import GridItem from '../Grid/GridItem'
 import ValidateFields from './validate'
 import GetFields from './getFields'
 import getType from './typeDatatypeMap'
+import { Redirect } from 'react-router'
 
 import { saveForm } from '../../store/actions/formAction'
 import { CardActions, CardHeader } from '@material-ui/core'
@@ -112,7 +113,17 @@ export class AddForm extends Component {
             let res = Object.values(this.state.values)
             console.log('Calling API', res)
             this.props.saveForm(
-                () => alert('data has been saved'),
+                () => {
+                    console.log(`About to Redirect to ${this.props.redirectTo}`)
+                    this.setState({
+                        redirectTo: <Redirect to={this.props.redirectTo} />,
+                    })
+                },
+                () => {
+                    this.setState({
+                        redirectTo: 'Some Errors Exists',
+                    })
+                },
                 res,
                 this.state.headingDetails.value,
                 this.props.formId,
@@ -121,6 +132,10 @@ export class AddForm extends Component {
         } else {
             console.log('Errors Exists')
         }
+    }
+
+    handleCancel = () => {
+        this.setState({ redirectTo: <Redirect to={this.props.redirectTo} /> })
     }
 
     getDefaultValues = ({
@@ -396,9 +411,15 @@ export class AddForm extends Component {
                                 color="default"
                                 onClick={this.addField}
                             />
+                            <Controls.Button
+                                text="Cancel"
+                                color="default"
+                                onClick={this.handleCancel}
+                            />
                         </div>
                     </CardActions>
                 </Form>
+                {this.state.redirectTo}
             </Card>
         )
     }

@@ -95,10 +95,7 @@ public class ProductService {
 		Form form = formRepository.findByUrlAndOption(formUrl, false);
     	if(form == null) 
     		throw new ProductNotFoundException("Form Url incorrect");
-    	String formId = form.get_id();
-    	
-    	System.out.println(formId);
-    	
+    	String formId = form.get_id();    	
     	Product product =repository.findByUrlAndFormId(productUrl, formId);
     	if(product == null)
     		throw new ProductNotFoundException("Option Url incorrect");

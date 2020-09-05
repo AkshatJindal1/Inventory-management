@@ -1,6 +1,7 @@
 package org.inventorymanagement.product.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException
 import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.FormShort;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -39,7 +41,7 @@ public class FormService {
 
 	@Autowired
 	private OptionRepository optionRepository;
-	
+
 	public List<Field> getDefaultForms(String category) {
 
 		Boolean option = ProductUtils.getOptions(category);
@@ -122,6 +124,10 @@ public class FormService {
 		return deletedForm;
 	}
 
+	public void deleteForm(List<String> formIds) {
+		repository.deleteBy_idIn(formIds);
+	}
+
 	public Form getByUrl(String url, String category) {
 
 		Boolean option = ProductUtils.getOptions(category);
@@ -130,11 +136,11 @@ public class FormService {
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");
-		
-		for(Field f: form.getFields()) {
+
+		for (Field f : form.getFields()) {
 			f.setMenuitems(optionRepository.findByFormId(f.getDatatype()));
 		}
-		
+
 		return form;
 	}
 
@@ -142,6 +148,14 @@ public class FormService {
 		List<Datatype> datatypeFromDb = repository.getDatatypes();
 		List<Datatype> defaultTypes = ProductUtils.getDefaultDatatype();
 		Pair<List<Datatype>, List<Datatype>> pair = Pair.of(datatypeFromDb, defaultTypes);
+		return pair;
+	}
+
+	public Pair<List<FormShort>, List<FormShort>> getAllFormShorts() {
+		List<FormShort> allFormShort = repository.getFormShorts();
+		Map<Boolean, List<FormShort>> partitionedFormShorts = allFormShort.stream()
+		        .collect(Collectors.partitioningBy(x -> x.getOption()));
+		Pair<List<FormShort>, List<FormShort>> pair = Pair.of(partitionedFormShorts.get(false), partitionedFormShorts.get(true));
 		return pair;
 	}
 

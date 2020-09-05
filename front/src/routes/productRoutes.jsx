@@ -8,6 +8,10 @@ const ProductStructure = React.lazy(() =>
     import('../components/AdminLayout/Product/productStructure')
 )
 
+const ProductLanding = React.lazy(() =>
+    import('../components/AdminLayout/Product/productLanding')
+)
+
 const routes = [
     {
         path: '/products',
@@ -38,6 +42,12 @@ const routes = [
         exact: true,
         name: 'Update Form',
         component: ProductStructure,
+    },
+    {
+        path: '/tables',
+        exact: true,
+        name: 'Update Form',
+        component: ProductLanding,
     },
 ]
 

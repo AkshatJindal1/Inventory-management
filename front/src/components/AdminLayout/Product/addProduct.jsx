@@ -87,6 +87,7 @@ export class ProductLanding extends Component {
                     formName={this.state.formName}
                     formId={this.state.formId}
                     option={this.props.match.params.option}
+                    redirectTo={'/tables'}
                 />
             )
     }

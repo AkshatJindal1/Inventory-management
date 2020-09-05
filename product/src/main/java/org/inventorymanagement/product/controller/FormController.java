@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.FormShort;
 import org.inventorymanagement.product.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -39,9 +40,14 @@ public class FormController {
 		return service.saveForm(fields, formName, formId, category);
 	}
 
-	@GetMapping(path = "all")
-	public List<Form> getAllForms() {
+	@GetMapping(path = "/all/raw")
+	public List<Form> getAllFormsRaw() {
 		return service.getAllForms();
+	}
+	
+	@GetMapping(path = "all")
+	public Pair<List<FormShort>, List<FormShort>> getAllFormShorts() {
+		return service.getAllFormShorts();
 	}
 
 	@GetMapping(value = "/{category}/default")
@@ -55,8 +61,8 @@ public class FormController {
 	}
 
 	@DeleteMapping
-	public Form deleteForm(@RequestParam String formId) {
-		return service.deleteForm(formId);
+	public void deleteForm(@RequestBody List<String> deletionList) {
+		service.deleteForm(deletionList);
 	}
 	
 	@GetMapping(path = "datatypes")

@@ -52,9 +52,14 @@ export const getDefaultFormData = (isLoading, onError, option) => (
         .catch((error) => onError(error))
 }
 
-export const saveForm = (isLoading, data, formName, formId, option) => (
-    dispatch
-) => {
+export const saveForm = (
+    isLoading,
+    onError,
+    data,
+    formName,
+    formId,
+    option
+) => (dispatch) => {
     const headers = {
         'Content-Type': 'application/json',
     }
@@ -68,5 +73,34 @@ export const saveForm = (isLoading, data, formName, formId, option) => (
             headers: headers,
         })
         .then((response) => isLoading(response.data))
-        .catch((err) => console.log(err))
+        .catch((err) => onError(err))
+}
+
+export const deleteForms = (isLoading, onError, data) => (dispatch) => {
+    const headers = {
+        'Content-Type': 'application/json',
+    }
+
+    const url = `${BASE_URL}/forms/`
+
+    console.log('Calling API', url)
+
+    axios
+        .delete(url, {
+            data: data,
+            headers: headers,
+        })
+        .then((response) => isLoading(data))
+        .catch((err) => onError(err))
+}
+
+export const getTable = (onSuccess, onError) => (dispatch) => {
+    const url = `${BASE_URL}/forms/all`
+
+    console.log(url)
+
+    axios
+        .get(url)
+        .then((response) => onSuccess(response.data))
+        .catch((err) => onError(err))
 }
