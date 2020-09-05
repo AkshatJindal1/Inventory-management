@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.Form;
-import org.inventorymanagement.product.model.Option;
-import org.inventorymanagement.product.model.Product;
+import org.inventorymanagement.product.model.*;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.MongoConnection;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -19,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.Order;
@@ -54,7 +53,8 @@ public class ProductService {
             Integer recordsPerPage,
             String sortBy,
             String descending,
-            Map<String,List<String>> filter) {
+            String searchText,
+            List<FilterOptions> filters) {
 
         Pageable pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy));
         if(descending.equals("true"))
@@ -64,20 +64,41 @@ public class ProductService {
         Criteria expression = new Criteria();
         String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
         log.info("formid: {}", formId);
-        expression.andOperator(Criteria.where("formId").is(formId));
-        for(Map.Entry<String, List<String>> entry: filter.entrySet()) {
-
-            String key = entry.getKey();
-            List<String> values = entry.getValue();
-            expression.andOperator(Criteria.where(key).in(values));
+        List<Criteria> criterias = new ArrayList<>();
+        criterias.add(Criteria.where("formId").is(formId));
+//        expression = Criteria.where("formId").is(formId);
+//        for(Map.Entry<String, List<String>> entry: filter.entrySet()) {
+//
+//            String key = entry.getKey();
+//            List<String> values = entry.getValue();
+//            expression.andOperator(Criteria.where(key).in(values));
+//        }
+      for(FilterOptions filter: filters) {
+        Map<String, Object> options = filter.getOptions();
+        String id = filter.getId();
+        List<Object> selected = filter.getSelected();
+        String datatype = options.get("dataType").toString();
+        if(datatype.equalsIgnoreCase("number")) {
+          criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
+        } else if(datatype.equalsIgnoreCase("checkbox")) {
+          if(selected.size() == 0) continue;
+          criterias.add(Criteria.where(id).in(selected));
+        } else if(datatype.equalsIgnoreCase("date")) {
+          criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
         }
-        query.addCriteria(expression);
-        Map<String, Object> resp =  new HashMap<>();
-        resp.put("totalProducts", mongoOps.count(query, Product.class));
-        query.with(pageableRequest);
-        List<Product> products = mongoOps.find(query, Product.class);
-        resp.put("response",products);
-        return resp;
+
+      }
+
+      query.addCriteria(expression.andOperator(criterias.toArray(new Criteria[criterias.size()])));
+      if(!searchText.equals(""))
+        query.addCriteria(TextCriteria.forDefaultLanguage().matching("^.*"+ searchText+".*$"));
+      Map<String, Object> resp =  new HashMap<>();
+      resp.put("totalProducts", mongoOps.count(query, Product.class));
+      query.with(pageableRequest);
+      log.info(query.toString());
+      List<Product> products = mongoOps.find(query, Product.class);
+      resp.put("response",products);
+      return resp;
     }
 
     public Product getProductById(String id) {

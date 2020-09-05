@@ -59,7 +59,7 @@ export class MaterialTable extends Component {
     filterSubmit = (filterCategories) => {
         this.props.onFilterSubmit(filterCategories)
         this.changeTableSpecificFilter(
-            1,
+            0,
             '',
             { name: this.state.orderBy, direction: this.state.order },
             this.state.rowsPerPage
