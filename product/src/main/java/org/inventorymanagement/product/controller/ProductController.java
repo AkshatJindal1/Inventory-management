@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Filter;
+import org.inventorymanagement.product.model.FilterOptions;
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +39,20 @@ public class ProductController {
     }
 
     @PostMapping("/{formUrl}")
-    public Map<String, Object> getProducts(@RequestBody Map<String, Object> req, @PathVariable("formUrl") String formUrl) {
+    public Map<String, Object> getProducts(@RequestBody Filter req, @PathVariable("formUrl") String formUrl) {
+
+        Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
+        Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
+        String sortBy = req.getSortBy() == null || req.getSortBy().equals("0")  ? "productId" : req.getSortBy();
+        String isDescending = req.getDescending() == null ? "false" : req.getDescending();
+        String searchText = req.getSearchText() == null ? "" : req.getSearchText();
+        List <FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
+        log.info("{}", req);
+        log.info("{} {} {} {} {} {}", pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters);
+
         return service.getProducts(
-                formUrl,
-                Integer.parseInt(req.getOrDefault("pageNumber","0").toString()),
-                Integer.parseInt(req.getOrDefault("recordsPerPage", "5").toString()),
-                req.getOrDefault("sortBy", "productId").toString(),
-                req.getOrDefault("descending", "false").toString(),
-                new ObjectMapper().convertValue(req.getOrDefault("filter", new HashMap<>()), Map.class));
+                formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters);
+
     }
 
     @PutMapping("/{productId}")
