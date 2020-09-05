@@ -74,27 +74,16 @@ class Navigation extends Component {
                     <Divider />
 
                     <NavLink
-                        to="/edit-product/sizes"
+                        to="/tables/"
                         activeClassName="active"
-                        key="edit-product"
+                        key="tables"
                     >
                         <List>
-                            <ListItem button key="edit-product">
+                            <ListItem button key="tables">
                                 <ListItemIcon>
                                     <InboxIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Edit Product" />
-                            </ListItem>
-                        </List>
-                    </NavLink>
-
-                    <NavLink to="/edit-structure/sizes" key="product-structure">
-                        <List>
-                            <ListItem button key="product-structure">
-                                <ListItemIcon>
-                                    <InboxIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Product Structure" />
+                                <ListItemText primary="Tables" />
                             </ListItem>
                         </List>
                     </NavLink>

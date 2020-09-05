@@ -98,6 +98,7 @@ export class ProductStructure extends Component {
                     formName={this.state.formName}
                     formId={this.state.formId}
                     option={this.state.option}
+                    redirectTo={'/tables'}
                 />
             )
     }

@@ -5,6 +5,8 @@ import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
+import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.FormRepository;
@@ -98,10 +100,15 @@ public class ProductService {
     
 
 	public Product getProductByUrl(String formUrl, String productUrl) {
-		String formId = formRepository.findByUrlAndOption(formUrl, true).get_id();
-    	System.out.println(formId);
-        return repository.findByUrlAndFormId(productUrl, formId);
-	}
+		Form form = formRepository.findByUrlAndOption(formUrl, false);
+    	if(form == null) 
+    		throw new ProductNotFoundException("Form Url incorrect");
+    	String formId = form.get_id();    	
+    	Product product =repository.findByUrlAndFormId(productUrl, formId);
+    	if(product == null)
+    		throw new ProductNotFoundException("Option Url incorrect");
+        return product;
+    }
 
 	public Map<String, List> getMaxMinValue(String formUrl, List<String> sortFields) {
 
@@ -132,5 +139,4 @@ public class ProductService {
 
 
     }
-
 }

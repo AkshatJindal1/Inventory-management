@@ -11,6 +11,7 @@ import GridItem from '../Grid/GridItem'
 import ValidateFields from './validate'
 import { connect } from 'react-redux'
 import getType from './typeDatatypeMap'
+import { Redirect } from 'react-router'
 
 import { saveProduct } from '../../store/actions/productAction'
 
@@ -84,15 +85,25 @@ export class AddForm extends Component {
 
             this.props.saveProduct(
                 (data) => {
-                    console.log('Success', data)
+                    console.log(`About to Redirect to ${this.props.redirectTo}`)
+                    this.setState({
+                        redirectTo: <Redirect to={this.props.redirectTo} />,
+                    })
                 },
                 (data) => {
-                    console.log('Error', data)
+                    this.setState({
+                        redirectTo: 'Some Errors Exists',
+                    })
                 },
                 values,
                 this.props.option
             )
+            return <Redirect to="/somewhere/else" />
         }
+    }
+
+    handleCancel = () => {
+        this.setState({ redirectTo: <Redirect to={this.props.redirectTo} /> })
     }
 
     componentWillMount() {
@@ -233,10 +244,16 @@ export class AddForm extends Component {
                                     color="default"
                                     onClick={resetForm}
                                 />
+                                <Controls.Button
+                                    text="Cancel"
+                                    color="default"
+                                    onClick={this.handleCancel}
+                                />
                             </div>
                         </GridItem>
                     </CardActions>
                 </Form>
+                {this.state.redirectTo}
             </Card>
         )
     }
