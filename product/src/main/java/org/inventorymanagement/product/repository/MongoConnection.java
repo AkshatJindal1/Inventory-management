@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
+import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -37,6 +38,12 @@ public interface MongoConnection extends MongoRepository<Product, String> {
                     .ensureIndex(
                             new Index().on("productId", Sort.Direction.ASC).unique()
                     );
+
+            TextIndexDefinition textIndex = new TextIndexDefinition.TextIndexDefinitionBuilder()
+                .onField("$**")
+                .build();
+            mongoTemplate.indexOps("products")
+                .ensureIndex(textIndex);
         }
     }
 
