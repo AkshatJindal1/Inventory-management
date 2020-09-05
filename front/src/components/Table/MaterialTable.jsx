@@ -53,7 +53,7 @@ export class MaterialTable extends Component {
             .filter((d, index) => selectedRowIndex.indexOf(index) !== -1)
             .map((product) => product.uid)
         this.props.deleteRows(productUids)
-        console.log(this.state) 
+        console.log(this.state)
     }
 
     filterSubmit = (filterCategories) => {
@@ -161,11 +161,13 @@ export class MaterialTable extends Component {
             <Fragment>
                 {!isTableLoading ? (
                     <Card variant="outlined">
-                        <Filters
-                            filterCategories={filterCategories}
-                            popupTitle={filterTitle}
-                            onFilterSubmit={this.filterSubmit}
-                        />
+                        {filterCategories.length > 0 ? (
+                            <Filters
+                                filterCategories={filterCategories}
+                                popupTitle={filterTitle}
+                                onFilterSubmit={this.filterSubmit}
+                            />
+                        ) : null}
 
                         <MUIDataTable
                             title={tableTitle}

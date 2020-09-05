@@ -39,14 +39,20 @@ export class ProductLanding extends Component {
     }
 
     componentDidMount() {
-        this.props.getColumns('products', this.props.match.params.formUrl)
-        this.props.getAllProducts('products', this.props.match.params.formUrl)
+        this.props.getColumns(
+            this.props.match.params.options,
+            this.props.match.params.formUrl
+        )
+        this.props.getAllProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl
+        )
         // this.props.getCategories()
     }
 
     getAllProducts = (filterOptions) => {
         this.props.getAllProducts(
-            'products',
+            this.props.match.params.options,
             this.props.match.params.formUrl,
             filterOptions
         )

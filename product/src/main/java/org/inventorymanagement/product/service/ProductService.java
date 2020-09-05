@@ -54,7 +54,8 @@ public class ProductService {
             String sortBy,
             String descending,
             String searchText,
-            List<FilterOptions> filters) {
+            List<FilterOptions> filters,
+            Boolean isProduct) {
 
         Pageable pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy));
         if(descending.equals("true"))
@@ -62,7 +63,10 @@ public class ProductService {
 
         Query query = new Query();
         Criteria expression = new Criteria();
-        String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
+        String formId;
+        log.info("{} {}", formUrl, isProduct);
+          formId = formRepository.findByUrlAndOption(formUrl, !isProduct).get_id();
+
         log.info("formid: {}", formId);
         List<Criteria> criterias = new ArrayList<>();
         criterias.add(Criteria.where("formId").is(formId));
@@ -93,11 +97,24 @@ public class ProductService {
       if(!searchText.equals(""))
         query.addCriteria(TextCriteria.forDefaultLanguage().matching("^.*"+ searchText+".*$"));
       Map<String, Object> resp =  new HashMap<>();
-      resp.put("totalProducts", mongoOps.count(query, Product.class));
-      query.with(pageableRequest);
-      log.info(query.toString());
-      List<Product> products = mongoOps.find(query, Product.class);
-      resp.put("response",products);
+      if(isProduct) {
+        resp.put("totalProducts", mongoOps.count(query, Product.class));
+        query.with(pageableRequest);
+        log.info(query.toString());
+        List<Product> products = mongoOps.find(query, Product.class);
+        resp.put("response",products);
+      } else {
+        resp.put("totalProducts", mongoOps.count(query, Option.class));
+        query.with(pageableRequest);
+        log.info(query.toString());
+        List<Option> products = mongoOps.find(query, Option.class);
+        resp.put("response",products);
+      }
+//      resp.put("totalProducts", mongoOps.count(query, Product.class));
+//      query.with(pageableRequest);
+//      log.info(query.toString());
+//      List<Product> products = mongoOps.find(query, Product.class);
+//      resp.put("response",products);
       return resp;
     }
 
