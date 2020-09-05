@@ -61,9 +61,9 @@ class Filters extends Component {
         this.setState({ options })
     }
 
-    changeDate = (index, fromOrTo, newDate) => {
+    changeDate = (index, dateRange) => {
         let { options } = this.state
-        options[index][fromOrTo] = newDate
+        options[index] = dateRange
         this.setState({ options })
     }
 
@@ -90,9 +90,12 @@ class Filters extends Component {
 
     handleFilterSubmit = () => {
         let { filterCategories, options } = this.state
-        filterCategories.forEach((category, index) => category.selected = options[index])
+        filterCategories.forEach(
+            (category, index) => (category.selected = options[index])
+        )
 
         console.log(filterCategories)
+        this.props.onFilterSubmit(filterCategories)
         this.togglePopover(false)
     }
 
@@ -108,7 +111,6 @@ class Filters extends Component {
             selectedFilterIndex,
             filterCategories,
         } = this.state
-        // console.log(options)
         return (
             <Fragment>
                 <IconButton

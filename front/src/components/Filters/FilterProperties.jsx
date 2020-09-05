@@ -98,9 +98,8 @@ class FilterProperties extends Component {
         const dataType = filterCategory.options.dataType
         const isContinuous = filterCategory.options.isContinuous
 
-        if (dataType === 'string') return 'checkbox'
-        if (dataType === 'number' && isContinuous) return 'slider'
-        if (dataType === 'number' && !isContinuous) return 'checkbox'
+        if (dataType === 'checkbox') return 'checkbox'
+        if (dataType === 'number') return 'slider'
         if (dataType === 'date') return 'datePicker'
     }
 
@@ -112,9 +111,26 @@ class FilterProperties extends Component {
         this.props.toggleCheckBox(index, option)
     }
 
-    handleSliderChange = (event, newValueRange) => {
+    handleCustomRange = (range, minValue, maxValue) => {
+        return range.map((value) =>
+            Math.round(minValue + ((maxValue - minValue) * value) / 100)
+        )
+    }
+
+    handleSliderChange = (event, newValueRange, minValue, maxValue) => {
         const { selectedIndex } = this.props
-        this.props.changeSliderRange(selectedIndex, newValueRange)
+        const valueRange = this.handleCustomRange(
+            newValueRange,
+            minValue,
+            maxValue
+        )
+        this.props.changeSliderRange(selectedIndex, valueRange)
+    }
+
+    handleDateRangeChange = (range) => {
+        const { selectedIndex } = this.props
+        const { endDate, startDate } = range
+        this.props.handleDateChange(selectedIndex, [startDate, endDate])
     }
 
     renderCheckbox = (category, selectedItems, index) => {
@@ -148,24 +164,43 @@ class FilterProperties extends Component {
         )
     }
 
-    renderSlider = (valueRange) => {
+    renderSlider = (valueRange, category) => {
         console.log(valueRange)
+        const {
+            options: { minimumValue, maximumValue },
+        } = category
+        const marks = [
+            { value: 0, label: minimumValue },
+            { value: 100, label: maximumValue },
+        ]
+        const range = [
+            (valueRange[0] - minimumValue) *
+                (100 / (maximumValue - minimumValue)),
+            (valueRange[1] - minimumValue) *
+                (100 / (maximumValue - minimumValue)),
+        ]
         return (
             <IOSSlider
-                value={valueRange}
-                onChange={this.handleSliderChange}
+                value={range}
+                onChange={(event, newValueRange) =>
+                    this.handleSliderChange(
+                        event,
+                        newValueRange,
+                        minimumValue,
+                        maximumValue
+                    )
+                }
                 valueLabelDisplay="on"
                 aria-labelledby="range-slider"
+                marks={marks}
+                valueLabelFormat={function valueText(value) {
+                    return `${Math.round(
+                        minimumValue +
+                            ((maximumValue - minimumValue) * value) / 100
+                    )}`
+                }}
             />
         )
-    }
-    handleFromDateChange = (event, newDate) => {
-        const { selectedIndex } = this.props
-        this.props.handleDateChange(selectedIndex, 0, newDate)
-    }
-    handleToDateChange = (event, newDate) => {
-        const { selectedIndex } = this.props
-        this.props.handleDateChange(selectedIndex, 1, newDate)
     }
 
     renderDateRangePicker = (selectedDate) => {
@@ -173,40 +208,13 @@ class FilterProperties extends Component {
             <DateRangePicker
                 paperElevation={0}
                 open={this.state.calendarOpen}
-                onChange={(range) => this.setState({ dateRange: range })}
+                onChange={(range) => this.handleDateRangeChange(range)}
             />
-            // <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            //     <Grid container justify="space-around">
-            //         <KeyboardDatePicker
-            //             variant="inline"
-            //             format="MM/dd/yyyy"
-            //             margin="normal"
-            //             label="From Date"
-            //             value={selectedDate[0] || new Date()}
-            //             onChange={this.handleFromDateChange}
-            //             KeyboardButtonProps={{
-            //                 'aria-label': 'change from date',
-            //             }}
-            //         />
-            //         <KeyboardDatePicker
-            //             variant="inline"
-            //             format="MM/dd/yyyy"
-            //             margin="normal"
-            //             label="To Date"
-            //             value={selectedDate[1] || new Date()}
-            //             onChange={this.handleToDateChange}
-            //             KeyboardButtonProps={{
-            //                 'aria-label': 'change to date',
-            //             }}
-            //         />
-            //     </Grid>
-            // </MuiPickersUtilsProvider>
         )
     }
 
     render() {
         const { selectedIndex, filterCategory, selectedOptions } = this.props
-
         return (
             <Typography>
                 {this.getRenderType() === 'checkbox'
@@ -217,7 +225,7 @@ class FilterProperties extends Component {
                       )
                     : null}
                 {this.getRenderType() === 'slider'
-                    ? this.renderSlider(selectedOptions)
+                    ? this.renderSlider(selectedOptions, filterCategory)
                     : null}
                 {this.getRenderType() === 'datePicker'
                     ? this.renderDateRangePicker(selectedOptions)

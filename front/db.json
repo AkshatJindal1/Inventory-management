@@ -1,225 +1,244 @@
 {
-    "products": [
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "1001",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 235.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "1002",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 236.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "1003",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 237.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "1004",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 236.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "1005",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "1006",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "1007",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "1008",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "1009",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "10010",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "10011",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "10012",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e74ea21fb8798d114d1d",
-            "productId": "10013",
-            "productName": "T-Shirt",
-            "description": "Blue t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        },
-        {
-            "_id": "5f41e759a21fb8798d114d1f",
-            "productId": "10014",
-            "productName": "T-Shirt",
-            "description": "Yellow t-shirt",
-            "cost": 234.0,
-            "productDetails": {
-                "size": "M"
-            },
-            "quantityInStock": 780,
-            "ratings": null
-        }
-    ],
-    "categories": [
-        {
-            "id": "cost",
-            "label": "Cost",
-            "options": {
-                "dataType": "number",
-                "isContinuous": true,
-                "minimumValue": 0,
-                "maximumValue": 1000
-            },
-            "selected": [0, 100]
-        },
-        {
-            "id": "productDetails.size",
-            "label": "Size",
-            "options": {
-                "dataType": "string",
-                "isContinuous": false,
-                "optionList": ["S", "M", "L"]
-            },
-            "selected": []
-        },
-        {
-            "id": "quantityInStock",
-            "label": "Quantity In Stock",
-            "options": {
-                "dataType": "number",
-                "isContinuous": true,
-                "minimumValue": 23,
-                "maximumValue": 4000
-            },
-            "selected": [2, 70]
-        },
-        {
-            "id": "ratings",
-            "label": "Ratings",
-            "options": {
-                "dataType": "number",
-                "isContinuous": false,
-                "optionList": [1, 2, 3, 4, 5]
-            },
-            "selected": []
-        },
-        {
-            "id": "saleDate",
-            "label": "Sale Date",
-            "options": {
-                "dataType": "date",
-                "isContinuous": true
-            },
-            "selected": []
-        }
-    ]
+  "clothing": [
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "1001",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 235,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "1002",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 236,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "1003",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 237,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "1004",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 236,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "1005",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "1006",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "1007",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "1008",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "1009",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "10010",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "10011",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "10012",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e74ea21fb8798d114d1d",
+      "productId": "10013",
+      "productName": "T-Shirt",
+      "description": "Blue t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    },
+    {
+      "_id": "5f41e759a21fb8798d114d1f",
+      "productId": "10014",
+      "productName": "T-Shirt",
+      "description": "Yellow t-shirt",
+      "cost": 234,
+      "productDetails": {
+        "size": "M"
+      },
+      "quantityInStock": 780,
+      "ratings": null
+    }
+  ],
+  "categories": [
+    {
+      "id": "cost",
+      "label": "Cost",
+      "options": {
+        "dataType": "number",
+        "isContinuous": true,
+        "minimumValue": 0,
+        "maximumValue": 1000
+      },
+      "selected": [
+        0,
+        100
+      ]
+    },
+    {
+      "id": "productDetails.size",
+      "label": "Size",
+      "options": {
+        "dataType": "checkbox",
+        "isContinuous": false,
+        "optionList": [
+          "S",
+          "M",
+          "L"
+        ]
+      },
+      "selected": []
+    },
+    {
+      "id": "quantityInStock",
+      "label": "Quantity In Stock",
+      "options": {
+        "dataType": "number",
+        "isContinuous": true,
+        "minimumValue": 23,
+        "maximumValue": 4000
+      },
+      "selected": [
+        2,
+        70
+      ]
+    },
+    {
+      "id": "ratings",
+      "label": "Ratings",
+      "options": {
+        "dataType": "checkbox",
+        "isContinuous": false,
+        "optionList": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "selected": []
+    },
+    {
+      "id": "saleDate",
+      "label": "Sale Date",
+      "options": {
+        "dataType": "date",
+        "isContinuous": true
+      },
+      "selected": []
+    },
+    {
+      "id": "Zt9X6Yg"
+    }
+  ]
 }

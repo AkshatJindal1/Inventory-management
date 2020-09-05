@@ -1,25 +1,21 @@
 package org.inventorymanagement.product.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Slf4j
 @RestController()
 @CrossOrigin
 @RequestMapping("/products")
@@ -39,21 +35,10 @@ public class ProductController {
         return service.getProductByUrl(formUrl, productUrl);
     }
 
-    
-    @GetMapping("{productId}")
-    public Product getProductById(@PathVariable("productId") String productId) {
-
-        Product product = service.getProductById(productId);
-        if(product == null)
-            throw new ProductNotFoundException("Product with given ID not present");
-        return product;
-    }
-
-    //TODO: Add pagenation for number of products
-    @GetMapping
-    public Map<String, Object> getProducts(@RequestBody Map<String, Object> req) {
-
+    @PostMapping("/{formUrl}")
+    public Map<String, Object> getProducts(@RequestBody Map<String, Object> req, @PathVariable("formUrl") String formUrl) {
         return service.getProducts(
+                formUrl,
                 Integer.parseInt(req.getOrDefault("pageNumber","0").toString()),
                 Integer.parseInt(req.getOrDefault("recordsPerPage", "5").toString()),
                 req.getOrDefault("sortBy", "productId").toString(),
@@ -65,6 +50,11 @@ public class ProductController {
     public Product updateProduct(@RequestBody Product product, @PathVariable("productId") String productId) {
 
         return service.updateProductById(productId, product);
+    }
+
+    @GetMapping("/{formUrl}/min-max/")
+    public Map<String, List> getMaxMinValue(@PathVariable("formUrl") String formUrl, @RequestParam("sortFields") List<String> sortFields) {
+        return service.getMaxMinValue(formUrl, sortFields);
     }
 
 

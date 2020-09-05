@@ -1,18 +1,23 @@
 import {
     FALSE_RESPONSE,
     GET_ALL_PRODUCTS,
+    GET_ALL_PRODUCTS_FORMS,
     GET_ALL_PRODUCTS_INIT,
     GET_CATEGORIES,
     GET_CATEGORIES_INIT,
-    GET_ALL_PRODUCTS_FORMS
+    GET_COLUMN_DETAILS,
+    GET_COLUMN_INIT,
+    SET_SELECTED_CATEGORIES,
 } from '../actions/types'
 
 const initialState = {
+    totalProducts: 0,
     allProducts: [],
     isLoading: true,
     isCategoriesLoading: true,
     allCategories: [],
     formFields: [],
+    columns: [],
 }
 
 export default function (state = initialState, action) {
@@ -31,7 +36,8 @@ export default function (state = initialState, action) {
         case GET_ALL_PRODUCTS:
             return {
                 ...state,
-                allProducts: action.payload,
+                allProducts: action.payload.response,
+                totalProducts: action.payload.totalProducts,
                 isLoading: false,
             }
 
@@ -52,6 +58,71 @@ export default function (state = initialState, action) {
                 ...state,
                 allCategories: action.payload,
                 isCategoriesLoading: false,
+            }
+
+        case SET_SELECTED_CATEGORIES:
+            return {
+                ...state,
+                allCategories: action.payload,
+            }
+
+        case GET_COLUMN_INIT:
+            return {
+                isLoading: true,
+                ...state,
+            }
+
+        case GET_COLUMN_DETAILS:
+            const filterCategories = action.payload[0].fields
+                .filter((field) => field.datatype !== 'text')
+                .map((field) => {
+                    console.log(field.id, action.payload[1][field.id])
+                    const minValue =
+                        action.payload[1][field.id] !== undefined
+                            ? action.payload[1][field.id][0] !==
+                              action.payload[1][field.id][1]
+                                ? parseInt(action.payload[1][field.id][0])
+                                : 0
+                            : 0
+                    const maxValue =
+                        action.payload[1][field.id] !== undefined
+                            ? parseInt(action.payload[1][field.id][1])
+                            : 100
+                    return {
+                        id: field.id,
+                        label: field.labelText,
+                        options: {
+                            dataType:
+                                field.datatype === 'number'
+                                    ? 'number'
+                                    : field.datatype === 'date'
+                                    ? 'date'
+                                    : 'checkbox',
+                            optionList: field.menuitems.map(
+                                (menu) => menu.title
+                            ),
+                            maximumValue: maxValue,
+                            minimumValue: minValue,
+                        },
+                        selected:
+                            action.payload[1][field.id] === undefined
+                                ? []
+                                : [minValue, maxValue],
+                    }
+                })
+            return {
+                ...state,
+                columns: action.payload[0].fields.map((field) => {
+                    return {
+                        name: field.id,
+                        label: field.labelText,
+                        options: {
+                            sort: true,
+                        },
+                    }
+                }),
+                isLoading: false,
+                allCategories: filterCategories,
             }
 
         default:

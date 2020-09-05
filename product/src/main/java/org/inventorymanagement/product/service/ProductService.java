@@ -1,9 +1,9 @@
 package org.inventorymanagement.product.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
@@ -21,6 +21,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.Order;
+
+@Slf4j
 @Repository
 public class ProductService {
 	
@@ -46,6 +49,7 @@ public class ProductService {
     }
 
     public Map<String, Object> getProducts(
+            String formUrl,
             Integer pageNumber,
             Integer recordsPerPage,
             String sortBy,
@@ -58,7 +62,11 @@ public class ProductService {
 
         Query query = new Query();
         Criteria expression = new Criteria();
+        String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
+        log.info("formid: {}", formId);
+        expression.andOperator(Criteria.where("formId").is(formId));
         for(Map.Entry<String, List<String>> entry: filter.entrySet()) {
+
             String key = entry.getKey();
             List<String> values = entry.getValue();
             expression.andOperator(Criteria.where(key).in(values));
@@ -100,5 +108,35 @@ public class ProductService {
     	if(product == null)
     		throw new ProductNotFoundException("Option Url incorrect");
         return product;
+    }
+
+	public Map<String, List> getMaxMinValue(String formUrl, List<String> sortFields) {
+
+        Map<String, List> mp = new HashMap<>();
+//        mp.put("min", minValue);
+//        mp.put("max", maxValue);
+
+        sortFields.stream().forEach(sortField -> {
+            Query maxQuery = new Query();
+            Criteria expression = new Criteria();
+            String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
+            expression.andOperator(Criteria.where("formId").is(formId));
+            maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields().include(sortField).exclude("_id");
+            Product maxProduct = mongoOps.findOne(maxQuery,  Product.class);
+
+            Query minQuery = new Query();
+            minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, sortField)).limit(1).fields().include(sortField).exclude("_id");
+            Product minProduct = mongoOps.findOne(minQuery, Product.class);
+
+            String minValue = new ObjectMapper().convertValue(minProduct, Map.class).get(sortField).toString();
+            String maxValue = new ObjectMapper().convertValue(maxProduct, Map.class).get(sortField).toString();
+            mp.put(sortField, new ArrayList<>(Arrays.asList(minValue, maxValue)));
+        });
+
+
+        return mp;
+
+
+
     }
 }
