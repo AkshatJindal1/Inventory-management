@@ -35,66 +35,21 @@ export class ProductLanding extends Component {
             count: 1,
             rowsPerPage: 5,
             isLoading: false,
-            // columns: [
-            //     {
-            //         name: 'productId',
-            //         label: 'Product ID',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'productName',
-            //         label: 'Name',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'description',
-            //         label: 'Description',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'cost',
-            //         label: 'Cost',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'productDetails.size',
-            //         label: 'Size',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'quantityInStock',
-            //         label: 'Quantity In Stock',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'ratings',
-            //         label: 'Ratings',
-            //         empty: true,
-            //     },
-            // ],
         }
     }
 
     componentDidMount() {
-        this.props.getColumns('products', 'clothing')
-        this.props.getAllProducts('products', 'clothing')
+        this.props.getColumns('products', this.props.match.params.formUrl)
+        this.props.getAllProducts('products', this.props.match.params.formUrl)
         // this.props.getCategories()
     }
 
     getAllProducts = (filterOptions) => {
-        this.props.getAllProducts('products', 'clothing', filterOptions)
+        this.props.getAllProducts(
+            'products',
+            this.props.match.params.formUrl,
+            filterOptions
+        )
     }
 
     deleteRows = (productUids) => {
