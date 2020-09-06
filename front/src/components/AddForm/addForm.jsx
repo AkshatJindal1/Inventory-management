@@ -71,8 +71,6 @@ export class AddForm extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
         if (this.validate()) {
-            this.resetForm()
-
             const values = this.state.values
 
             // Set uid
@@ -85,6 +83,7 @@ export class AddForm extends Component {
 
             this.props.saveProduct(
                 (data) => {
+                    this.resetForm()
                     console.log(`About to Redirect to ${this.props.redirectTo}`)
                     this.setState({
                         redirectTo: <Redirect to={this.props.redirectTo} />,

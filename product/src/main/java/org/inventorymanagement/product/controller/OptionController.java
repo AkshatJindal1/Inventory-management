@@ -1,8 +1,12 @@
 package org.inventorymanagement.product.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
-import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.model.Filter;
 import org.inventorymanagement.product.model.FilterOptions;
 import org.inventorymanagement.product.model.Option;
@@ -17,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController()
@@ -35,7 +37,7 @@ public class OptionController {
     
 
     @PostMapping
-    public Option addOption(@Valid @RequestBody Option option) {
+    public Option addOption(@Valid @RequestBody HashMap<String, Object> option) {
         return service.insertOption(option);
     }
     

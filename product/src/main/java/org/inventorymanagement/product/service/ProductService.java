@@ -25,6 +25,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +51,9 @@ public class ProductService {
     @Autowired
     MongoConnection repository;
 
-    public Product insertProduct(Product product) {
+    public Product insertProduct(String productMap) throws JsonMappingException, JsonProcessingException {
+    	final ObjectMapper mapper = new ObjectMapper();
+    	final Product product = mapper.readValue(productMap, Product.class);
     	product.setUrl(ProductUtils.toSlug(product.getProductId()));
         return repository.save(product);
     }
