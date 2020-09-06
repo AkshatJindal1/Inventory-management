@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import MUIDataTable from 'mui-datatables'
 import Loader from '../../Loader'
 import IconButton from '@material-ui/core/IconButton'
-import { Delete, Add, Edit, TramOutlined } from '@material-ui/icons'
+import { Delete, Add, Edit, Visibility } from '@material-ui/icons'
 import GridContainer from '../../Grid/GridContainer'
 import GridItem from '../../Grid/GridItem'
 import { withStyles } from '@material-ui/core/styles'
@@ -32,6 +32,7 @@ export class ProductLanding extends Component {
             allOptionForms: [],
             loading: true,
             error: true,
+            redirectTo: null,
         }
     }
 
@@ -64,7 +65,7 @@ export class ProductLanding extends Component {
 
     deleteForms = (data) => {
         this.props.deleteForms(
-            this.removeFromForms(data),
+            (data) => this.removeFromForms(data),
             () => {
                 alert('An Error Occured, Please try again in some time')
             },
@@ -100,9 +101,28 @@ export class ProductLanding extends Component {
                             <Edit />
                         </IconButton>
                     </Link>
+                    <Link to={editUrl}>
+                        <IconButton aria-label="edit">
+                            <Visibility />
+                        </IconButton>
+                    </Link>
                 </>,
             ]
         })
+    }
+
+    changeLocation = (data, rowMeta) => {
+        console.log(data, rowMeta)
+        // TODO Assuming Option Name and Product name are also unique
+
+        // let options =
+        //     this.state.allOptionForms[rowMeta.rowIndex].name == data[0]
+        //         ? 'options'
+        //         : 'products'
+
+        // console.log(options)
+
+        // this.setState({ allOptionForms, allProductForms })
     }
 
     render() {
@@ -167,6 +187,7 @@ export class ProductLanding extends Component {
                             />
                         </Link>
                     </GridItem>
+                    {this.state.redirectTo}
                 </GridContainer>
             )
         }

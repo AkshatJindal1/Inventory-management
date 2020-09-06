@@ -33,6 +33,12 @@ public class FormController {
 
 	@Autowired
 	private FormService service;
+	
+	@PostMapping(value="/delete")
+	public void deleteForm(@RequestBody List<String> deletionList) {
+		System.out.println(deletionList);
+		service.deleteForm(deletionList);
+	}
 
 	@PostMapping(value = "/{category}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Form addForm(@Valid @RequestBody List<Field> fields, @RequestParam(required = false) String formId,
@@ -58,11 +64,6 @@ public class FormController {
 	@GetMapping(value = "/{category}/url")
 	public Form getFormByUrl(@RequestParam String url, @PathVariable("category") String category) {
 		return service.getByUrl(url, category);
-	}
-
-	@DeleteMapping
-	public void deleteForm(@RequestBody List<String> deletionList) {
-		service.deleteForm(deletionList);
 	}
 	
 	@GetMapping(path = "datatypes")
