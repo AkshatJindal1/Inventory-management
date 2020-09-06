@@ -21,6 +21,7 @@ import {
 import Filters from '../../Filters'
 import MUIDataTable from 'mui-datatables'
 import { MaterialTable } from '../../Table/MaterialTable'
+import { Redirect } from 'react-router-dom'
 import SimplePopover from '../../Popover/SimplePopover'
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
@@ -35,66 +36,28 @@ export class ProductLanding extends Component {
             count: 1,
             rowsPerPage: 5,
             isLoading: false,
-            // columns: [
-            //     {
-            //         name: 'productId',
-            //         label: 'Product ID',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'productName',
-            //         label: 'Name',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'description',
-            //         label: 'Description',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'cost',
-            //         label: 'Cost',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'productDetails.size',
-            //         label: 'Size',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'quantityInStock',
-            //         label: 'Quantity In Stock',
-            //         options: {
-            //             sort: true,
-            //         },
-            //     },
-            //     {
-            //         name: 'ratings',
-            //         label: 'Ratings',
-            //         empty: true,
-            //     },
-            // ],
+            redirectTo: null,
         }
     }
 
     componentDidMount() {
-        this.props.getColumns('products', 'clothing')
-        this.props.getAllProducts('products', 'clothing')
+        this.props.getColumns(
+            this.props.match.params.options,
+            this.props.match.params.formUrl
+        )
+        this.props.getAllProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl
+        )
         // this.props.getCategories()
     }
 
     getAllProducts = (filterOptions) => {
-        this.props.getAllProducts('products', 'clothing', filterOptions)
+        this.props.getAllProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            filterOptions
+        )
     }
 
     deleteRows = (productUids) => {
@@ -104,6 +67,17 @@ export class ProductLanding extends Component {
     filterSubmit = (filterCategories) => {
         this.props.setCategories(filterCategories)
         getAllProducts(filterCategories)
+    }
+
+    rowClick = (data) => {
+        console.log(data)
+        this.setState({
+            redirectTo: (
+                <Redirect
+                    to={`/form/${this.props.match.params.options}/${this.props.match.params.formUrl}/${data.url}`}
+                />
+            ),
+        })
     }
 
     render() {
@@ -149,7 +123,9 @@ export class ProductLanding extends Component {
                     getAllProducts={this.getAllProducts}
                     deleteRows={this.deleteRows}
                     onFilterSubmit={this.filterSubmit}
+                    onRowClick={this.rowClick}
                 />
+                {this.state.redirectTo}
             </Fragment>
         )
     }

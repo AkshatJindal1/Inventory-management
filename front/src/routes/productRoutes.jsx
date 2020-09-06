@@ -22,7 +22,7 @@ const routes = [
         component: UserProfile,
     },
     {
-        path: '/products',
+        path: '/data/:options/:formUrl',
         exact: true,
         name: 'Product Index',
         component: Product,

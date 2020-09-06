@@ -51,7 +51,7 @@ public class ProductController {
         log.info("{} {} {} {} {} {}", pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters);
 
         return service.getProducts(
-                formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters);
+                formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters, true);
 
     }
 
