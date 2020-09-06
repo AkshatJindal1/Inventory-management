@@ -160,17 +160,34 @@ public class ProductService {
             String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
             expression.andOperator(Criteria.where("formId").is(formId));
             maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields().include(sortField).exclude("_id");
+            
+            System.out.println("Reached 0 ");
+            
             Product maxProduct = mongoOps.findOne(maxQuery,  Product.class);
+            
+            System.out.println("Reached 1");
 
             Query minQuery = new Query();
             minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, sortField)).limit(1).fields().include(sortField).exclude("_id");
+            
+            System.out.println("Reached 2");
+            
             Product minProduct = mongoOps.findOne(minQuery, Product.class);
 
+            System.out.println("Reached 3");
+            
+            System.out.println(minProduct);
+            System.out.println(maxProduct);
+            
+            
             String minValue = new ObjectMapper().convertValue(minProduct, Map.class).get(sortField).toString();
             String maxValue = new ObjectMapper().convertValue(maxProduct, Map.class).get(sortField).toString();
             mp.put(sortField, new ArrayList<>(Arrays.asList(minValue, maxValue)));
+            
+            
         });
 
+        System.out.println(mp);
 
         return mp;
 

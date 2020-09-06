@@ -23,7 +23,9 @@ import lombok.ToString;
 @Document(collection = "forms")
 @ToString
 public class Form {
-	
+
+//	TODO Datatypes overflow
+
 	@Id
 	@JsonProperty("formId")
 	private String _id;
@@ -31,7 +33,7 @@ public class Form {
 	private Boolean option;
 	private String name;
 	private List<Field> fields;
-	
+
 	public Form(String url, Boolean option, String name, List<Field> fields) {
 		super();
 		this.url = url;
@@ -39,5 +41,5 @@ public class Form {
 		this.name = name;
 		this.fields = fields;
 	}
-	
+
 }

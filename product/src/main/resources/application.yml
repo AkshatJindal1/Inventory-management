@@ -10,5 +10,5 @@ spring:
         jwt:
           # Replace with the domain of your Auth0 tenant.
           # Note the trailing slash is important!
-          issuer-uri: https://dev-jl9-q1h7.eu.auth0.com/
           
+          issuer-uri: https://dev-jl9-q1h7.eu.auth0.com/

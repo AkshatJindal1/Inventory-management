@@ -89,8 +89,7 @@ export const deleteForms = (isLoading, onError, data) => (dispatch) => {
     console.log('Calling API', url)
 
     axios
-        .post(url, {
-            data: data,
+        .post(url, data, {
             headers: headers,
         })
         .then((response) => isLoading(data))

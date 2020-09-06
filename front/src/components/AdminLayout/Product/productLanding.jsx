@@ -9,6 +9,7 @@ import GridItem from '../../Grid/GridItem'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import Controls from '../../Controls/Controls'
+import { Redirect } from 'react-router'
 
 import { getTable, deleteForms } from '../../../store/actions/formAction'
 
@@ -52,14 +53,14 @@ export class ProductLanding extends Component {
         })
     }
 
-    removeFromForms = (data) => {
-        const invalidUids = data.map((form) => form.uid)
+    removeFromForms = (invalidUids) => {
         const allOptionForms = this.state.allOptionForms.filter((form) => {
             return !invalidUids.includes(form.uid)
         })
         const allProductForms = this.state.allProductForms.filter((form) => {
             return !invalidUids.includes(form.uid)
         })
+
         this.setState({ allOptionForms, allProductForms })
     }
 
@@ -85,6 +86,7 @@ export class ProductLanding extends Component {
         return formShort.map((form, index) => {
             const editUrl = `/structure/${options}/${form.url}`
             const addUrl = `/form/${options}/${form.url}`
+            const dataUrl = `data/${options}/${form.url}`
             return [
                 form.name,
                 <>
@@ -101,7 +103,7 @@ export class ProductLanding extends Component {
                             <Edit />
                         </IconButton>
                     </Link>
-                    <Link to={editUrl}>
+                    <Link to={dataUrl}>
                         <IconButton aria-label="edit">
                             <Visibility />
                         </IconButton>
@@ -111,18 +113,35 @@ export class ProductLanding extends Component {
         })
     }
 
-    changeLocation = (data, rowMeta) => {
-        console.log(data, rowMeta)
-        // TODO Assuming Option Name and Product name are also unique
+    options = (options) => {
+        const allForms =
+            options == 'options'
+                ? this.state.allOptionForms
+                : this.state.allProductForms
 
-        // let options =
-        //     this.state.allOptionForms[rowMeta.rowIndex].name == data[0]
-        //         ? 'options'
-        //         : 'products'
-
-        // console.log(options)
-
-        // this.setState({ allOptionForms, allProductForms })
+        return {
+            download: false,
+            filter: false,
+            print: false,
+            viewColumns: false,
+            onRowsDelete: (rowsDeleted) => {
+                const invalidIndexes = rowsDeleted.data.map((d) => d.dataIndex)
+                const invalidUids = allForms
+                    .filter((form, index) => invalidIndexes.includes(index))
+                    .map((form) => form.uid)
+                this.deleteForms(invalidUids)
+            },
+            onRowClick: (rowData, rowMeta) => {
+                const dataUrl = (
+                    <Redirect
+                        to={`data/${options}/${
+                            allForms[rowMeta.dataIndex].url
+                        }`}
+                    />
+                )
+                this.setState({ redirectTo: dataUrl })
+            },
+        }
     }
 
     render() {
@@ -133,25 +152,6 @@ export class ProductLanding extends Component {
             return <span>{'An Error Occured, or page not found'}</span>
         else {
             const columns = ['Name', 'Actions']
-            const options = {
-                download: false,
-                filter: false,
-                print: false,
-                viewColumns: false,
-                onRowsDelete: (rowsDeleted) => {
-                    for (var key in rowsDeleted.data) {
-                        console.log(key)
-                        // this.removeItem(
-                        //     this.state.item_id[rowsDeleted.data[key].dataIndex]
-                        // ).then((res) => {
-                        //     if (res != true) {
-                        //         // ???
-                        //     }
-                        // })
-                    }
-                    console.log(rowsDeleted, 'were deleted!')
-                },
-            }
 
             const addFormUrl = (options) => `/structure/${options}/`
 
@@ -163,7 +163,7 @@ export class ProductLanding extends Component {
                             title={'Product Forms'}
                             data={this.getProductData('products')}
                             columns={columns}
-                            options={options}
+                            options={this.options('products')}
                         />
                         <Link to={addFormUrl('products')}>
                             <Controls.Button
@@ -178,7 +178,7 @@ export class ProductLanding extends Component {
                             title={'Option Forms'}
                             data={this.getProductData('options')}
                             columns={columns}
-                            options={options}
+                            options={this.options('options')}
                         />
                         <Link to={addFormUrl('options')}>
                             <Controls.Button
