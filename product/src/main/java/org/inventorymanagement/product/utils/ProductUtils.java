@@ -17,38 +17,40 @@ import org.inventorymanagement.product.model.Field;
 
 public class ProductUtils {
 
-	public static String[][] getDefaultOptionValuesArray() {
-		String[][] defaultForms = { { "optionName", "Option Name", "text" } };
+	public static Object[][] getDefaultOptionValuesArray() {
+		Object[][] defaultForms = { { "optionName", "Option Name", "text", true } };
 		return defaultForms;
 	}
 
-	public static String[][] getDefaultProductValuesArray() {
-		String[][] defaultForms = { { "productId", "Product Id", "text" },
-				{ "productName", "Product Name", "text" }, { "description", "Description", "text" },
-				{ "image", "Image", "text" }, { "cost", "Cost", "number" },
-				{ "quantityInStock", "Quantity in Stock", "number" },
-				{ "quantityInTransit", "Quantity in Transit", "number" }, { "benchmark", "Benchmark", "number" } };
+	public static Object[][] getDefaultProductValuesArray() {
+		Object[][] defaultForms = { { "productId", "Product Id", "text", true },
+				{ "productName", "Product Name", "text", true }, { "description", "Description", "text", false },
+				{ "image", "Image", "text", false }, { "cost", "Cost", "number", false },
+				{ "quantityInStock", "Quantity in Stock", "number", false },
+				{ "quantityInTransit", "Quantity in Transit", "number", false },
+				{ "benchmark", "Benchmark", "number", false } };
 		return defaultForms;
 	}
 
-	public static String[][] getDefaultValuesArray(Boolean option) {
+	public static Object[][] getDefaultValuesArray(Boolean option) {
 		return option ? getDefaultOptionValuesArray() : getDefaultProductValuesArray();
 	}
 
 	public static List<Field> getDefaultForms(Boolean option) {
 		ArrayList<Field> forms = new ArrayList<>();
 
-		String[][] defaultForms = getDefaultValuesArray(option);
+		Object[][] defaultForms = getDefaultValuesArray(option);
 
 		for (int i = 0; i < defaultForms.length; i++) {
-			forms.add(new Field(defaultForms[i][0], defaultForms[i][1], defaultForms[i][2]));
+			forms.add(new Field((String) defaultForms[i][0], (String) defaultForms[i][1], (String) defaultForms[i][2],
+					(Boolean) defaultForms[i][3]));
 		}
 		return forms;
 	}
 
 	public static Set<String> getMandatoryIds(Boolean option) {
-		List<String[]> defaultProductArray = Arrays.asList(ProductUtils.getDefaultValuesArray(option));
-		return defaultProductArray.stream().map(field -> field[0]).collect(Collectors.toSet());
+		List<Object[]> defaultProductArray = Arrays.asList(ProductUtils.getDefaultValuesArray(option));
+		return defaultProductArray.stream().map(field -> (String) field[0]).collect(Collectors.toSet());
 	}
 
 	public static String generateId(String labelText, String id) {

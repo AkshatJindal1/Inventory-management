@@ -1,6 +1,7 @@
 package org.inventorymanagement.product.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,7 +37,7 @@ public class ProductController {
 	ProductService service;
 
 	@PostMapping
-	public Product addProduct(@Valid @RequestBody Product product) {
+	public Product addProduct(@Valid @RequestBody String product) throws JsonMappingException, JsonProcessingException {
 		return service.insertProduct(product);
 	}
 

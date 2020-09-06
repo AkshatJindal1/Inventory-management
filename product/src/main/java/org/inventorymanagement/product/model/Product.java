@@ -1,26 +1,37 @@
 package org.inventorymanagement.product.model;
 
 
-import lombok.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @Document(collection = "products")
+@JsonPropertyOrder({
+	"uid", "productId", "productName"
+})
 public class Product {
     @Id
     @JsonProperty("uid")
@@ -38,28 +49,36 @@ public class Product {
 
     private String image;
 
-//    @NotNull(message = "Product cost must not be null")
     private Double cost;
 
-    HashMap<String, String> productDetails;
+	private Long quantityInStock;
 
-//    @NotNull(message = "Quantity in stock must not be null")
-    private Integer quantityInStock;
-
-    private Integer quantityInTransit;
+    private Long quantityInTransit;
 
     private Integer ratings;
 
-    //TODO: handle when number of ratings are zero
     private Integer numberOfRatings;
 
     private List<String> reviews;
 
-    private Integer benchmark;
+    private Long benchmark;
     
     @NotNull(message = "Form Id cannot be null")
     private String formId;
     
     private String url;
 
+    private Map<String, Object> productDetails = new HashMap<String, Object>();
+
+    @JsonAnyGetter
+    public Map<String, Object> otherFields() {
+        return productDetails;
+    }
+
+    @JsonAnySetter
+    public void setOtherField(String name, Object value) {
+    	System.out.println(name);
+    	productDetails.put(name, value);
+    }
+    
 }
