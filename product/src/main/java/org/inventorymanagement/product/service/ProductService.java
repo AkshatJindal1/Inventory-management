@@ -1,12 +1,17 @@
 package org.inventorymanagement.product.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
+import org.inventorymanagement.product.model.FilterOptions;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.Option;
+import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.MongoConnection;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -20,7 +25,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.Order;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
@@ -43,7 +50,7 @@ public class ProductService {
     MongoConnection repository;
 
     public Product insertProduct(Product product) {
-    	product.setUrl(ProductUtils.toSlug(product.getProductName()));
+    	product.setUrl(ProductUtils.toSlug(product.getProductId()));
         return repository.save(product);
     }
 

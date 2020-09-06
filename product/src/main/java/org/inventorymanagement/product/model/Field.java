@@ -35,10 +35,11 @@ public class Field {
 	private Conditions conditions = new Conditions();
 	private List<Datatype> menuitems;
 	
-	public Field(String id, String labelText, String datatype) {
+	public Field(String id, String labelText, String datatype, Boolean required) {
 		this.id = id;
 		this.labelText = labelText;
 		this.datatype = datatype;
 		this.disabled = true;
+		this.required = required;
 	}
 }
