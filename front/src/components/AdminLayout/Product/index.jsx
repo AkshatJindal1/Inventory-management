@@ -21,6 +21,7 @@ import {
 import Filters from '../../Filters'
 import MUIDataTable from 'mui-datatables'
 import { MaterialTable } from '../../Table/MaterialTable'
+import { Redirect } from 'react-router-dom'
 import SimplePopover from '../../Popover/SimplePopover'
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
@@ -35,6 +36,7 @@ export class ProductLanding extends Component {
             count: 1,
             rowsPerPage: 5,
             isLoading: false,
+            redirectTo: null,
         }
     }
 
@@ -65,6 +67,17 @@ export class ProductLanding extends Component {
     filterSubmit = (filterCategories) => {
         this.props.setCategories(filterCategories)
         getAllProducts(filterCategories)
+    }
+
+    rowClick = (data) => {
+        console.log(data)
+        this.setState({
+            redirectTo: (
+                <Redirect
+                    to={`/form/${this.props.match.params.options}/${this.props.match.params.formUrl}/${data.url}`}
+                />
+            ),
+        })
     }
 
     render() {
@@ -110,7 +123,9 @@ export class ProductLanding extends Component {
                     getAllProducts={this.getAllProducts}
                     deleteRows={this.deleteRows}
                     onFilterSubmit={this.filterSubmit}
+                    onRowClick={this.rowClick}
                 />
+                {this.state.redirectTo}
             </Fragment>
         )
     }
