@@ -76,7 +76,7 @@ export class MaterialTable extends Component {
             filterTitle,
             tableTitle,
         } = this.props
-
+        console.log(data)
         let optionsDefault = {
             onTableChange: (action, tableState) => {
                 console.log(action, tableState)
@@ -152,6 +152,9 @@ export class MaterialTable extends Component {
                     useDisplayedColumnsOnly: false,
                     useDisplayedRowsOnly: false,
                 },
+            },
+            onRowClick: (rowData, rowMeta) => {
+                this.props.onRowClick(data[rowMeta.dataIndex])
             },
         }
 
