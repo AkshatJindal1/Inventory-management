@@ -47,8 +47,6 @@ public class ProductController {
         String isDescending = req.getDescending() == null ? "false" : req.getDescending();
         String searchText = req.getSearchText() == null ? "" : req.getSearchText();
         List <FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
-        log.info("{}", req);
-        log.info("{} {} {} {} {} {}", pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters);
 
         return service.getProducts(
                 formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters, true);

@@ -169,6 +169,7 @@ class FilterProperties extends Component {
         const {
             options: { minimumValue, maximumValue },
         } = category
+        if (minimumValue === null || maximumValue === null) return null
         const marks = [
             { value: 0, label: minimumValue },
             { value: 100, label: maximumValue },

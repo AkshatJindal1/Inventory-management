@@ -64,19 +64,11 @@ public class ProductService {
         Query query = new Query();
         Criteria expression = new Criteria();
         String formId;
-        log.info("{} {}", formUrl, isProduct);
           formId = formRepository.findByUrlAndOption(formUrl, !isProduct).get_id();
 
-        log.info("formid: {}", formId);
         List<Criteria> criterias = new ArrayList<>();
         criterias.add(Criteria.where("formId").is(formId));
-//        expression = Criteria.where("formId").is(formId);
-//        for(Map.Entry<String, List<String>> entry: filter.entrySet()) {
-//
-//            String key = entry.getKey();
-//            List<String> values = entry.getValue();
-//            expression.andOperator(Criteria.where(key).in(values));
-//        }
+
       for(FilterOptions filter: filters) {
         Map<String, Object> options = filter.getOptions();
         String id = filter.getId();
@@ -100,21 +92,14 @@ public class ProductService {
       if(isProduct) {
         resp.put("totalProducts", mongoOps.count(query, Product.class));
         query.with(pageableRequest);
-        log.info(query.toString());
         List<Product> products = mongoOps.find(query, Product.class);
         resp.put("response",products);
       } else {
         resp.put("totalProducts", mongoOps.count(query, Option.class));
         query.with(pageableRequest);
-        log.info(query.toString());
         List<Option> products = mongoOps.find(query, Option.class);
         resp.put("response",products);
       }
-//      resp.put("totalProducts", mongoOps.count(query, Product.class));
-//      query.with(pageableRequest);
-//      log.info(query.toString());
-//      List<Product> products = mongoOps.find(query, Product.class);
-//      resp.put("response",products);
       return resp;
     }
 
@@ -151,27 +136,30 @@ public class ProductService {
 	public Map<String, List> getMaxMinValue(String formUrl, List<String> sortFields) {
 
         Map<String, List> mp = new HashMap<>();
-//        mp.put("min", minValue);
-//        mp.put("max", maxValue);
-
         sortFields.stream().forEach(sortField -> {
+            log.info(sortField);
             Query maxQuery = new Query();
             Criteria expression = new Criteria();
             String formId = formRepository.findByUrlAndOption(formUrl, false).get_id();
             expression.andOperator(Criteria.where("formId").is(formId));
             maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields().include(sortField).exclude("_id");
             Product maxProduct = mongoOps.findOne(maxQuery,  Product.class);
+            log.info("{}", maxProduct);
 
             Query minQuery = new Query();
             minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, sortField)).limit(1).fields().include(sortField).exclude("_id");
             Product minProduct = mongoOps.findOne(minQuery, Product.class);
-
-            String minValue = new ObjectMapper().convertValue(minProduct, Map.class).get(sortField).toString();
-            String maxValue = new ObjectMapper().convertValue(maxProduct, Map.class).get(sortField).toString();
-            mp.put(sortField, new ArrayList<>(Arrays.asList(minValue, maxValue)));
+            log.info("{}", minProduct);
+            try {
+              String minValue = new ObjectMapper().convertValue(minProduct, Map.class).get(sortField).toString();
+              String maxValue = new ObjectMapper().convertValue(maxProduct, Map.class).get(sortField).toString();
+              mp.put(sortField, new ArrayList<>(Arrays.asList(minValue, maxValue)));
+            } catch (Exception e) {
+              mp.put(sortField, new ArrayList<>(Arrays.asList(null, null)));
+            }
         });
 
-
+        log.info("{}", mp);
         return mp;
 
 
