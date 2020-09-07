@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -52,5 +53,6 @@ public interface FormRepository extends MongoRepository<Form, String> {
                 .ensureIndex(textIndex);
         }
     }
-	
+
+	public boolean existsByUrl(String url);
 }

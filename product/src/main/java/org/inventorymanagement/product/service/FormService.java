@@ -3,6 +3,7 @@ package org.inventorymanagement.product.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,6 +97,13 @@ public class FormService {
 			throw new ProductNotFoundException("Mandatory Field Missing\nMandatory Ids: " + mandatoryIds.toString()
 					+ "\nRequestedIds: " + requestIds.toString());
 		}
+		
+		// Set a url for the form
+		
+		String slugCandidate = ProductUtils.toSlug(name) + "-";
+		do {
+			slugCandidate = slugCandidate + String.valueOf((new Random()).nextInt(10));
+		} while (repository.existsByUrl(slugCandidate));
 
 		// Update the Form Object
 
@@ -103,7 +111,7 @@ public class FormService {
 
 			// If new Form let mongo generate a new Id and create a new form
 
-			form = new Form(ProductUtils.toSlug(name), option, name, fields);
+			form = new Form(slugCandidate, option, name, fields);
 		}
 
 		else {
@@ -113,7 +121,7 @@ public class FormService {
 				throw new ProductNotFoundException("Product with that id could not be found");
 			}
 			repository.deleteById(id);
-			form = new Form(id, ProductUtils.toSlug(name), option, name, fields);
+			form = new Form(id, slugCandidate, option, name, fields);
 		}
 
 		return repository.save(form);

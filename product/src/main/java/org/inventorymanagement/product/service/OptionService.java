@@ -1,5 +1,7 @@
 package org.inventorymanagement.product.service;
 
+import java.util.Random;
+
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Option;
@@ -34,7 +36,12 @@ public class OptionService {
     	final ObjectMapper mapper = new ObjectMapper();
     	final Option option = mapper.readValue(optionMap, Option.class);
     	
-    	option.setOptionUrl(ProductUtils.toSlug(option.getName()));
+		String candidate = ProductUtils.toSlug(option.getName()) + "-";
+		do {
+			candidate = candidate + String.valueOf((new Random()).nextInt(10));
+		} while (repository.existsByOptionUrl(candidate));
+
+    	option.setOptionUrl(candidate);
     	return repository.save(option);
     }
 
