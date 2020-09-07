@@ -1,7 +1,9 @@
 package org.inventorymanagement.product.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,9 +61,28 @@ public class FormService {
 			throw new ProductNotFoundException("Form Name Cannot be null");
 		}
 
+		// Generate Ids for new fields
+		
+		Form form = repository.findById(id).orElse(null);
+		ArrayList<String> ids = new ArrayList<>();
+		if (form != null) {
+			for (Field f : form.getFields()) {
+				ids.add(f.getId());
+			}
+		}
+
+		for (Field f : fields) {
+			String generatedId = ProductUtils.getOrGenerateId(f.getLabelText(), f.getId(), ids);
+			f.setId(generatedId);
+		}
+
 		Set<String> mandatoryIds = ProductUtils.getMandatoryIds(option);
 		Set<String> requestIds = fields.stream()
-				.map(field -> ProductUtils.generateId(field.getLabelText(), field.getId())).collect(Collectors.toSet());
+				.map(field -> field.getId())
+				.collect(Collectors.toSet());
+		
+		System.out.println(requestIds);
+		System.out.println(ids);
 
 		// Check if Duplicate Keys are sent
 
@@ -76,35 +97,31 @@ public class FormService {
 			throw new ProductNotFoundException("Mandatory Field Missing\nMandatory Ids: " + mandatoryIds.toString()
 					+ "\nRequestedIds: " + requestIds.toString());
 		}
-
-		// Generate Ids for new fields
-
-		for (Field f : fields) {
-			String generatedId = ProductUtils.generateId(f.getLabelText(), f.getId());
-			f.setId(generatedId);
-		}
+		
+		// Set a url for the form
+		
+		String slugCandidate = ProductUtils.toSlug(name) + "-";
+		do {
+			slugCandidate = slugCandidate + String.valueOf((new Random()).nextInt(10));
+		} while (repository.existsByUrl(slugCandidate));
 
 		// Update the Form Object
-
-		Form form = null;
 
 		if (id == null || id.trim().equals("")) {
 
 			// If new Form let mongo generate a new Id and create a new form
 
-			form = new Form(ProductUtils.toSlug(name), option, name, fields);
+			form = new Form(slugCandidate, option, name, fields);
 		}
 
 		else {
 
 			// If updating a Form delete the previous form and create a identical new form
-
-			Form deletedForm = deleteForm(id);
-			if (deletedForm == null) {
+			if (form == null) {
 				throw new ProductNotFoundException("Product with that id could not be found");
 			}
-
-			form = new Form(id, ProductUtils.toSlug(name), option, name, fields);
+			repository.deleteById(id);
+			form = new Form(id, slugCandidate, option, name, fields);
 		}
 
 		return repository.save(form);
@@ -116,12 +133,6 @@ public class FormService {
 
 	public List<Form> getAllForms() {
 		return repository.findAll();
-	}
-
-	public Form deleteForm(String formId) {
-		Form deletedForm = repository.findById(formId).orElse(null);
-		repository.deleteById(formId);
-		return deletedForm;
 	}
 
 	public void deleteForm(List<String> formIds) {
@@ -154,8 +165,9 @@ public class FormService {
 	public Pair<List<FormShort>, List<FormShort>> getAllFormShorts() {
 		List<FormShort> allFormShort = repository.getFormShorts();
 		Map<Boolean, List<FormShort>> partitionedFormShorts = allFormShort.stream()
-		        .collect(Collectors.partitioningBy(x -> x.getOption()));
-		Pair<List<FormShort>, List<FormShort>> pair = Pair.of(partitionedFormShorts.get(false), partitionedFormShorts.get(true));
+				.collect(Collectors.partitioningBy(x -> x.getOption()));
+		Pair<List<FormShort>, List<FormShort>> pair = Pair.of(partitionedFormShorts.get(false),
+				partitionedFormShorts.get(true));
 		return pair;
 	}
 

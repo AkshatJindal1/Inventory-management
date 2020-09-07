@@ -86,7 +86,7 @@ export class ProductLanding extends Component {
         return formShort.map((form, index) => {
             const editUrl = `/structure/${options}/${form.url}`
             const addUrl = `/form/${options}/${form.url}`
-            const dataUrl = `data/${options}/${form.url}`
+            const dataUrl = `/data/${options}/${form.url}`
             return [
                 form.name,
                 <>
@@ -134,7 +134,7 @@ export class ProductLanding extends Component {
             onRowClick: (rowData, rowMeta) => {
                 const dataUrl = (
                     <Redirect
-                        to={`data/${options}/${
+                        to={`/data/${options}/${
                             allForms[rowMeta.dataIndex].url
                         }`}
                     />

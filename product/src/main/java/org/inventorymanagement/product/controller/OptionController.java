@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -37,7 +40,7 @@ public class OptionController {
     
 
     @PostMapping
-    public Option addOption(@Valid @RequestBody HashMap<String, Object> option) {
+    public Option addOption(@Valid @RequestBody String option) throws JsonMappingException, JsonProcessingException {
         return service.insertOption(option);
     }
     

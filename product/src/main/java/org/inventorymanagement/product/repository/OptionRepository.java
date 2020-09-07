@@ -21,6 +21,8 @@ public interface OptionRepository extends MongoRepository<Option, String> {
 	
 	List<Datatype> findByFormId(String formId);
 
+	boolean existsByOptionUrl(String candidate);
+	
 	@Configuration
 	@DependsOn("mongoTemplate")
 	public class CollectionsConfig {

@@ -47,5 +47,6 @@ public interface MongoConnection extends MongoRepository<Product, String> {
     }
 
 	Product findByUrlAndFormId(String url, String formId);
+	boolean existsByUrl(String candidate);
 
 }

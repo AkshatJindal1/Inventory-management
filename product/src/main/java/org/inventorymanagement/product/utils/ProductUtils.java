@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -53,15 +54,21 @@ public class ProductUtils {
 		return defaultProductArray.stream().map(field -> (String) field[0]).collect(Collectors.toSet());
 	}
 
-	public static String generateId(String labelText, String id) {
-		if (id == null || id.trim().equalsIgnoreCase(""))
-			return CaseUtils.toCamelCase(labelText, false);
+	public static String getOrGenerateId(String labelText, String id, ArrayList<String> ids) {
+		if (id == null || id.trim().equalsIgnoreCase("")) {
+			String candidate = CaseUtils.toCamelCase(labelText, false);
+			if(ids.contains(candidate)) return getOrGenerateId(labelText + String.valueOf(new Random().nextInt(10)), id, ids);
+			else {
+				ids.add(candidate);
+				return candidate;
+			}
+		}
 		return id;
 	}
 
-	public static String generateId(String labelText) {
-		return generateId(labelText, null);
-	}
+//	public static String generateId(String labelText) {
+//		return getOrGenerateId(labelText, null, new ArrayList<String>());
+//	}
 
 	public static String toSlug(String input) {
 
