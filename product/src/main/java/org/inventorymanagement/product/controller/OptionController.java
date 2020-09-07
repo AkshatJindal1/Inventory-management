@@ -58,8 +58,6 @@ public class OptionController {
         String isDescending = req.getDescending() == null ? "false" : req.getDescending();
         String searchText = req.getSearchText() == null ? "" : req.getSearchText();
         List<FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
-        log.info("I am here");
-        log.info("{}", req);
 
         return productService.getProducts(
             formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters, false);

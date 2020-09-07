@@ -11,15 +11,7 @@ import org.inventorymanagement.product.model.FilterOptions;
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -49,14 +41,12 @@ public class ProductController {
 	@PostMapping("/{formUrl}")
 	public Map<String, Object> getProducts(@RequestBody Filter req, @PathVariable("formUrl") String formUrl) {
 
-		Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
-		Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
-		String sortBy = req.getSortBy() == null || req.getSortBy().equals("0") ? "productId" : req.getSortBy();
-		String isDescending = req.getDescending() == null ? "false" : req.getDescending();
-		String searchText = req.getSearchText() == null ? "" : req.getSearchText();
-		List<FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
-		log.info("{}", req);
-		log.info("{} {} {} {} {} {}", pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters);
+        Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
+        Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
+        String sortBy = req.getSortBy() == null || req.getSortBy().equals("0")  ? "productId" : req.getSortBy();
+        String isDescending = req.getDescending() == null ? "false" : req.getDescending();
+        String searchText = req.getSearchText() == null ? "" : req.getSearchText();
+        List <FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
 
 		return service.getProducts(formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters,
 				true);
@@ -74,5 +64,6 @@ public class ProductController {
 			@RequestParam("sortFields") List<String> sortFields) {
 		return service.getMaxMinValue(formUrl, sortFields);
 	}
+
 
 }

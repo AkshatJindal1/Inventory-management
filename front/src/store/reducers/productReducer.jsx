@@ -76,18 +76,19 @@ export default function (state = initialState, action) {
             const filterCategories = action.payload[0].fields
                 .filter((field) => field.datatype !== 'text')
                 .map((field) => {
-                    console.log(field.id, action.payload[1][field.id])
                     const minValue =
-                        action.payload[1][field.id] !== undefined
+                        action.payload[1][field.id] !== undefined &&
+                        action.payload[1][field.id] !== null
                             ? action.payload[1][field.id][0] !==
                               action.payload[1][field.id][1]
                                 ? parseInt(action.payload[1][field.id][0])
                                 : 0
-                            : 0
+                            : null
                     const maxValue =
-                        action.payload[1][field.id] !== undefined
+                        action.payload[1][field.id] !== undefined &&
+                        action.payload[1][field.id] !== null
                             ? parseInt(action.payload[1][field.id][1])
-                            : 100
+                            : null
                     return {
                         id: field.id,
                         label: field.labelText,
@@ -110,6 +111,11 @@ export default function (state = initialState, action) {
                                 : [minValue, maxValue],
                     }
                 })
+                .filter(
+                    (field) =>
+                        field.datatype === 'number' &&
+                        field.options.maximumValue !== null
+                )
             return {
                 ...state,
                 columns: action.payload[0].fields.map((field) => {
