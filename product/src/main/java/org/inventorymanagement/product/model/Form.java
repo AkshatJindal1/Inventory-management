@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,8 +30,11 @@ public class Form {
 	@Id
 	@JsonProperty("formId")
 	private String _id;
+	
 	private String url;
 	private Boolean option;
+	
+	@Indexed(unique = true)
 	private String name;
 	private List<Field> fields;
 

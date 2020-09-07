@@ -1,11 +1,8 @@
 package org.inventorymanagement.product.service;
 
-import java.util.HashMap;
-
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Option;
-import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
