@@ -8,6 +8,9 @@ import {
 
 import { BASE_URL } from './constants'
 import axios from 'axios'
+// import { useAuth0 } from '@auth0/auth0-react'
+
+// const { getAccessTokenSilently } = useAuth0()
 
 export const getFormData = (isLoading, onError, productUrl, option) => (
     dispatch
@@ -81,13 +84,12 @@ export const deleteForms = (isLoading, onError, data) => (dispatch) => {
         'Content-Type': 'application/json',
     }
 
-    const url = `${BASE_URL}/forms/`
+    const url = `${BASE_URL}/forms/delete`
 
     console.log('Calling API', url)
 
     axios
-        .delete(url, {
-            data: data,
+        .post(url, data, {
             headers: headers,
         })
         .then((response) => isLoading(data))
@@ -95,6 +97,13 @@ export const deleteForms = (isLoading, onError, data) => (dispatch) => {
 }
 
 export const getTable = (onSuccess, onError) => (dispatch) => {
+    // const accessToken = getAccessTokenSilently({
+    //     audience: `https://quickstarts/api`,
+    //     scope: 'read:current_user',
+    // }).then((response) => console.log(response))
+
+    // console.log(accessToken)
+
     const url = `${BASE_URL}/forms/all`
 
     console.log(url)

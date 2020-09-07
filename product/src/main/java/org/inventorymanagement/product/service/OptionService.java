@@ -1,5 +1,7 @@
 package org.inventorymanagement.product.service;
 
+import java.util.Random;
+
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Option;
@@ -8,6 +10,10 @@ import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class OptionService {
@@ -25,8 +31,17 @@ public class OptionService {
     @Autowired 
     FormRepository formRepository;
     
-    public Option insertOption(Option option) {
-    	option.setOptionUrl(ProductUtils.toSlug(option.getName()));
+    public Option insertOption(String optionMap) throws JsonMappingException, JsonProcessingException {
+    	
+    	final ObjectMapper mapper = new ObjectMapper();
+    	final Option option = mapper.readValue(optionMap, Option.class);
+    	
+		String candidate = ProductUtils.toSlug(option.getName()) + "-";
+		do {
+			candidate = candidate + String.valueOf((new Random()).nextInt(10));
+		} while (repository.existsByOptionUrl(candidate));
+
+    	option.setOptionUrl(candidate);
     	return repository.save(option);
     }
 

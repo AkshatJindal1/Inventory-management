@@ -2,11 +2,12 @@ package org.inventorymanagement.product.service;
 
 import java.util.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
+import org.inventorymanagement.product.model.FilterOptions;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.Option;
+import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.MongoConnection;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -20,46 +21,50 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.Order;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
 public class ProductService {
-	
+
 	/*
 	 * 
-	 * TODO Verify fields before saving
-	 * TODO Error Occurs when saving twice on the same form
+	 * TODO Verify fields before saving TODO Error Occurs when saving twice on the
+	 * same form
 	 * 
 	 */
-	
+
 	@Autowired
 	private FormRepository formRepository;
 
-    @Autowired
-    private MongoOperations mongoOps;
+	@Autowired
+	private MongoOperations mongoOps;
 
-    @Autowired
-    MongoConnection repository;
+	@Autowired
+	MongoConnection repository;
 
-    public Product insertProduct(Product product) {
-    	product.setUrl(ProductUtils.toSlug(product.getProductName()));
-        return repository.save(product);
-    }
+	public Product insertProduct(String productMap) throws JsonMappingException, JsonProcessingException {
+		final ObjectMapper mapper = new ObjectMapper();
+		final Product product = mapper.readValue(productMap, Product.class);
+		String candidate = ProductUtils.toSlug(product.getProductId()) + "-";
+		do {
+			candidate = candidate + String.valueOf((new Random()).nextInt(10));
+		} while (repository.existsByUrl(candidate));
 
-    public Map<String, Object> getProducts(
-            String formUrl,
-            Integer pageNumber,
-            Integer recordsPerPage,
-            String sortBy,
-            String descending,
-            String searchText,
-            List<FilterOptions> filters,
-            Boolean isProduct) {
+		product.setUrl(candidate);
+		return repository.save(product);
+	}
 
-        Pageable pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy));
-        if(descending.equals("true"))
-            pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy).descending());
+	public Map<String, Object> getProducts(String formUrl, Integer pageNumber, Integer recordsPerPage, String sortBy,
+			String descending, String searchText, List<FilterOptions> filters, Boolean isProduct) {
+
+		Pageable pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy));
+		if (descending.equals("true"))
+			pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy).descending());
 
         Query query = new Query();
         Criteria expression = new Criteria();
@@ -83,7 +88,7 @@ public class ProductService {
           criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
         }
 
-      }
+		}
 
       query.addCriteria(expression.andOperator(criterias.toArray(new Criteria[criterias.size()])));
       if(!searchText.equals(""))
@@ -103,35 +108,34 @@ public class ProductService {
       return resp;
     }
 
-    public Product getProductById(String id) {
+	public Product getProductById(String id) {
 
-        return repository.findByProductId(id);
-    }
+		return repository.findByProductId(id);
+	}
 
-    public Product updateProductById(String id, Product product) {
+	public Product updateProductById(String id, Product product) {
 
-        if(!product.getProductId().equals(id)) {
-            throw new ProductIdMismatchException("Product id  does not match with the request body");
-        }
-        Product oldProduct = getProductById(id);
-        if(oldProduct == null)
-            return repository.save(product);
+		if (!product.getProductId().equals(id)) {
+			throw new ProductIdMismatchException("Product id  does not match with the request body");
+		}
+		Product oldProduct = getProductById(id);
+		if (oldProduct == null)
+			return repository.save(product);
 
-        product.set_id(oldProduct.get_id());
-        return repository.save(product);
-    }
-    
+		product.set_id(oldProduct.get_id());
+		return repository.save(product);
+	}
 
 	public Product getProductByUrl(String formUrl, String productUrl) {
 		Form form = formRepository.findByUrlAndOption(formUrl, false);
-    	if(form == null) 
-    		throw new ProductNotFoundException("Form Url incorrect");
-    	String formId = form.get_id();    	
-    	Product product =repository.findByUrlAndFormId(productUrl, formId);
-    	if(product == null)
-    		throw new ProductNotFoundException("Option Url incorrect");
-        return product;
-    }
+		if (form == null)
+			throw new ProductNotFoundException("Form Url incorrect");
+		String formId = form.get_id();
+		Product product = repository.findByUrlAndFormId(productUrl, formId);
+		if (product == null)
+			throw new ProductNotFoundException("Option Url incorrect");
+		return product;
+	}
 
 	public Map<String, List> getMaxMinValue(String formUrl, List<String> sortFields) {
 
@@ -159,10 +163,8 @@ public class ProductService {
             }
         });
 
-        log.info("{}", mp);
+
         return mp;
 
-
-
-    }
+	}
 }

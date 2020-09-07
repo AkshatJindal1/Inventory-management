@@ -17,6 +17,8 @@ import { saveProduct } from '../../store/actions/productAction'
 
 const validateOnChange = true
 
+// TODO Render data values for option fields in data table
+
 export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
         let temp = { ...this.state.errors }
@@ -71,8 +73,6 @@ export class AddForm extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
         if (this.validate()) {
-            this.resetForm()
-
             const values = this.state.values
 
             // Set uid
@@ -85,6 +85,7 @@ export class AddForm extends Component {
 
             this.props.saveProduct(
                 (data) => {
+                    this.resetForm()
                     console.log(`About to Redirect to ${this.props.redirectTo}`)
                     this.setState({
                         redirectTo: <Redirect to={this.props.redirectTo} />,
@@ -107,8 +108,6 @@ export class AddForm extends Component {
     }
 
     componentWillMount() {
-        console.log(this.props.initialFValues)
-
         const initialFValues = this.props.initialFValues
             ? this.props.initialFValues
             : []

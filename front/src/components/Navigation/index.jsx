@@ -15,6 +15,8 @@ import { toggleDrawer } from '../../store/actions/appAction'
 import { useStyles } from '../../assets/jss/navigationStyle'
 import { withStyles } from '@material-ui/core/styles'
 import withWidth from '@material-ui/core/withWidth'
+import LoginButton from '../../authentication/LoginButton'
+import LogoutButton from '../../authentication/LogoutButton'
 
 class Navigation extends Component {
     handleDrawerClose = () => {
@@ -72,6 +74,24 @@ class Navigation extends Component {
                 >
                     {this.getBrand()}
                     <Divider />
+
+                    <LoginButton />
+                    <LogoutButton />
+
+                    <NavLink
+                        to="/profile/"
+                        activeClassName="active"
+                        key="profile"
+                    >
+                        <List>
+                            <ListItem button key="profile">
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Profile" />
+                            </ListItem>
+                        </List>
+                    </NavLink>
 
                     <NavLink
                         to="/tables/"

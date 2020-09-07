@@ -201,8 +201,6 @@ export class AddForm extends Component {
                 })
             )
         }
-
-        console.log(datatypes)
         this.setState({
             values,
             errors,
@@ -379,7 +377,11 @@ export class AddForm extends Component {
                             value={values[index].required}
                             onChange={(e) => handleInputChange(e, index)}
                             error={errors[index].required}
-                            // disabled={disabled[index]}
+                            disabled={
+                                this.props.option === 'options'
+                                    ? [0].includes(index)
+                                    : [0, 1].includes(index)
+                            } // Disabling 1st two field in case of option, 2 in case of product
                         />
                     </GridItem>
                 </GridContainer>
