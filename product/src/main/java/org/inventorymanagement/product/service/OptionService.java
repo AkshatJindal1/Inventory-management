@@ -5,12 +5,15 @@ import java.util.HashMap;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Option;
+import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
@@ -29,10 +32,10 @@ public class OptionService {
     @Autowired 
     FormRepository formRepository;
     
-    public Option insertOption(HashMap<String, Object> optionMap) {
+    public Option insertOption(String optionMap) throws JsonMappingException, JsonProcessingException {
     	
     	final ObjectMapper mapper = new ObjectMapper();
-    	final Option option = mapper.convertValue(optionMap, Option.class);
+    	final Option option = mapper.readValue(optionMap, Option.class);
     	
     	option.setOptionUrl(ProductUtils.toSlug(option.getName()));
     	return repository.save(option);

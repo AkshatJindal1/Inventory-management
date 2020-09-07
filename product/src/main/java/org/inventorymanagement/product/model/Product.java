@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +28,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @Document(collection = "products")
-@JsonPropertyOrder({
-	"uid", "productId", "productName"
-})
 public class Product {
     @Id
     @JsonProperty("uid")
