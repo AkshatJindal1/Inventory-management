@@ -39,9 +39,9 @@ public class OptionService {
 		String candidate = ProductUtils.toSlug(option.getName()) + "-";
 		do {
 			candidate = candidate + String.valueOf((new Random()).nextInt(10));
-		} while (repository.existsByOptionUrl(candidate));
+		} while (repository.existsByUrl(candidate));
 
-    	option.setOptionUrl(candidate);
+    	option.setUrl(candidate);
     	return repository.save(option);
     }
 
@@ -52,7 +52,7 @@ public class OptionService {
     		throw new ProductNotFoundException("Form Url incorrect");
     	String formId = form.get_id();
     	
-    	Option option =repository.findByOptionUrlAndFormId(optionUrl, formId);
+    	Option option =repository.findByUrlAndFormId(optionUrl, formId);
     	if(option == null)
     		throw new ProductNotFoundException("Option Url incorrect");
         return option;

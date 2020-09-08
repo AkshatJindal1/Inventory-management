@@ -17,11 +17,11 @@ public interface OptionRepository extends MongoRepository<Option, String> {
 
 	Option findByName(String optiontName);
 	
-	Option findByOptionUrlAndFormId(String optionName, String formId);
+	Option findByUrlAndFormId(String optionName, String formId);
 	
 	List<Datatype> findByFormId(String formId);
 
-	boolean existsByOptionUrl(String candidate);
+	boolean existsByUrl(String candidate);
 	
 	@Configuration
 	@DependsOn("mongoTemplate")

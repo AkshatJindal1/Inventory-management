@@ -34,7 +34,7 @@ public class Option {
     @JsonProperty("uid")
     private String _id;
     
-    private String optionUrl;
+    private String url;
 
     @NotBlank(message = "Option name must not be null or empty")
     @JsonProperty("optionName")
