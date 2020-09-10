@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.FormShort;
+import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -50,7 +52,7 @@ public class FormController {
 	}
 	
 	@GetMapping(path = "/all")
-	public Pair<List<FormShort>, List<FormShort>> getAllFormShorts() {
+	public HashMap<Model, List<FormShort>> getAllFormShorts() {
 		return service.getAllFormShorts();
 	}
 

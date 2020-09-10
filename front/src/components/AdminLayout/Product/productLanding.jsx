@@ -39,8 +39,8 @@ export class ProductLanding extends Component {
 
     onSuccess = (response) => {
         this.setState({
-            allProductForms: response.first,
-            allOptionForms: response.second,
+            allProductForms: response.PRODUCT,
+            allOptionForms: response.OPTION,
             loading: false,
             error: false,
         })

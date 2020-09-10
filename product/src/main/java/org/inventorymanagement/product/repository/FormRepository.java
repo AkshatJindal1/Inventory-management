@@ -1,6 +1,5 @@
 package org.inventorymanagement.product.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -23,10 +22,10 @@ public interface FormRepository extends MongoRepository<Form, String> {
 
 	public Form findByUrlAndModel(String url, Model model);
 
-	@Query(value = "{}", fields = "{url:1, name: 1, option:1, _id:1}")
+	@Query(value = "{}", fields = "{url:1, name: 1, model:1, _id:1}")
 	public List<FormShort> getFormShorts();
 
-	@Query(value = "{ option : true}", fields = "{ _id : 1, name: 1 }")
+	@Query(value = "{ model : OPTION}", fields = "{ _id : 1, name: 1 }")
 	public List<Datatype> getDatatypes();
 
 	public List<Form> findAll();
