@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.FormShort;
+import org.inventorymanagement.product.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -20,7 +21,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface FormRepository extends MongoRepository<Form, String> {
 
-	public Form findByUrlAndOption(String url, Boolean option);
+	public Form findByUrlAndModel(String url, Model model);
 
 	@Query(value = "{}", fields = "{url:1, name: 1, option:1, _id:1}")
 	public List<FormShort> getFormShorts();

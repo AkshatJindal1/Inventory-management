@@ -32,16 +32,16 @@ public class Form {
 	private String _id;
 	
 	private String url;
-	private Boolean option;
+	private Model model;
 	
 	@Indexed(unique = true)
 	private String name;
 	private List<Field> fields;
 
-	public Form(String url, Boolean option, String name, List<Field> fields) {
+	public Form(String url, Model model, String name, List<Field> fields) {
 		super();
 		this.url = url;
-		this.option = option;
+		this.model = model;
 		this.name = name;
 		this.fields = fields;
 	}

@@ -13,8 +13,10 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.Datatype;
-import org.inventorymanagement.product.model.Field;
+import org.inventorymanagement.product.model.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ProductUtils {
 
@@ -33,14 +35,35 @@ public class ProductUtils {
 		return defaultForms;
 	}
 
-	public static Object[][] getDefaultValuesArray(Boolean option) {
-		return option ? getDefaultOptionValuesArray() : getDefaultProductValuesArray();
+	public static Object[][] getDefaultSalesValuesArray() {
+		Object[][] defaultForms = {
+				{ "amount", "Amount", "number", true},
+				{ "discount", "Discount", "number", false },
+				{ "netAmount", "Net Amount", "number", true },
+				{ "customerPhone", "Customer Phone Number", "text", false },
+				{ "customerEmail", "Customer Email", "text", false },
+				{ "customerName", "Customer Name", "text", false },
+		};
+		return defaultForms;
 	}
 
-	public static List<Field> getDefaultForms(Boolean option) {
+	public static Object[][] getDefaultValuesArray(Model model) {
+		switch(model) {
+			case PRODUCT:
+				return getDefaultProductValuesArray();
+			case OPTION:
+				return getDefaultOptionValuesArray();
+			case SALE:
+				return getDefaultSalesValuesArray();
+			default:
+				throw new ProductNotFoundException("Wrong Category");
+		}
+	}
+
+	public static List<Field> getDefaultForms(Model model) {
 		ArrayList<Field> forms = new ArrayList<>();
 
-		Object[][] defaultForms = getDefaultValuesArray(option);
+		Object[][] defaultForms = getDefaultValuesArray(model);
 
 		for (int i = 0; i < defaultForms.length; i++) {
 			forms.add(new Field((String) defaultForms[i][0], (String) defaultForms[i][1], (String) defaultForms[i][2],
@@ -49,8 +72,8 @@ public class ProductUtils {
 		return forms;
 	}
 
-	public static Set<String> getMandatoryIds(Boolean option) {
-		List<Object[]> defaultProductArray = Arrays.asList(ProductUtils.getDefaultValuesArray(option));
+	public static Set<String> getMandatoryIds(Model model) {
+		List<Object[]> defaultProductArray = Arrays.asList(ProductUtils.getDefaultValuesArray(model));
 		return defaultProductArray.stream().map(field -> (String) field[0]).collect(Collectors.toSet());
 	}
 
@@ -83,15 +106,25 @@ public class ProductUtils {
 		return slug.toLowerCase(Locale.ENGLISH);
 	}
 
-	public static Boolean getOptions(String category) {
-		Boolean option;
-		if (category.equals("options"))
-			option = true;
-		else if (category.equals("products"))
-			option = false;
-		else
-			throw new ProductNotFoundException("Wrong Category");
-		return option;
+	public static Model getOptions(String category) {
+//		Boolean option;
+//		if (category.equals("options"))
+//			option = true;
+//		else if (category.equals("products"))
+//			option = false;
+//		else
+//			throw new ProductNotFoundException("Wrong Category");
+//		return option;
+		switch(category) {
+			case "options":
+				return Model.OPTION;
+			case "products":
+				return Model.PRODUCT;
+			case "sales":
+				return Model.SALE;
+			default:
+				throw new ProductNotFoundException("Wrong Category");
+		}
 	}
 
 	public static List<Datatype> getDefaultDatatype() {

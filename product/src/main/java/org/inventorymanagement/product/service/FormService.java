@@ -7,11 +7,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.Datatype;
-import org.inventorymanagement.product.model.Field;
-import org.inventorymanagement.product.model.Form;
-import org.inventorymanagement.product.model.FormShort;
+import org.inventorymanagement.product.model.*;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -19,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class FormService {
 
@@ -46,15 +45,13 @@ public class FormService {
 
 	public List<Field> getDefaultForms(String category) {
 
-		Boolean option = ProductUtils.getOptions(category);
+		Model model = ProductUtils.getOptions(category);
 
-		return ProductUtils.getDefaultForms(option);
+		return ProductUtils.getDefaultForms(model);
 	}
 
 	public Form saveForm(List<Field> fields, String name, String id, String category) {
-
-		Boolean option = ProductUtils.getOptions(category);
-
+		Model model = ProductUtils.getOptions(category);
 		// Check if Form Name is null or blank
 
 		if (name == null || name.trim().equals("")) {
@@ -62,7 +59,6 @@ public class FormService {
 		}
 
 		// Generate Ids for new fields
-		
 		Form form = repository.findById(id).orElse(null);
 		ArrayList<String> ids = new ArrayList<>();
 		if (form != null) {
@@ -70,13 +66,12 @@ public class FormService {
 				ids.add(f.getId());
 			}
 		}
-
 		for (Field f : fields) {
 			String generatedId = ProductUtils.getOrGenerateId(f.getLabelText(), f.getId(), ids);
 			f.setId(generatedId);
 		}
 
-		Set<String> mandatoryIds = ProductUtils.getMandatoryIds(option);
+		Set<String> mandatoryIds = ProductUtils.getMandatoryIds(model);
 		Set<String> requestIds = fields.stream()
 				.map(field -> field.getId())
 				.collect(Collectors.toSet());
@@ -111,7 +106,7 @@ public class FormService {
 
 			// If new Form let mongo generate a new Id and create a new form
 
-			form = new Form(slugCandidate, option, name, fields);
+			form = new Form(slugCandidate, model, name, fields);
 		}
 
 		else {
@@ -121,7 +116,7 @@ public class FormService {
 				throw new ProductNotFoundException("Product with that id could not be found");
 			}
 			repository.deleteById(id);
-			form = new Form(id, slugCandidate, option, name, fields);
+			form = new Form(id, slugCandidate, model, name, fields);
 		}
 
 		return repository.save(form);
@@ -141,9 +136,9 @@ public class FormService {
 
 	public Form getByUrl(String url, String category) {
 
-		Boolean option = ProductUtils.getOptions(category);
+		Model model = ProductUtils.getOptions(category);
 
-		Form form = repository.findByUrlAndOption(url, option);
+		Form form = repository.findByUrlAndModel(url, model);
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");
@@ -165,7 +160,7 @@ public class FormService {
 	public Pair<List<FormShort>, List<FormShort>> getAllFormShorts() {
 		List<FormShort> allFormShort = repository.getFormShorts();
 		Map<Boolean, List<FormShort>> partitionedFormShorts = allFormShort.stream()
-				.collect(Collectors.partitioningBy(x -> x.getOption()));
+				.collect(Collectors.partitioningBy(x -> x.getOption().equals(Model.OPTION)));
 		Pair<List<FormShort>, List<FormShort>> pair = Pair.of(partitionedFormShorts.get(false),
 				partitionedFormShorts.get(true));
 		return pair;

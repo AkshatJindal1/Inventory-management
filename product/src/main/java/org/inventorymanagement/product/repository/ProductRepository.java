@@ -16,13 +16,9 @@ import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-public interface MongoConnection extends MongoRepository<Product, String> {
+public interface ProductRepository extends MongoRepository<Product, String> {
 
     Product findByProductId(String productId);
-    List<Product> findByProductNameIn(List<String> productName, Pageable pageable);
-
-    @Query("db.products.find(?0)")
-    List<Product> executeQuery(String query);
 
     @Configuration
     @DependsOn("mongoTemplate")

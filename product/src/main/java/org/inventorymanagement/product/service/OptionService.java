@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
@@ -47,11 +48,10 @@ public class OptionService {
 
 
     public Option getOptionByUrl(String formUrl, String optionUrl) {
-    	Form form = formRepository.findByUrlAndOption(formUrl, true);
+    	Form form = formRepository.findByUrlAndModel(formUrl, Model.OPTION);
     	if(form == null) 
     		throw new ProductNotFoundException("Form Url incorrect");
     	String formId = form.get_id();
-    	
     	Option option =repository.findByUrlAndFormId(optionUrl, formId);
     	if(option == null)
     		throw new ProductNotFoundException("Option Url incorrect");
