@@ -8,9 +8,6 @@ import {
 
 import { BASE_URL } from './constants'
 import axios from 'axios'
-// import { useAuth0 } from '@auth0/auth0-react'
-
-// const { getAccessTokenSilently } = useAuth0()
 
 export const getFormData = (isLoading, onError, productUrl, option) => (
     dispatch
