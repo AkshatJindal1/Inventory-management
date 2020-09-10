@@ -106,15 +106,7 @@ public class ProductUtils {
 		return slug.toLowerCase(Locale.ENGLISH);
 	}
 
-	public static Model getOptions(String category) {
-//		Boolean option;
-//		if (category.equals("options"))
-//			option = true;
-//		else if (category.equals("products"))
-//			option = false;
-//		else
-//			throw new ProductNotFoundException("Wrong Category");
-//		return option;
+	public static Model getModel(String category) {
 		switch(category) {
 			case "options":
 				return Model.OPTION;

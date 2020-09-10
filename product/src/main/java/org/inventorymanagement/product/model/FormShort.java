@@ -19,6 +19,6 @@ public class FormShort {
 	private String _id;
 	private String url;
 	private String name;
-	private Boolean option;
+	private Model model;
 
 }

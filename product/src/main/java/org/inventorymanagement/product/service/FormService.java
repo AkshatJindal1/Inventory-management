@@ -1,21 +1,26 @@
 package org.inventorymanagement.product.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
+import org.inventorymanagement.product.model.Datatype;
+import org.inventorymanagement.product.model.Field;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.FormShort;
+import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -45,13 +50,13 @@ public class FormService {
 
 	public List<Field> getDefaultForms(String category) {
 
-		Model model = ProductUtils.getOptions(category);
+		Model model = ProductUtils.getModel(category);
 
 		return ProductUtils.getDefaultForms(model);
 	}
 
 	public Form saveForm(List<Field> fields, String name, String id, String category) {
-		Model model = ProductUtils.getOptions(category);
+		Model model = ProductUtils.getModel(category);
 		// Check if Form Name is null or blank
 
 		if (name == null || name.trim().equals("")) {
@@ -119,6 +124,7 @@ public class FormService {
 			form = new Form(id, slugCandidate, model, name, fields);
 		}
 
+		System.out.println(form);
 		return repository.save(form);
 	}
 
@@ -136,7 +142,7 @@ public class FormService {
 
 	public Form getByUrl(String url, String category) {
 
-		Model model = ProductUtils.getOptions(category);
+		Model model = ProductUtils.getModel(category);
 
 		Form form = repository.findByUrlAndModel(url, model);
 
@@ -157,13 +163,17 @@ public class FormService {
 		return pair;
 	}
 
-	public Pair<List<FormShort>, List<FormShort>> getAllFormShorts() {
+	public HashMap<Model, List<FormShort>> getAllFormShorts() {
+		HashMap<Model, List<FormShort>> map = new HashMap<Model, List<FormShort>>();
+		for(Model m: Model.values()) {
+			map.put(m, new ArrayList<FormShort>());
+		}
 		List<FormShort> allFormShort = repository.getFormShorts();
-		Map<Boolean, List<FormShort>> partitionedFormShorts = allFormShort.stream()
-				.collect(Collectors.partitioningBy(x -> x.getOption().equals(Model.OPTION)));
-		Pair<List<FormShort>, List<FormShort>> pair = Pair.of(partitionedFormShorts.get(false),
-				partitionedFormShorts.get(true));
-		return pair;
+		for(FormShort form: allFormShort) {
+			System.out.println(form.getModel());
+			map.get(form.getModel()).add(form);
+		}
+		return map;
 	}
 
 }
