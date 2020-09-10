@@ -8,7 +8,9 @@ import javax.validation.Valid;
 
 import org.inventorymanagement.product.model.Filter;
 import org.inventorymanagement.product.model.FilterOptions;
+import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Product;
+import org.inventorymanagement.product.service.CommonService;
 import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class ProductController {
 
 	@Autowired
 	ProductService service;
+
+	@Autowired
+	CommonService commonService;
 
 	@PostMapping
 	public Product addProduct(@Valid @RequestBody String product) throws JsonMappingException, JsonProcessingException {
@@ -48,8 +53,8 @@ public class ProductController {
         String searchText = req.getSearchText() == null ? "" : req.getSearchText();
         List <FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
 
-		return service.getProducts(formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters,
-				true);
+		return commonService.getProducts(formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters,
+				Model.PRODUCT);
 
 	}
 
@@ -62,7 +67,7 @@ public class ProductController {
 	@GetMapping("/{formUrl}/min-max/")
 	public Map<String, List> getMaxMinValue(@PathVariable("formUrl") String formUrl,
 			@RequestParam("sortFields") List<String> sortFields) {
-		return service.getMaxMinValue(formUrl, sortFields);
+		return commonService.getMaxMinValue(formUrl, sortFields, Model.PRODUCT);
 	}
 
 

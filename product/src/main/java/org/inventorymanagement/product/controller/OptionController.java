@@ -9,17 +9,13 @@ import javax.validation.Valid;
 
 import org.inventorymanagement.product.model.Filter;
 import org.inventorymanagement.product.model.FilterOptions;
+import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Option;
+import org.inventorymanagement.product.service.CommonService;
 import org.inventorymanagement.product.service.OptionService;
 import org.inventorymanagement.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -36,7 +32,7 @@ public class OptionController {
     OptionService service;
 
     @Autowired
-    ProductService productService;
+    CommonService commonService;
     
 
     @PostMapping
@@ -59,9 +55,15 @@ public class OptionController {
         String searchText = req.getSearchText() == null ? "" : req.getSearchText();
         List<FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
 
-        return productService.getProducts(
-            formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters, false);
+        return commonService.getProducts(
+            formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters, Model.OPTION);
 
+    }
+
+    @GetMapping("/{formUrl}/min-max/")
+    public Map<String, List> getMaxMinValue(@PathVariable("formUrl") String formUrl,
+                                            @RequestParam("sortFields") List<String> sortFields) {
+        return commonService.getMaxMinValue(formUrl, sortFields, Model.OPTION);
     }
 
 }
