@@ -94,13 +94,6 @@ export const deleteForms = (isLoading, onError, data) => (dispatch) => {
 }
 
 export const getTable = (onSuccess, onError) => (dispatch) => {
-    // const accessToken = getAccessTokenSilently({
-    //     audience: `https://quickstarts/api`,
-    //     scope: 'read:current_user',
-    // }).then((response) => console.log(response))
-
-    // console.log(accessToken)
-
     const url = `${BASE_URL}/forms/all`
 
     console.log(url)

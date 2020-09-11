@@ -1,0 +1,9 @@
+auth0:
+  audience: https://dev-jl9-q1h7.eu.auth0.com/api/v2/
+spring:
+  security:
+    oauth2:
+        resourceserver:
+            jwt:
+                issuer-uri: https://dev-jl9-q1h7.eu.auth0.com/
+                client_secret: QwHeXmyGBhPb_S_tfpHj_aIzBYRvPMQsCk-hiQgUZSNZ4lyTgoEjAW53LU7UQsxW

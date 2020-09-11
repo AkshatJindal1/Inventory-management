@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MailIcon from '@material-ui/icons/Mail'
-import { NavLink } from 'react-router-dom'
+import { Link as NavLink } from 'react-router-dom'
 import clsx from 'clsx'
 import { connect } from 'react-redux'
 import { toggleDrawer } from '../../store/actions/appAction'
@@ -72,6 +72,22 @@ class Navigation extends Component {
                 >
                     {this.getBrand()}
                     <Divider />
+
+                    <NavLink
+                        to="/auth/main"
+                        activeClassName="active"
+                        key="tables"
+                    >
+                        <List>
+                            <ListItem button key="tables">
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Tables" />
+                            </ListItem>
+                        </List>
+                    </NavLink>
+
                     <NavLink
                         to="/tables/"
                         activeClassName="active"

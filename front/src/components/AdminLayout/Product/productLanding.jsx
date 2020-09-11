@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import Controls from '../../Controls/Controls'
 import { Redirect } from 'react-router'
+import { withAuth0 } from '@auth0/auth0-react'
 
 import { getTable, deleteForms } from '../../../store/actions/formAction'
 
@@ -75,6 +76,14 @@ export class ProductLanding extends Component {
     }
 
     componentWillMount() {
+        this.props.auth0
+            .getAccessTokenSilently({
+                audience: `https://quickstarts/api`,
+                // scope: 'read:posts',
+            })
+            .then((res) => console.log(res))
+            .catch((res) => console.log('>>>>', res))
+
         this.props.getTable(this.onSuccess, this.onError)
     }
 
@@ -197,5 +206,5 @@ export class ProductLanding extends Component {
 const mapStateToProps = (state) => ({})
 
 export default connect(mapStateToProps, { getTable, deleteForms })(
-    withStyles(useStyles, { withTheme: true })(ProductLanding)
+    withAuth0(withStyles(useStyles, { withTheme: true })(ProductLanding))
 )
