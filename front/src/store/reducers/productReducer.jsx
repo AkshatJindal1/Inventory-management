@@ -10,6 +10,8 @@ import {
     SET_SELECTED_CATEGORIES,
 } from '../actions/types'
 
+import { min } from 'date-fns'
+
 const initialState = {
     totalProducts: 0,
     allProducts: [],
@@ -89,6 +91,7 @@ export default function (state = initialState, action) {
                         action.payload[1][field.id] !== null
                             ? parseInt(action.payload[1][field.id][1])
                             : null
+                    console.log(minValue, maxValue)
                     return {
                         id: field.id,
                         label: field.labelText,
@@ -113,9 +116,12 @@ export default function (state = initialState, action) {
                 })
                 .filter(
                     (field) =>
-                        field.datatype === 'number' &&
-                        field.options.maximumValue !== null
+                        !(
+                            field.options.datatype === 'number' &&
+                            field.options.maximumValue === null
+                        )
                 )
+            console.log(filterCategories)
             return {
                 ...state,
                 columns: action.payload[0].fields.map((field) => {

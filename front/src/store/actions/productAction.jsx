@@ -125,7 +125,6 @@ export const getColumns = (option, formUrl) => (dispatch) => {
                     })
                 })
         })
-        .then(console.log('hello', store.getState().product.allCategories))
         .catch((err) => {
             console.log(err)
             dispatch({
