@@ -26,6 +26,6 @@ mongod/
 /.metadata/
 .metadata/*
 
-metastore_db/
+metastore_db/*
 derby.log
 
