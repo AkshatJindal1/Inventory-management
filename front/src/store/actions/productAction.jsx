@@ -110,16 +110,20 @@ export const getColumns = (option, formUrl) => (dispatch) => {
     axios
         .get(`${BASE_URL}/forms/${option}/url?url=${formUrl}`)
         .then((response) => {
-            const fields = response.data.fields.filter(
-                (resp) => resp.datatype === 'number'
-            ).map(field => field.id)
-            
-            axios.get(`${BASE_URL}/products/${formUrl}/min-max/?sortFields=${fields.join()}`).then((resp) => {
-                return dispatch({
-                    type: GET_COLUMN_DETAILS,
-                    payload: [response.data, resp.data],
+            const fields = response.data.fields
+                .filter((resp) => resp.datatype === 'number')
+                .map((field) => field.id)
+
+            axios
+                .get(
+                    `${BASE_URL}/${option}/${formUrl}/min-max/?sortFields=${fields.join()}`
+                )
+                .then((resp) => {
+                    return dispatch({
+                        type: GET_COLUMN_DETAILS,
+                        payload: [response.data, resp.data],
+                    })
                 })
-            })
         })
         .then(console.log('hello', store.getState().product.allCategories))
         .catch((err) => {
