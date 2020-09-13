@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import { withAuth0 } from '@auth0/auth0-react'
 import LoginButton from './Login'
 
-export class ProductLanding extends Component {
+export class Profile extends Component {
     componentWillMount() {
-        let accessToken = ''
         const domain = 'https://dev-jl9-q1h7.eu.auth0.com/api/v2/'
-        const another = 'https://quickstarts/api'
         this.props.auth0
             .getAccessTokenSilently({
                 audience: domain,
@@ -54,4 +52,4 @@ export class ProductLanding extends Component {
     }
 }
 
-export default withAuth0(ProductLanding)
+export default withAuth0(Profile)

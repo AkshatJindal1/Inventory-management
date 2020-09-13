@@ -5,9 +5,9 @@ import java.util.List;
 import javax.persistence.Entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -34,16 +34,13 @@ public class Form {
 	private String url;
 	private Model model;
 	
-	@Indexed(unique = true)
 	private String name;
+	
 	private List<Field> fields;
-
-	public Form(String url, Model model, String name, List<Field> fields) {
-		super();
-		this.url = url;
-		this.model = model;
-		this.name = name;
-		this.fields = fields;
-	}
-
+	
+	private String client;
+	
+	@JsonIgnore
+	private String nameClient;
+	
 }

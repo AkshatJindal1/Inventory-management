@@ -71,20 +71,13 @@ export class ProductLanding extends Component {
             () => {
                 alert('An Error Occured, Please try again in some time')
             },
-            data
+            data,
+            this.props.token
         )
     }
 
     componentWillMount() {
-        this.props.auth0
-            .getAccessTokenSilently({
-                audience: `https://quickstarts/api`,
-                // scope: 'read:posts',
-            })
-            .then((res) => console.log(res))
-            .catch((res) => console.log('>>>>', res))
-
-        this.props.getTable(this.onSuccess, this.onError)
+        this.props.getTable(this.onSuccess, this.onError, this.props.token)
     }
 
     getProductData = (options) => {

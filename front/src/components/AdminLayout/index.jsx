@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
 import routes from '../../routes/productRoutes'
+import PrivateRoute from '../authentication/PrivateRoute'
 import NavBar from '../NavBar'
 import Navigation from '../Navigation'
 
@@ -35,7 +36,11 @@ class AdminLayout extends Component {
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
-                    render={(props) => <route.component {...props} />}
+                    render={(props) => {
+                        console.log(props)
+                        return <PrivateRoute route={route} {...props} />
+                        // return <route.component {...props} />
+                    }}
                 />
             ) : null
         })

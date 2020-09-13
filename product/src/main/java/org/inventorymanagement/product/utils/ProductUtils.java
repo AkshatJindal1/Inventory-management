@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import org.inventorymanagement.product.model.Datatype;
+import org.inventorymanagement.product.model.Field;
+import org.inventorymanagement.product.model.Model;
 
 public class ProductUtils {
+
+	private static final String breakpoint = "$$<-->$$";
 
 	public static Object[][] getDefaultOptionValuesArray() {
 		Object[][] defaultForms = { { "optionName", "Option Name", "text", true } };
@@ -123,6 +124,11 @@ public class ProductUtils {
 		List<Datatype> defaultTypes = Arrays.asList(new Datatype("number", "Number"), new Datatype("text", "Text"),
 				new Datatype("boolean", "Boolean"), new Datatype("email", "Email"));
 		return defaultTypes;
+	}
+
+	public static String getNameClient(String name, String client) {
+
+		return name+breakpoint+client;
 	}
 
 }

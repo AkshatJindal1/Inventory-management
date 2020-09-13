@@ -66,9 +66,12 @@ export const setCategories = (categories) => (dispatch) => {
     })
 }
 
-export const saveProduct = (isLoading, onError, data, option) => (dispatch) => {
+export const saveProduct = (isLoading, onError, data, option, token) => (
+    dispatch
+) => {
     const headers = {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
     }
 
     const url = `${BASE_URL}/${option}`
@@ -89,15 +92,27 @@ export const saveProduct = (isLoading, onError, data, option) => (dispatch) => {
         })
 }
 
-export const getProduct = (onSuccess, onError, option, formUrl, itemUrl) => (
-    dispatch
-) => {
+export const getProduct = (
+    onSuccess,
+    onError,
+    option,
+    formUrl,
+    itemUrl,
+    token
+) => (dispatch) => {
     const url = `${BASE_URL}/${option}/${formUrl}/${itemUrl}`
 
     console.log(url)
 
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
     axios
-        .get(url)
+        .get(url, {
+            headers: headers,
+        })
         .then((response) => onSuccess(response.data))
         .catch((err) => onError(err))
 }
@@ -108,18 +123,22 @@ export const getColumns = (option, formUrl) => (dispatch) => {
     })
 
     axios
-        .get(`${BASE_URL}/forms/${option}/url?url=${formUrl}`)
+        .get(`${BASE_URL}/forms/${option}/${formUrl}`)
         .then((response) => {
-            const fields = response.data.fields.filter(
-                (resp) => resp.datatype === 'number'
-            ).map(field => field.id)
-            
-            axios.get(`${BASE_URL}/products/${formUrl}/min-max/?sortFields=${fields.join()}`).then((resp) => {
-                return dispatch({
-                    type: GET_COLUMN_DETAILS,
-                    payload: [response.data, resp.data],
+            const fields = response.data.fields
+                .filter((resp) => resp.datatype === 'number')
+                .map((field) => field.id)
+
+            axios
+                .get(
+                    `${BASE_URL}/products/${formUrl}/min-max/?sortFields=${fields.join()}`
+                )
+                .then((resp) => {
+                    return dispatch({
+                        type: GET_COLUMN_DETAILS,
+                        payload: [response.data, resp.data],
+                    })
                 })
-            })
         })
         .then(console.log('hello', store.getState().product.allCategories))
         .catch((err) => {

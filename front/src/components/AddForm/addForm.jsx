@@ -97,7 +97,8 @@ export class AddForm extends Component {
                     })
                 },
                 values,
-                this.props.option
+                this.props.option,
+                this.props.token
             )
             return <Redirect to="/somewhere/else" />
         }

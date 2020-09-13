@@ -1,8 +1,8 @@
 package org.inventorymanagement.product.utils;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.inventorymanagement.product.security.Claims;
-import org.inventorymanagement.product.security.User;
+import org.inventorymanagement.product.security.model.Claims;
+import org.inventorymanagement.product.security.model.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,6 +13,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SecurityUtils {
+	
+	public static String getClientName(String tokenWithBearer, String issuer) throws JsonMappingException, JsonProcessingException {
+		return getUserDetails(tokenWithBearer, issuer).getUserMetadata().getClientName();
+	}
 	
 	public static User getUserDetails(String tokenWithBearer, String issuer) throws JsonMappingException, JsonProcessingException {
 

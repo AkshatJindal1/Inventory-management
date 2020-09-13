@@ -47,8 +47,8 @@ public class OptionService {
     }
 
 
-    public Option getOptionByUrl(String formUrl, String optionUrl) {
-    	Form form = formRepository.findByUrlAndModel(formUrl, Model.OPTION);
+    public Option getOptionByUrl(String formUrl, String optionUrl, String client) {
+    	Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.OPTION, client);
     	if(form == null) 
     		throw new ProductNotFoundException("Form Url incorrect");
     	String formId = form.get_id();

@@ -1,4 +1,4 @@
-package org.inventorymanagement.product.security;
+package org.inventorymanagement.product.security.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +20,5 @@ public class Claims {
 	private String exp;
 	private String azp;
 	private String scope;
-	
-	
+
 }

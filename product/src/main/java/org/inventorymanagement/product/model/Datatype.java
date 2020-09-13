@@ -20,8 +20,8 @@ public class Datatype {
 	@Id
 	@JsonProperty("id")
 	private String _id;
+	
 	@JsonProperty("title")
 	private String name;
 
-	
 }

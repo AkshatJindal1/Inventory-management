@@ -1,4 +1,6 @@
-package org.inventorymanagement.product.security;
+package org.inventorymanagement.product.security.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import lombok.ToString;
 @ToString
 public class Identities {
 
+	@JsonProperty("user_id")
 	private String user_id;
 	private String provider;
 	private String connection;

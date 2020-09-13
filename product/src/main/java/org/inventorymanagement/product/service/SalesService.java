@@ -55,8 +55,8 @@ public class SalesService {
     return repository.save(sale);
   }
 
-  public Sale getSaleByUrl(String formUrl, String saleUrl) {
-    Form form = formRepository.findByUrlAndModel(formUrl, Model.SALE);
+  public Sale getSaleByUrl(String formUrl, String saleUrl, String client) {
+    Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.SALE, client);
     if (form == null)
       throw new ProductNotFoundException("Form Url incorrect");
     String formId = form.get_id();

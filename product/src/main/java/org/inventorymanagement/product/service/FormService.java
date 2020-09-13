@@ -55,10 +55,11 @@ public class FormService {
 		return ProductUtils.getDefaultForms(model);
 	}
 
-	public Form saveForm(List<Field> fields, String name, String id, String category) {
-		Model model = ProductUtils.getModel(category);
-		// Check if Form Name is null or blank
+	public Form saveForm(List<Field> fields, String name, String id, String category, String client) {
 
+		Model model = ProductUtils.getModel(category);
+
+		// Check if Form Name is null or blank
 		if (name == null || name.trim().equals("")) {
 			throw new ProductNotFoundException("Form Name Cannot be null");
 		}
@@ -77,74 +78,70 @@ public class FormService {
 		}
 
 		Set<String> mandatoryIds = ProductUtils.getMandatoryIds(model);
-		Set<String> requestIds = fields.stream()
-				.map(field -> field.getId())
-				.collect(Collectors.toSet());
-		
-		System.out.println(requestIds);
-		System.out.println(ids);
+		Set<String> requestIds = fields.stream().map(field -> field.getId()).collect(Collectors.toSet());
 
 		// Check if Duplicate Keys are sent
-
 		if (requestIds.size() != fields.size()) {
 			throw new ProductNotFoundException("Duplicate Key Error\nMandatory Ids: " + mandatoryIds.toString()
 					+ "\nRequestedIds: " + requestIds.toString());
 		}
 
 		// Check if All Mandatory Fields are present
-
 		if (!requestIds.containsAll(mandatoryIds)) {
 			throw new ProductNotFoundException("Mandatory Field Missing\nMandatory Ids: " + mandatoryIds.toString()
 					+ "\nRequestedIds: " + requestIds.toString());
 		}
-		
+
 		// Set a url for the form
-		
 		String slugCandidate = ProductUtils.toSlug(name) + "-";
 		do {
 			slugCandidate = slugCandidate + String.valueOf((new Random()).nextInt(10));
-		} while (repository.existsByUrl(slugCandidate));
+		} while (repository.existsByUrlAndClient(slugCandidate, client));
 
 		// Update the Form Object
-
 		if (id == null || id.trim().equals("")) {
 
 			// If new Form let mongo generate a new Id and create a new form
-
-			form = new Form(slugCandidate, model, name, fields);
+			form = new Form();
+			form.setUrl(slugCandidate);
+			form.setModel(model);
+			form.setName(name);
+			form.setFields(fields);
+			form.setClient(client);
+			form.setNameClient(ProductUtils.getNameClient(name, client));
 		}
 
 		else {
+
+//			TODO I think we can just replace it
 
 			// If updating a Form delete the previous form and create a identical new form
 			if (form == null) {
 				throw new ProductNotFoundException("Product with that id could not be found");
 			}
-			repository.deleteById(id);
-			form = new Form(id, slugCandidate, model, name, fields);
+			form.setUrl(slugCandidate);
+			form.setName(name);
+			form.setFields(fields);
+			form.setNameClient(ProductUtils.getNameClient(name, client));
 		}
 
 		System.out.println(form);
 		return repository.save(form);
 	}
 
-	public Form getForm(String formId) {
-		return repository.findById(formId).orElse(null);
-	}
-
 	public List<Form> getAllForms() {
 		return repository.findAll();
 	}
 
-	public void deleteForm(List<String> formIds) {
-		repository.deleteBy_idIn(formIds);
+	public void deleteForm(List<String> formIds, String client) {
+		repository.deleteBy_idInAndClient(formIds, client);
 	}
 
-	public Form getByUrl(String url, String category) {
+	public Form getByUrl(String url, String category, String client) {
 
 		Model model = ProductUtils.getModel(category);
 
-		Form form = repository.findByUrlAndModel(url, model);
+		Form form = repository.findByUrlAndModelAndClient(url, model, client);
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");
@@ -156,24 +153,27 @@ public class FormService {
 		return form;
 	}
 
-	public Pair<List<Datatype>, List<Datatype>> getAllDatatypes() {
-		List<Datatype> datatypeFromDb = repository.getDatatypes();
+	public Pair<List<Datatype>, List<Datatype>> getAllDatatypes(String client) {
+		List<Datatype> datatypeFromDb = repository.getDatatypes(client);
 		List<Datatype> defaultTypes = ProductUtils.getDefaultDatatype();
 		Pair<List<Datatype>, List<Datatype>> pair = Pair.of(datatypeFromDb, defaultTypes);
 		return pair;
 	}
 
-	public HashMap<Model, List<FormShort>> getAllFormShorts() {
+	public HashMap<Model, List<FormShort>> getAllFormShorts(String client) {
+		System.out.println("<>>>>>" + client);
 		HashMap<Model, List<FormShort>> map = new HashMap<Model, List<FormShort>>();
-		for(Model m: Model.values()) {
+		for (Model m : Model.values()) {
 			map.put(m, new ArrayList<FormShort>());
 		}
-		List<FormShort> allFormShort = repository.getFormShorts();
-		for(FormShort form: allFormShort) {
+		System.out.println("<>>>>>" + map);
+		List<FormShort> allFormShort = repository.getFormShorts(client);
+		System.out.println("<>>>>>" + allFormShort);
+		for (FormShort form : allFormShort) {
 			System.out.println(form.getModel());
 			map.get(form.getModel()).add(form);
 		}
+		System.out.println("<>>>>>" + map);
 		return map;
 	}
-
 }

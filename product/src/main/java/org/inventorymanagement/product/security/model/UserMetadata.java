@@ -1,6 +1,6 @@
-package org.inventorymanagement.product.security;
+package org.inventorymanagement.product.security.model;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserMetadata {
-	private String cname;
+	
+	@JsonProperty("client_name")
+	private String clientName;
 }
