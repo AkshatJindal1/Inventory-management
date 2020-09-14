@@ -13,12 +13,14 @@ import { BASE_URL } from './constants'
 import axios from 'axios'
 import store from '../store'
 
-export const getAllProducts = (option, formUrl, filterOptions = {}, token) => (
+export const getAllProducts = (option, formUrl, token, filterOptions = {}) => (
     dispatch
 ) => {
     dispatch({
         type: GET_ALL_PRODUCTS_INIT,
     })
+
+    console.log('token', token)
 
     const headers = {
         'Content-Type': 'application/json',
@@ -152,7 +154,10 @@ export const getColumns = (option, formUrl, token) => (dispatch) => {
 
             axios
                 .get(
-                    `${BASE_URL}/products/${formUrl}/min-max/?sortFields=${fields.join()}`
+                    `${BASE_URL}/${option}/${formUrl}/min-max/?sortFields=${fields.join()}`,
+                    {
+                        headers: headers,
+                    }
                 )
                 .then((resp) => {
                     return dispatch({

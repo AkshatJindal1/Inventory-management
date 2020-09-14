@@ -137,7 +137,7 @@ public class CommonService {
 				mp.put(sortField, new ArrayList<>(Arrays.asList(null, null)));
 			}
 		});
-
+		
 		return mp;
 	}
 }

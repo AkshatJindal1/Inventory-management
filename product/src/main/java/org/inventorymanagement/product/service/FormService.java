@@ -161,19 +161,14 @@ public class FormService {
 	}
 
 	public HashMap<Model, List<FormShort>> getAllFormShorts(String client) {
-		System.out.println("<>>>>>" + client);
 		HashMap<Model, List<FormShort>> map = new HashMap<Model, List<FormShort>>();
 		for (Model m : Model.values()) {
 			map.put(m, new ArrayList<FormShort>());
 		}
-		System.out.println("<>>>>>" + map);
 		List<FormShort> allFormShort = repository.getFormShorts(client);
-		System.out.println("<>>>>>" + allFormShort);
 		for (FormShort form : allFormShort) {
-			System.out.println(form.getModel());
 			map.get(form.getModel()).add(form);
 		}
-		System.out.println("<>>>>>" + map);
 		return map;
 	}
 }
