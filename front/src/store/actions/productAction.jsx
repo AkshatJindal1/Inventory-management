@@ -13,15 +13,22 @@ import { BASE_URL } from './constants'
 import axios from 'axios'
 import store from '../store'
 
-export const getAllProducts = (option, formUrl, filterOptions = {}) => (
+export const getAllProducts = (option, formUrl, filterOptions = {}, token) => (
     dispatch
 ) => {
     dispatch({
         type: GET_ALL_PRODUCTS_INIT,
     })
 
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
     axios
-        .post(`${BASE_URL}/${option}/${formUrl}`, filterOptions)
+        .post(`${BASE_URL}/${option}/${formUrl}`, filterOptions, {
+            headers: headers,
+        })
         .then((response) =>
             dispatch({
                 type: GET_ALL_PRODUCTS,
@@ -37,13 +44,20 @@ export const getAllProducts = (option, formUrl, filterOptions = {}) => (
         })
 }
 
-export const getCategories = () => (dispatch) => {
+export const getCategories = (token) => (dispatch) => {
     dispatch({
         type: GET_CATEGORIES_INIT,
     })
 
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
     axios
-        .get(BASE_URL + '/categories')
+        .get(BASE_URL + '/categories', {
+            headers: headers,
+        })
         .then((response) =>
             dispatch({
                 type: GET_CATEGORIES,
@@ -117,13 +131,20 @@ export const getProduct = (
         .catch((err) => onError(err))
 }
 
-export const getColumns = (option, formUrl) => (dispatch) => {
+export const getColumns = (option, formUrl, token) => (dispatch) => {
     dispatch({
         type: GET_COLUMN_INIT,
     })
 
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
     axios
-        .get(`${BASE_URL}/forms/${option}/${formUrl}`)
+        .get(`${BASE_URL}/forms/${option}/${formUrl}`, {
+            headers: headers,
+        })
         .then((response) => {
             const fields = response.data.fields
                 .filter((resp) => resp.datatype === 'number')

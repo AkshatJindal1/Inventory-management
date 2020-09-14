@@ -1,7 +1,6 @@
 package org.inventorymanagement.product.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +12,18 @@ import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.service.CommonService;
 import org.inventorymanagement.product.service.OptionService;
-import org.inventorymanagement.product.service.ProductService;
 import org.inventorymanagement.product.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -53,6 +59,7 @@ public class OptionController {
 		return service.getOptionByUrl(formUrl, optionUrl, client);
 	}
 
+	
 	@PostMapping("/{formUrl}")
 	public Map<String, Object> getOptions(@RequestBody Filter req, @PathVariable("formUrl") String formUrl,
 			@RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {

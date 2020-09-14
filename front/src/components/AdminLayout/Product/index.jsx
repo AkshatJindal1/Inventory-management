@@ -43,11 +43,13 @@ export class ProductLanding extends Component {
     componentDidMount() {
         this.props.getColumns(
             this.props.match.params.options,
-            this.props.match.params.formUrl
+            this.props.match.params.formUrl,
+            this.props.token
         )
         this.props.getAllProducts(
             this.props.match.params.options,
-            this.props.match.params.formUrl
+            this.props.match.params.formUrl,
+            this.props.token
         )
         // this.props.getCategories()
     }
@@ -56,6 +58,7 @@ export class ProductLanding extends Component {
         this.props.getAllProducts(
             this.props.match.params.options,
             this.props.match.params.formUrl,
+            this.props.token,
             filterOptions
         )
     }
@@ -65,7 +68,7 @@ export class ProductLanding extends Component {
     }
 
     filterSubmit = (filterCategories) => {
-        this.props.setCategories(filterCategories)
+        this.props.setCategories(filterCategories, this.props.token)
         getAllProducts(filterCategories)
     }
 
@@ -124,6 +127,7 @@ export class ProductLanding extends Component {
                     deleteRows={this.deleteRows}
                     onFilterSubmit={this.filterSubmit}
                     onRowClick={this.rowClick}
+                    token={this.props.token}
                 />
                 {this.state.redirectTo}
             </Fragment>
