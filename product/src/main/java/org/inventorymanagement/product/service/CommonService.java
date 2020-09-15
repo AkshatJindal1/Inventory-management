@@ -1,10 +1,17 @@
 package org.inventorymanagement.product.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.inventorymanagement.product.exceptionhandler.NoSupportedMethodException;
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
+import org.inventorymanagement.product.model.FilterOptions;
+import org.inventorymanagement.product.model.Model;
+import org.inventorymanagement.product.model.Option;
+import org.inventorymanagement.product.model.Product;
+import org.inventorymanagement.product.model.Sale;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
@@ -27,132 +34,136 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CommonService {
 
-  @Autowired
-  private FormRepository formRepository;
-  @Autowired
-  private ProductRepository productRepository;
-  @Autowired
-  private OptionRepository optionRepository;
-  @Autowired
-  private SaleRepository saleRepository;
-  @Autowired
-  private MongoOperations mongoOps;
+	@Autowired
+	private FormRepository formRepository;
 
-  public Map<String, Object> getProducts(
-      String formUrl,
-      Integer pageNumber,
-      Integer recordsPerPage,
-      String sortBy,
-      String descending,
-      String searchText,
-      List<FilterOptions> filters,
-      Model modelType) {
+	@Autowired
+	private ProductRepository productRepository;
 
-    Pageable pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy));
-    if (descending.equals("true"))
-      pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy).descending());
+	@Autowired
+	private OptionRepository optionRepository;
 
-    Query query = new Query();
-    Criteria expression = new Criteria();
-    List<Criteria> criterias = new ArrayList<>();
+	@Autowired
+	private SaleRepository saleRepository;
 
-    String formId = formRepository.findByUrlAndModel(formUrl, modelType).get_id();
-    criterias.add(Criteria.where("formId").is(formId));
+	@Autowired
+	private MongoOperations mongoOps;
 
-    for(FilterOptions filter: filters) {
-      Map<String, Object> options = filter.getOptions();
-      String id = filter.getId();
-      List<Object> selected = filter.getSelected();
-      String datatype = options.get("dataType").toString();
-      if(datatype.equalsIgnoreCase("number")) {
-        criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
-      } else if(datatype.equalsIgnoreCase("checkbox")) {
-        if(selected.size() == 0) continue;
-        criterias.add(Criteria.where(id).in(selected));
-      } else if(datatype.equalsIgnoreCase("date")) {
-        criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
-      }
+	public Map<String, Object> getProducts(String formUrl, Integer pageNumber, Integer recordsPerPage, String sortBy,
+			String descending, String searchText, List<FilterOptions> filters, Model modelType, String client) {
 
-    }
-    if(!searchText.equals(""))
-      query.addCriteria(TextCriteria.forDefaultLanguage().matching("^.*"+ searchText+".*$"));
+		Pageable pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy));
+		if (descending.equals("true"))
+			pageableRequest = PageRequest.of(pageNumber, recordsPerPage, Sort.by(sortBy).descending());
 
-    query.addCriteria(expression.andOperator(criterias.toArray(new Criteria[criterias.size()])));
+		Query query = new Query();
+		Criteria expression = new Criteria();
+		List<Criteria> criterias = new ArrayList<>();
 
-    Map<String, Object> resp =  new HashMap<>();
-    switch(modelType) {
-      case OPTION:
-        resp.put("totalProducts", mongoOps.count(query, Option.class));
-        query.with(pageableRequest);
-        List<Option> options = mongoOps.find(query, Option.class);
-        resp.put("response",options);
-        break;
+		String formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
+		criterias.add(Criteria.where("formId").is(formId));
 
-      case PRODUCT:
-        resp.put("totalProducts", mongoOps.count(query, Product.class));
-        query.with(pageableRequest);
-        List<Product> products = mongoOps.find(query, Product.class);
-        resp.put("response",products);
-        break;
+		for (FilterOptions filter : filters) {
+			Map<String, Object> options = filter.getOptions();
+			String id = filter.getId();
+			List<Object> selected = filter.getSelected();
+			String datatype = options.get("dataType").toString();
+			if (datatype.equalsIgnoreCase("number")) {
+				criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
+			} else if (datatype.equalsIgnoreCase("checkbox")) {
+				if (selected.size() == 0)
+					continue;
+				criterias.add(Criteria.where(id).in(selected));
+			} else if (datatype.equalsIgnoreCase("date")) {
+				criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
+			}
 
-      case SALE:
-        resp.put("totalProducts", mongoOps.count(query, Sale.class));
-        query.with(pageableRequest);
-        List<Sale> sales = mongoOps.find(query, Sale.class);
-        resp.put("response",sales);
-        break;
+		}
+		if (!searchText.equals(""))
+			query.addCriteria(TextCriteria.forDefaultLanguage().matching("^.*" + searchText + ".*$"));
 
-      default:
-        break;
-    }
-    return resp;
-  }
+		query.addCriteria(expression.andOperator(criterias.toArray(new Criteria[criterias.size()])));
 
-  public Map<String, List> getMaxMinValue(String formUrl, List<String> sortFields, Model modelType) {
+		Map<String, Object> resp = new HashMap<>();
+		switch (modelType) {
+		case OPTION:
+			resp.put("totalProducts", mongoOps.count(query, Option.class));
+			query.with(pageableRequest);
+			List<Option> options = mongoOps.find(query, Option.class);
+			resp.put("response", options);
+			break;
 
-    Map<String, List> mp = new HashMap<>();
-    Criteria expression = new Criteria();
-    String formId;
-    formId = formRepository.findByUrlAndModel(formUrl, modelType).get_id();
-    expression.andOperator(Criteria.where("formId").is(formId));
+		case PRODUCT:
+			resp.put("totalProducts", mongoOps.count(query, Product.class));
+			query.with(pageableRequest);
+			List<Product> products = mongoOps.find(query, Product.class);
+			resp.put("response", products);
+			break;
 
-    Class classType;
+		case SALE:
+			resp.put("totalProducts", mongoOps.count(query, Sale.class));
+			query.with(pageableRequest);
+			List<Sale> sales = mongoOps.find(query, Sale.class);
+			resp.put("response", sales);
+			break;
 
-    switch(modelType) {
-      case PRODUCT:
-        classType = Product.class; break;
-      case SALE:
-        classType = Sale.class; break;
-      case OPTION:
-        classType = Option.class; break;
-      default:
-        throw new NoSupportedMethodException("No supported method found: Currently supported product, sale and option");
-    }
+		default:
+			break;
+		}
+		return resp;
+	}
 
-    sortFields.stream().forEach(sortField -> {
+	public Map<String, List> getMaxMinValue(String formUrl, List<String> sortFields, Model modelType, String client) {
 
-      log.info(sortField);
-      Query maxQuery = new Query();
-      maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields().include(sortField).exclude("_id");
+		Map<String, List> mp = new HashMap<>();
+		Criteria expression = new Criteria();
+		String formId;
+		formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
+		expression.andOperator(Criteria.where("formId").is(formId));
+
+		Class classType;
+
+		switch (modelType) {
+		case PRODUCT:
+			classType = Product.class;
+			break;
+		case SALE:
+			classType = Sale.class;
+			break;
+		case OPTION:
+			classType = Option.class;
+			break;
+		default:
+			throw new NoSupportedMethodException(
+					"No supported method found: Currently supported product, sale and option");
+		}
+
+		sortFields.stream().forEach(sortField -> {
+
+			log.info(sortField);
+			Query maxQuery = new Query();
+			maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields()
+					.include(sortField).exclude("_id");
 //      Product maxProduct = mongoOps.findOne(maxQuery,  classType);
 
-      Query minQuery = new Query();
-      minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, sortField)).limit(1).fields().include(sortField).exclude("_id");
+			Query minQuery = new Query();
+			minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, sortField)).limit(1).fields()
+					.include(sortField).exclude("_id");
 //      Product minProduct = mongoOps.findOne(minQuery, Product.class);
 
-      try {
-        String minValue = new ObjectMapper()
-            .convertValue(mongoOps.findOne(minQuery, classType), Map.class).get(sortField).toString();
+			try {
+				String minValue = new ObjectMapper().convertValue(mongoOps.findOne(minQuery, classType), Map.class)
+						.get(sortField).toString();
 
-        String maxValue = new ObjectMapper()
-            .convertValue(mongoOps.findOne(maxQuery,  classType), Map.class).get(sortField).toString();
+				String maxValue = new ObjectMapper().convertValue(mongoOps.findOne(maxQuery, classType), Map.class)
+						.get(sortField).toString();
 
-        mp.put(sortField, new ArrayList<>(Arrays.asList(minValue, maxValue)));
-      } catch (Exception e) {
-        mp.put(sortField, new ArrayList<>(Arrays.asList(null, null)));
-      }
-    });
+				mp.put(sortField, new ArrayList<>(Arrays.asList(minValue, maxValue)));
+			} catch (Exception e) {
+				mp.put(sortField, new ArrayList<>(Arrays.asList(null, null)));
+			}
+		});
 
-    return mp;
-  }
+		return mp;
+	}
 }

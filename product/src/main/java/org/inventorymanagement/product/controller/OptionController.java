@@ -41,7 +41,7 @@ public class OptionController {
 
 	@Autowired
 	CommonService commonService;
-	
+
 	@Autowired
 	UserManagementService userService;
 
@@ -49,12 +49,12 @@ public class OptionController {
 	private String issuer;
 
 	@PostMapping
-	public Option addOption(@Valid @RequestBody String option, @RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {
+	public Option addOption(@Valid @RequestBody String option, @RequestHeader("Authorization") String token)
+			throws JsonMappingException, JsonProcessingException {
 		String client = userService.getClientName(token);
 		return service.insertOption(option, client);
 	}
 
-//	Clientified
 	@GetMapping("/{formUrl}/{optionUrl}")
 	public Option getOptionByOptionName(@PathVariable("formUrl") String formUrl,
 			@PathVariable("optionUrl") String optionUrl, @RequestHeader("Authorization") String token)
@@ -63,7 +63,6 @@ public class OptionController {
 		return service.getOptionByUrl(formUrl, optionUrl, client);
 	}
 
-	
 	@PostMapping("/{formUrl}")
 	public Map<String, Object> getOptions(@RequestBody Filter req, @PathVariable("formUrl") String formUrl,
 			@RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {

@@ -14,6 +14,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserManagementRepository extends MongoRepository<CustomUser, String> {
 	
+	/*
+	 * 
+	 * TODO Assuming just one user per company
+	 * TODO Make Sure No two different client register with same ClientName  
+	 * 
+	 */
+	
 	CustomUser findBySubject(String subject);
 
     @Configuration
