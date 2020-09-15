@@ -34,6 +34,7 @@ public interface FormRepository extends MongoRepository<Form, String> {
 	
 	public boolean existsByUrlAndClient(String url, String client);
 	
+	public boolean existsBy_idAndClient(String formId, String client);
 
     @Configuration
     @DependsOn("mongoTemplate")
@@ -56,4 +57,6 @@ public interface FormRepository extends MongoRepository<Form, String> {
                 .ensureIndex(textIndex);
         }
     }
+
+
 }
