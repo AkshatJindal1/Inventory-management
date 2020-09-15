@@ -29,6 +29,16 @@ import { connect } from 'react-redux'
 export class ProductLanding extends Component {
     constructor(props) {
         super(props)
+        this.props.getColumns(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            this.props.token
+        )
+        this.props.getAllProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            this.props.token
+        )
         this.state = {
             order: 'asc',
             orderBy: '0',
@@ -41,16 +51,6 @@ export class ProductLanding extends Component {
     }
 
     componentDidMount() {
-        this.props.getColumns(
-            this.props.match.params.options,
-            this.props.match.params.formUrl,
-            this.props.token
-        )
-        this.props.getAllProducts(
-            this.props.match.params.options,
-            this.props.match.params.formUrl,
-            this.props.token
-        )
         // this.props.getCategories()
     }
 
