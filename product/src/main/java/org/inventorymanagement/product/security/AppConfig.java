@@ -18,24 +18,24 @@ import java.util.Arrays;
 @EnableWebSecurity(debug = false)
 public class AppConfig extends WebSecurityConfigurerAdapter {
 
-    @Value(value = "${auth0.apiAudience}")
-    private String apiAudience;
-    @Value(value = "${auth0.issuer}")
-    private String issuer;
+	@Value(value = "${auth0.apiAudience}")
+	private String apiAudience;
+	@Value(value = "${auth0.issuer}")
+	private String issuer;
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","OPTIONS"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
+		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 
-    @Override
+	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
         JwtWebSecurityConfigurer
@@ -53,10 +53,12 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/products/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/products/**").authenticated()
-                
+
                 .antMatchers(HttpMethod.GET, "/options/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/options/**").authenticated();
+                .antMatchers(HttpMethod.POST, "/options/**").authenticated()
+                
+                .antMatchers(HttpMethod.GET, "/user-management/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/user-management/**").authenticated();
                 
     }
 }
-

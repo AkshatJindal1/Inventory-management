@@ -12,7 +12,7 @@ import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.service.CommonService;
 import org.inventorymanagement.product.service.ProductService;
-import org.inventorymanagement.product.utils.SecurityUtils;
+import org.inventorymanagement.product.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,6 +43,9 @@ public class ProductController {
 	@Autowired
 	CommonService commonService;
 
+	@Autowired
+	UserManagementService userService;
+
 	@Value(value = "${auth0.issuer}")
 	private String issuer;
 
@@ -55,7 +58,7 @@ public class ProductController {
 	public Product getOptionByOptionName(@PathVariable("formUrl") String formUrl,
 			@PathVariable("productUrl") String productUrl, @RequestHeader("Authorization") String token)
 			throws JsonMappingException, JsonProcessingException {
-		String client = SecurityUtils.getClientName(token, issuer);
+		String client = userService.getClientName(token);
 		return service.getProductByUrl(formUrl, productUrl, client);
 	}
 
@@ -63,7 +66,7 @@ public class ProductController {
 	public Map<String, Object> getProducts(@RequestBody Filter req, @PathVariable("formUrl") String formUrl,
 			@RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {
 
-		String client = SecurityUtils.getClientName(token, issuer);
+		String client = userService.getClientName(token);
 
 		Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
 		Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
@@ -88,7 +91,7 @@ public class ProductController {
 			@RequestParam("sortFields") List<String> sortFields, @RequestHeader("Authorization") String token)
 			throws JsonMappingException, JsonProcessingException {
 
-		String client = SecurityUtils.getClientName(token, issuer);
+		String client = userService.getClientName(token);
 		return commonService.getMaxMinValue(formUrl, sortFields, Model.PRODUCT, client);
 	}
 

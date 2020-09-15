@@ -12,7 +12,7 @@ import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Option;
 import org.inventorymanagement.product.service.CommonService;
 import org.inventorymanagement.product.service.OptionService;
-import org.inventorymanagement.product.utils.SecurityUtils;
+import org.inventorymanagement.product.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,13 +41,17 @@ public class OptionController {
 
 	@Autowired
 	CommonService commonService;
+	
+	@Autowired
+	UserManagementService userService;
 
 	@Value(value = "${auth0.issuer}")
 	private String issuer;
 
 	@PostMapping
-	public Option addOption(@Valid @RequestBody String option) throws JsonMappingException, JsonProcessingException {
-		return service.insertOption(option);
+	public Option addOption(@Valid @RequestBody String option, @RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {
+		String client = userService.getClientName(token);
+		return service.insertOption(option, client);
 	}
 
 //	Clientified
@@ -55,7 +59,7 @@ public class OptionController {
 	public Option getOptionByOptionName(@PathVariable("formUrl") String formUrl,
 			@PathVariable("optionUrl") String optionUrl, @RequestHeader("Authorization") String token)
 			throws JsonMappingException, JsonProcessingException {
-		String client = SecurityUtils.getClientName(token, issuer);
+		String client = userService.getClientName(token);
 		return service.getOptionByUrl(formUrl, optionUrl, client);
 	}
 
@@ -64,7 +68,7 @@ public class OptionController {
 	public Map<String, Object> getOptions(@RequestBody Filter req, @PathVariable("formUrl") String formUrl,
 			@RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {
 
-		String client = SecurityUtils.getClientName(token, issuer);
+		String client = userService.getClientName(token);
 
 		Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
 		Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
@@ -83,7 +87,7 @@ public class OptionController {
 			@RequestParam("sortFields") List<String> sortFields, @RequestHeader("Authorization") String token)
 			throws JsonMappingException, JsonProcessingException {
 
-		String client = SecurityUtils.getClientName(token, issuer);
+		String client = userService.getClientName(token);
 
 		return commonService.getMaxMinValue(formUrl, sortFields, Model.OPTION, client);
 	}

@@ -13,12 +13,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SecurityUtils {
-	
-	public static String getClientName(String tokenWithBearer, String issuer) throws JsonMappingException, JsonProcessingException {
-		return getUserDetails(tokenWithBearer, issuer).getUserMetadata().getClientName();
-	}
-	
-	public static User getUserDetails(String tokenWithBearer, String issuer) throws JsonMappingException, JsonProcessingException {
+
+	public static User getUserDetailsUsingManagementAPI(String tokenWithBearer, String issuer) throws JsonMappingException, JsonProcessingException {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", tokenWithBearer);
@@ -31,7 +27,7 @@ public class SecurityUtils {
 		return user;
 	}
 
-	private static Claims getAllClaimsFromToken(String jwtToken) throws JsonMappingException, JsonProcessingException {
+	public static Claims getAllClaimsFromToken(String jwtToken) throws JsonMappingException, JsonProcessingException {
 
 		String[] split_string = jwtToken.split("\\.");
         String base64EncodedBody = split_string[1];
@@ -40,5 +36,15 @@ public class SecurityUtils {
         Claims claims = new ObjectMapper().readValue(body, Claims.class);
         return claims;
 	}
-	
+
+	public static String getSubjectFromToken(String jwtToken) throws JsonMappingException, JsonProcessingException {
+
+		String[] split_string = jwtToken.split("\\.");
+        String base64EncodedBody = split_string[1];
+        Base64 base64Url = new Base64(true);
+        String body = new String(base64Url.decode(base64EncodedBody));
+        Claims claims = new ObjectMapper().readValue(body, Claims.class);
+        return claims.getSub();
+	}
+
 }
