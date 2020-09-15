@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { withAuth0 } from '@auth0/auth0-react'
+
+import Loader from '../Loader'
 import LoginButton from './Login'
 import { Redirect } from 'react-router-dom'
-import Loader from '../Loader'
+import { withAuth0 } from '@auth0/auth0-react'
 
 export class PrivateRoute extends Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export class PrivateRoute extends Component {
             this.getToken()
             return <Loader />
         }
-        if (this.state.isError) return 'Somethign Went Wrong'
+        if (this.state.isError) return 'Something Went Wrong'
         return <route.component token={this.state.token} {...this.props} />
     }
 }

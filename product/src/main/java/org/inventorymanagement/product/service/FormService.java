@@ -95,7 +95,7 @@ public class FormService {
 		// Set a url for the form
 		String slugCandidate = ProductUtils.toSlug(name) + "-";
 		do {
-			slugCandidate = slugCandidate + String.valueOf((new Random()).nextInt(10));
+			slugCandidate = slugCandidate + (new Random()).nextInt(10);
 		} while (repository.existsByUrlAndClient(slugCandidate, client));
 
 		// Update the Form Object
@@ -141,7 +141,9 @@ public class FormService {
 
 		Model model = ProductUtils.getModel(category);
 
-		Form form = repository.findByUrlAndModelAndClient(url, model, client);
+		Form form = model == Model.SALE
+				? repository.findByUrlAndModel(url, model)
+				: repository.findByUrlAndModelAndClient(url, model, client);
 
 		if (form == null)
 			throw new ProductNotFoundException("URL NOT FOUND");

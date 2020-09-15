@@ -16,7 +16,7 @@ public class UserManagementService {
 	@Autowired
 	private UserManagementRepository repository;
 	
-	public String getClientName(String token) throws JsonMappingException, JsonProcessingException {
+	public String getClientName(String token) throws JsonProcessingException {
 		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
 		CustomUser user = repository.findBySubject(subject);
 		if(user == null) throw new ProductNotFoundException("User Not Found");

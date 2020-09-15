@@ -1,7 +1,6 @@
 package org.inventorymanagement.product.utils;
 
 import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +14,15 @@ import org.apache.commons.text.CaseUtils;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
 import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
+import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Model;
+import org.inventorymanagement.product.repository.FormRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProductUtils {
+
+	@Autowired
+	private FormRepository repository;
 
 	private static final String breakpoint = "$$<-->$$";
 
@@ -102,7 +107,7 @@ public class ProductUtils {
 		final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
 		String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
+		String normalized = Normalizer.normalize(nowhitespace, java.text.Normalizer.Form.NFD);
 		String slug = NONLATIN.matcher(normalized).replaceAll("");
 		return slug.toLowerCase(Locale.ENGLISH);
 	}
@@ -129,6 +134,15 @@ public class ProductUtils {
 	public static String getNameClient(String name, String client) {
 
 		return name+breakpoint+client;
+	}
+
+	public Form saveSalesForm() {
+
+		Form form = new Form();
+		form.setFields(new ProductUtils().getDefaultForms(Model.SALE));
+		form.setUrl("sales");
+		form.setModel(Model.SALE);
+		return form;
 	}
 
 }

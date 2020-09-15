@@ -83,7 +83,7 @@ class Navigation extends Component {
                                 <ListItemIcon>
                                     <InboxIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Tables" />
+                                <ListItemText primary="Auth Main" />
                             </ListItem>
                         </List>
                     </NavLink>
@@ -104,16 +104,16 @@ class Navigation extends Component {
                     </NavLink>
 
                     <NavLink
-                        to="/products"
+                        to="/data/sales/sales"
                         activeClassName="active"
-                        key="products"
+                        key="sales"
                     >
                         <List>
-                            <ListItem button key="products">
+                            <ListItem button key="sales">
                                 <ListItemIcon>
                                     <InboxIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="products" />
+                                <ListItemText primary="Sales" />
                             </ListItem>
                         </List>
                     </NavLink>

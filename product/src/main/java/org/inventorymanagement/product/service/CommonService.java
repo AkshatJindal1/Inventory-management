@@ -59,8 +59,15 @@ public class CommonService {
 		Query query = new Query();
 		Criteria expression = new Criteria();
 		List<Criteria> criterias = new ArrayList<>();
+		String formId = "";
 
-		String formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
+		if(modelType == Model.SALE) {
+			formId = formRepository.findByUrlAndModel(formUrl, modelType).get_id();
+			criterias.add(Criteria.where("client").is(client));
+		} else {
+			formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
+		}
+
 		criterias.add(Criteria.where("formId").is(formId));
 
 		for (FilterOptions filter : filters) {
@@ -118,8 +125,15 @@ public class CommonService {
 		Map<String, List> mp = new HashMap<>();
 		Criteria expression = new Criteria();
 		String formId;
-		formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
-		expression.andOperator(Criteria.where("formId").is(formId));
+		if(modelType == Model.SALE) {
+			formId = formRepository.findByUrlAndModel(formUrl, modelType).get_id();
+			expression.andOperator(Criteria.where("formId").is(formId), Criteria.where("client").is(client));
+		} else {
+			formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
+			expression.andOperator(Criteria.where("formId").is(formId));
+		}
+
+
 
 		Class classType;
 
@@ -144,12 +158,10 @@ public class CommonService {
 			Query maxQuery = new Query();
 			maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields()
 					.include(sortField).exclude("_id");
-//      Product maxProduct = mongoOps.findOne(maxQuery,  classType);
 
 			Query minQuery = new Query();
 			minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, sortField)).limit(1).fields()
 					.include(sortField).exclude("_id");
-//      Product minProduct = mongoOps.findOne(minQuery, Product.class);
 
 			try {
 				String minValue = new ObjectMapper().convertValue(mongoOps.findOne(minQuery, classType), Map.class)

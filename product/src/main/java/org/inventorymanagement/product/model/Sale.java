@@ -36,4 +36,5 @@ public class Sale {
   private String customerPhone;
   private String customerEmail;
   private String customerName;
+  private String client;
 }

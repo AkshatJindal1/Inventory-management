@@ -65,7 +65,7 @@ public class SaleController {
 
 	@PostMapping("/{formUrl}")
 	public Map<String, Object> getSales(@RequestBody Filter req, @PathVariable("formUrl") String formUrl,
-			@RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {
+			@RequestHeader("Authorization") String token) throws JsonProcessingException {
 
 		Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
 		Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
@@ -75,7 +75,6 @@ public class SaleController {
 		List<FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
 
 		String client = userService.getClientName(token);
-
 		return commonService.getProducts(formUrl, pageNumber, recordsPerPage, sortBy, isDescending, searchText, filters,
 				Model.SALE, client);
 
