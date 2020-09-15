@@ -92,9 +92,9 @@ export class ProductLanding extends Component {
             return [
                 form.name,
                 <>
-                    <IconButton aria-label="delete">
+                    {/* <IconButton aria-label="delete">
                         <Delete onClick={() => this.deleteForms([form.uid])} />
-                    </IconButton>
+                    </IconButton> */}
                     <Link to={addUrl}>
                         <IconButton aria-label="add">
                             <Add />
@@ -134,6 +134,7 @@ export class ProductLanding extends Component {
                 this.deleteForms(invalidUids)
             },
             onRowClick: (rowData, rowMeta) => {
+                console.log(rowData, rowMeta)
                 const dataUrl = (
                     <Redirect
                         to={`/data/${options}/${
