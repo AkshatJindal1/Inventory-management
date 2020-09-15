@@ -108,6 +108,7 @@ export class AddForm extends Component {
     }
 
     handleSubmit = (e) => {
+        console.log(this.props.option)
         e.preventDefault()
         if (this.validate()) {
             let res = Object.values(this.state.values)
@@ -119,7 +120,8 @@ export class AddForm extends Component {
                         redirectTo: <Redirect to={this.props.redirectTo} />,
                     })
                 },
-                () => {
+                (err) => {
+                    console.log(err)
                     this.setState({
                         redirectTo: 'Some Errors Exists',
                     })
@@ -127,7 +129,8 @@ export class AddForm extends Component {
                 res,
                 this.state.headingDetails.value,
                 this.props.formId,
-                this.props.option
+                this.props.option,
+                this.props.token
             )
         } else {
             console.log('Errors Exists')

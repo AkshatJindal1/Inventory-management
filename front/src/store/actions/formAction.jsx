@@ -1,50 +1,66 @@
-import {
-    FALSE_RESPONSE,
-    GET_ALL_PRODUCTS,
-    GET_ALL_PRODUCTS_INIT,
-    GET_CATEGORIES,
-    GET_CATEGORIES_INIT,
-} from './types'
-
 import { BASE_URL } from './constants'
 import axios from 'axios'
 
-export const getFormData = (isLoading, onError, productUrl, option) => (
+export const getFormData = (isLoading, onError, productUrl, option, token) => (
     dispatch
 ) => {
-    const url = `${BASE_URL}/forms/${option}/url?url=${productUrl}`
-    console.log(url)
+    const dataUrl = `${BASE_URL}/forms/${option}/${productUrl}`
+    const datatypeUrl = `${BASE_URL}/forms/datatypes`
 
-    Promise.all([fetch(url), fetch(`${BASE_URL}/forms/datatypes`)])
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
+    Promise.all([
+        axios.get(dataUrl, {
+            headers: headers,
+        }),
+
+        axios.get(datatypeUrl, {
+            headers: headers,
+        }),
+    ])
         .then(function (responses) {
-            // Get a JSON object from each of the responses
             return Promise.all(
                 responses.map(function (response) {
+                    console.log(response)
                     if (response.status !== 200) throw '404 Not Found'
-                    return response.json()
+                    return response.data
                 })
             )
         })
-        .then(function (data) {
-            isLoading(data[0], data[1])
-        })
-        .catch(function (error) {
-            onError(error)
-        })
+        .then((data) => isLoading(data[0], data[1]))
+        .catch((error) => onError(error))
 }
 
-export const getDefaultFormData = (isLoading, onError, option) => (
+export const getDefaultFormData = (isLoading, onError, option, token) => (
     dispatch
 ) => {
-    const url = `${BASE_URL}/forms/${option}/default`
+    const defaultUrl = `${BASE_URL}/forms/${option}/default`
+    const datatypeUrl = `${BASE_URL}/forms/datatypes`
 
-    Promise.all([fetch(url), fetch(`${BASE_URL}/forms/datatypes`)])
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
+    Promise.all([
+        axios.get(defaultUrl, {
+            headers: headers,
+        }),
+
+        axios.get(datatypeUrl, {
+            headers: headers,
+        }),
+    ])
         .then(function (responses) {
             // Get a JSON object from each of the responses
             return Promise.all(
                 responses.map(function (response) {
+                    console.log(response)
                     if (response.status !== 200) throw '404 Not Found'
-                    return response.json()
+                    return response.data
                 })
             )
         })
@@ -58,10 +74,12 @@ export const saveForm = (
     data,
     formName,
     formId,
-    option
+    option,
+    token
 ) => (dispatch) => {
     const headers = {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
     }
 
     const url = `${BASE_URL}/forms/${option}?formId=${formId}&formName=${formName}`
@@ -76,9 +94,10 @@ export const saveForm = (
         .catch((err) => onError(err))
 }
 
-export const deleteForms = (isLoading, onError, data) => (dispatch) => {
+export const deleteForms = (isLoading, onError, data, token) => (dispatch) => {
     const headers = {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
     }
 
     const url = `${BASE_URL}/forms/delete`
@@ -93,20 +112,19 @@ export const deleteForms = (isLoading, onError, data) => (dispatch) => {
         .catch((err) => onError(err))
 }
 
-export const getTable = (onSuccess, onError) => (dispatch) => {
-    // const accessToken = getAccessTokenSilently({
-    //     audience: `https://quickstarts/api`,
-    //     scope: 'read:current_user',
-    // }).then((response) => console.log(response))
-
-    // console.log(accessToken)
-
+export const getTable = (onSuccess, onError, token) => (dispatch) => {
     const url = `${BASE_URL}/forms/all`
 
     console.log(url)
 
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
     axios
-        .get(url)
+        .get(url, {
+            headers: headers,
+        })
         .then((response) => onSuccess(response.data))
         .catch((err) => onError(err))
 }

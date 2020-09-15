@@ -20,19 +20,22 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface FormRepository extends MongoRepository<Form, String> {
 
-	public Form findByUrlAndModel(String url, Model model);
+	public Form findByUrlAndModelAndClient(String url, Model model, String client);
 
-	@Query(value = "{}", fields = "{url:1, name: 1, model:1, _id:1}")
-	public List<FormShort> getFormShorts();
+	@Query(value = "{client: ?0}", fields = "{url:1, name: 1, model:1, _id:1}")
+	public List<FormShort> getFormShorts(String client);
 
-	@Query(value = "{ model : OPTION}", fields = "{ _id : 1, name: 1 }")
-	public List<Datatype> getDatatypes();
+	@Query(value = "{ model : OPTION, client: ?0}", fields = "{ _id : 1, name: 1 }")
+	public List<Datatype> getDatatypes(String client);
 
 	public List<Form> findAll();
 
-	public void deleteBy_idIn(List<String> formIds);
+	public void deleteBy_idInAndClient(List<String> formIds, String client);
 	
-	@Configuration
+	public boolean existsByUrlAndClient(String url, String client);
+	
+
+    @Configuration
     @DependsOn("mongoTemplate")
     public class CollectionsConfig {
 
@@ -43,16 +46,14 @@ public interface FormRepository extends MongoRepository<Form, String> {
         public void initIndexes() {
             mongoTemplate.indexOps("forms")
                     .ensureIndex(
-                            new Index().on("name", Sort.Direction.ASC).unique()
+                            new Index().on("nameClient", Sort.Direction.ASC).unique()
                     );
 
             TextIndexDefinition textIndex = new TextIndexDefinition.TextIndexDefinitionBuilder()
                 .onField("$**")
                 .build();
-            mongoTemplate.indexOps("forms")
+            mongoTemplate.indexOps("products")
                 .ensureIndex(textIndex);
         }
     }
-
-	public boolean existsByUrl(String url);
 }

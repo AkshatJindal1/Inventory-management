@@ -1,21 +1,17 @@
 package org.inventorymanagement.product.service;
 
-import java.util.*;
+import java.util.Random;
 
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.Model;
+import org.inventorymanagement.product.model.Product;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,7 +38,7 @@ public class ProductService {
 	private MongoOperations mongoOps;
 
 	@Autowired
-  ProductRepository repository;
+	private ProductRepository repository;
 
 	public Product insertProduct(String productMap) throws JsonMappingException, JsonProcessingException {
 		final ObjectMapper mapper = new ObjectMapper();
@@ -74,8 +70,8 @@ public class ProductService {
 		return repository.save(product);
 	}
 
-	public Product getProductByUrl(String formUrl, String productUrl) {
-		Form form = formRepository.findByUrlAndModel(formUrl, Model.PRODUCT);
+	public Product getProductByUrl(String formUrl, String productUrl, String client) {
+		Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.PRODUCT, client);
 		if (form == null)
 			throw new ProductNotFoundException("Form Url incorrect");
 		String formId = form.get_id();

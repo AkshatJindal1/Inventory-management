@@ -32,7 +32,7 @@ public class OptionService {
     @Autowired 
     FormRepository formRepository;
     
-    public Option insertOption(String optionMap) throws JsonMappingException, JsonProcessingException {
+    public Option insertOption(String optionMap, String client) throws JsonMappingException, JsonProcessingException {
     	
     	final ObjectMapper mapper = new ObjectMapper();
     	final Option option = mapper.readValue(optionMap, Option.class);
@@ -47,8 +47,8 @@ public class OptionService {
     }
 
 
-    public Option getOptionByUrl(String formUrl, String optionUrl) {
-    	Form form = formRepository.findByUrlAndModel(formUrl, Model.OPTION);
+    public Option getOptionByUrl(String formUrl, String optionUrl, String client) {
+    	Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.OPTION, client);
     	if(form == null) 
     		throw new ProductNotFoundException("Form Url incorrect");
     	String formId = form.get_id();

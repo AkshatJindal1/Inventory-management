@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import Controls from '../../Controls/Controls'
 import { Redirect } from 'react-router'
+import { withAuth0 } from '@auth0/auth0-react'
 
 import { getTable, deleteForms } from '../../../store/actions/formAction'
 
@@ -70,12 +71,13 @@ export class ProductLanding extends Component {
             () => {
                 alert('An Error Occured, Please try again in some time')
             },
-            data
+            data,
+            this.props.token
         )
     }
 
     componentWillMount() {
-        this.props.getTable(this.onSuccess, this.onError)
+        this.props.getTable(this.onSuccess, this.onError, this.props.token)
     }
 
     getProductData = (options) => {
@@ -197,5 +199,5 @@ export class ProductLanding extends Component {
 const mapStateToProps = (state) => ({})
 
 export default connect(mapStateToProps, { getTable, deleteForms })(
-    withStyles(useStyles, { withTheme: true })(ProductLanding)
+    withAuth0(withStyles(useStyles, { withTheme: true })(ProductLanding))
 )

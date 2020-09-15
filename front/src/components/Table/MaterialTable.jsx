@@ -36,6 +36,7 @@ export class MaterialTable extends Component {
                     searchText: searchText,
                     filter: this.props.filterCategories,
                 }
+                console.log(this.props.token)
                 this.props.getAllProducts(filterOptions)
             }
         )

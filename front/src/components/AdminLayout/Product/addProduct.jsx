@@ -36,7 +36,11 @@ export class ProductLanding extends Component {
 
     onError = (err) => {
         console.log(err)
-        this.setState({ failed: true, loading: false, errorMsg: err })
+        this.setState({
+            failed: true,
+            loading: false,
+            errorMsg: 'Something Went Wrong',
+        })
     }
 
     onFetchDataSuccess = (fetchedData) => {
@@ -60,7 +64,8 @@ export class ProductLanding extends Component {
             this.isLoading,
             this.onError,
             this.props.match.params.formUrl,
-            this.props.match.params.option
+            this.props.match.params.option,
+            this.props.token
         )
         if (this.props.match.params.itemId != null)
             this.props.getProduct(
@@ -68,7 +73,8 @@ export class ProductLanding extends Component {
                 this.onFetchDataError,
                 this.props.match.params.option,
                 this.props.match.params.formUrl,
-                this.props.match.params.itemId
+                this.props.match.params.itemId,
+                this.props.token
             )
         else {
             this.setState({ fetchingLoading: false })
@@ -88,6 +94,7 @@ export class ProductLanding extends Component {
                     formId={this.state.formId}
                     option={this.props.match.params.option}
                     redirectTo={'/tables'}
+                    token={this.props.token}
                 />
             )
     }

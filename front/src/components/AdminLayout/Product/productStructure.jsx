@@ -30,13 +30,12 @@ export class ProductStructure extends Component {
         const formFields = form.fields
         const formId = form.formId
         const datatypeList = this.getDataTypeList(datatypes)
-        const option = form.option ? 'options' : 'products'
         this.setState({
             loading: false,
             formFields,
             formName,
             formId,
-            option,
+            option: this.props.match.params.option,
             datatypes: datatypeList,
         })
     }
@@ -63,7 +62,11 @@ export class ProductStructure extends Component {
 
     onError = (err) => {
         console.log(err)
-        this.setState({ failed: true, loading: false, errorMsg: err })
+        this.setState({
+            failed: true,
+            loading: false,
+            errorMsg: 'Somethign Went Wrong',
+        })
     }
 
     updateUrl = (formFields) => {
@@ -71,19 +74,20 @@ export class ProductStructure extends Component {
     }
 
     componentWillMount() {
-        console.log(this.props.match.params.itemUrl)
         if (this.props.match.params.itemUrl == undefined)
             this.props.getDefaultFormData(
                 this.newFormLoader,
                 this.onError,
-                this.props.match.params.option
+                this.props.match.params.option,
+                this.props.token
             )
         else
             this.props.getFormData(
                 this.existingFormLoader,
                 this.onError,
                 this.props.match.params.itemUrl,
-                this.props.match.params.option
+                this.props.match.params.option,
+                this.props.token
             )
     }
 
@@ -99,6 +103,7 @@ export class ProductStructure extends Component {
                     formId={this.state.formId}
                     option={this.state.option}
                     redirectTo={'/tables'}
+                    token={this.props.token}
                 />
             )
     }

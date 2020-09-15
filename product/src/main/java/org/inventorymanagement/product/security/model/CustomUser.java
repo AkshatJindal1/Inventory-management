@@ -1,6 +1,7 @@
-package org.inventorymanagement.product.model;
+package org.inventorymanagement.product.security.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,18 +11,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class Datatype {
 
+@Getter
+@Setter 
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Document(collection = "users")
+public class CustomUser {
+	
 	@Id
 	@JsonProperty("id")
 	private String _id;
 	
-	@JsonProperty("title")
-	private String name;
+	@JsonProperty("subject")
+	private String subject;
+	
+	@JsonProperty("client_name")
+	private String clientName;
 
 }

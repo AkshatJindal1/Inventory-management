@@ -1,6 +1,4 @@
-package org.inventorymanagement.product.model;
-
-import org.springframework.data.annotation.Id;
+package org.inventorymanagement.product.security.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,13 +13,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Datatype {
-
-	@Id
-	@JsonProperty("id")
-	private String _id;
+public class UserMetadata {
 	
-	@JsonProperty("title")
-	private String name;
-
+	@JsonProperty("client_name")
+	private String clientName;
 }
