@@ -25,3 +25,7 @@ yarn-error.log*
 mongod/
 /.metadata/
 .metadata/*
+
+metastore_db/*
+derby.log
+

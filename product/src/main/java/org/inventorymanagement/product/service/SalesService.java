@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Random;
 
 @Slf4j
@@ -34,6 +35,7 @@ public class SalesService {
     } while (repository.existsByUrl(candidate));
 
     sale.setUrl(candidate);
+    sale.setSalesDate(new Date().toString());
     return repository.save(sale);
   }
 

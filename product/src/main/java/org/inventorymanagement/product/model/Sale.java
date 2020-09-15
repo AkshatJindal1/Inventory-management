@@ -28,7 +28,6 @@ public class Sale {
   private String url;
   @NotNull(message = "Form Id cannot be null")
   private String formId;
-  @NotBlank(message = "Sales Date must not be null or empty")
   private String salesDate;
   private Double amount;
   private Double discount;
