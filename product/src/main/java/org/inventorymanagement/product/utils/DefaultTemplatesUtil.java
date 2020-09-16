@@ -80,6 +80,9 @@ public class DefaultTemplatesUtil {
 		
 		Object[][] formSchemas;
 		switch (template) {
+		case NONE: 
+			formSchemas = new Object[0][0];
+			break;
 		case TEXTILE:
 			formSchemas = getTextileSchemas();
 			break;

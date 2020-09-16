@@ -29,7 +29,6 @@ public class CustomUser {
 
 	private String clientName;
 
-	@JsonIgnore
 	private DefaultTemplates defaultTemplates;
 
 	@JsonIgnore
