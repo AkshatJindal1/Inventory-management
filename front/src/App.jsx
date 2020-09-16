@@ -1,6 +1,7 @@
 import React, { Component, Suspense } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Loadable from 'react-loadable'
+import PrivateRoute from './components/authentication/PrivateRoute'
 
 import Loader from './components/Loader'
 
@@ -14,15 +15,21 @@ const AdminLayout = Loadable({
 class App extends Component {
     render() {
         const menu = routes.map((route, index) => {
-            return route.component ? (
+            return (
                 <Route
                     key={index}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
-                    render={(props) => <route.component {...props} />}
+                    render={(props) =>
+                        route.private ? (
+                            <PrivateRoute route={route} {...props} />
+                        ) : (
+                            <route.component {...props} />
+                        )
+                    }
                 />
-            ) : null
+            )
         })
 
         return (
