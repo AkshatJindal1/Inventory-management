@@ -131,10 +131,10 @@ public class ProductUtils {
 		return name+breakpoint+client;
 	}
 
-	public Form saveSalesForm() {
+	public static Form saveSalesForm() {
 
 		Form form = new Form();
-		form.setFields(new ProductUtils().getDefaultForms(Model.SALE));
+		form.setFields(ProductUtils.getDefaultForms(Model.SALE));
 		form.setUrl("sales");
 		form.setModel(Model.SALE);
 		return form;
