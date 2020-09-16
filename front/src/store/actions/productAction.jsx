@@ -150,3 +150,32 @@ export const getColumns = (option, formUrl, token) => (dispatch) => {
             })
         })
 }
+
+export const deleteProducts = (
+    option,
+    formUrl,
+    token,
+    productList = [],
+    filterOptions = {}
+) => (dispatch) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+
+    axios
+        .delete(`${BASE_URL}/${option}/${formUrl}`, {
+            headers: headers,
+            data: productList,
+        })
+        .then((resp) => {
+            dispatch(getAllProducts(option, formUrl, token, filterOptions))
+        })
+        .catch((err) => {
+            console.log(err)
+            dispatch({
+                type: FALSE_RESPONSE,
+                payload: false,
+            })
+        })
+}

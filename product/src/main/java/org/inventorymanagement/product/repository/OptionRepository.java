@@ -20,4 +20,6 @@ public interface OptionRepository extends MongoRepository<Option, String> {
 
 	Option findBy_idAndFormId(String get_id, String formId);
 
+	void deleteBy_idAndFormId(String id, String formId);
+
 }

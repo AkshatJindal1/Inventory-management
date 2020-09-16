@@ -12,6 +12,7 @@ import {
 import { CheckBox, ThreeSixty } from '@material-ui/icons'
 import React, { Component, Fragment } from 'react'
 import {
+    deleteProducts,
     getAllProducts,
     getColumns,
     getInitialState,
@@ -74,8 +75,14 @@ export class ProductLanding extends Component {
         )
     }
 
-    deleteRows = (productUids) => {
-        this.props.deleteProducts(productUids)
+    deleteRows = (productUids, filterOptions) => {
+        this.props.deleteProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            this.props.token,
+            productUids,
+            filterOptions
+        )
     }
 
     filterSubmit = (filterCategories) => {
@@ -170,4 +177,5 @@ export default connect(mapStateToProps, {
     setCategories,
     getColumns,
     getInitialState,
+    deleteProducts,
 })(ProductLanding)

@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.service;
 
+import java.util.List;
 import java.util.Random;
 
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
@@ -99,6 +100,14 @@ public class OptionService {
 			throw new ProductNotFoundException("Option with this id not found");
 		}
 		return option;
+	}
+
+	public void deleteOptions(List<String> uids, String formUrl, String client) {
+
+		String formId = formRepository.findByUrlAndModelAndClient(formUrl, Model.OPTION, client).get_id();
+		for (String uid : uids) {
+			optionRepository.deleteBy_idAndFormId(uid, formId);
+		}
 	}
 
 }
