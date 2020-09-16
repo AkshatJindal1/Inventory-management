@@ -13,6 +13,7 @@ import ValidateFields from './validate'
 import { connect } from 'react-redux'
 import getType from './typeDatatypeMap'
 import { saveProduct } from '../../store/actions/productAction'
+import { TimerSharp } from '@material-ui/icons'
 
 const validateOnChange = true
 
@@ -22,8 +23,9 @@ export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
         let temp = { ...this.state.errors }
         const errorConditions = this.state.errorCondition
-
+        console.log(errorConditions)
         for (const [key, value] of Object.entries(fieldValues)) {
+            console.log(key)
             const errorCondition = errorConditions[key]
 
             if (value === '') {
@@ -69,37 +71,45 @@ export class AddForm extends Component {
             return Object.values(temp).every((x) => x === '')
     }
 
+    onSuccess = () => {
+        this.resetForm()
+        console.log(`About to Redirect to ${this.props.redirectTo}`)
+        this.setState({
+            redirectTo: <Redirect to={this.props.redirectTo} />,
+        })
+    }
+
+    onError = () => {
+        this.setState({
+            redirectTo: 'Some Errors Exists',
+        })
+    }
+
     handleSubmit = (e) => {
         e.preventDefault()
+        this.save(this.onSuccess, this.onError)
+    }
+
+    saveAndReset = () => {
+        this.save(this.resetForm, this.onError)
+        this.setState({ uid: '' })
+    }
+
+    save = (onSuccess, onError) => {
         if (this.validate()) {
-            const values = this.state.values
+            const values = { ...this.state.values }
 
             // Set uid
-            values.uid =
-                this.props.initialFValues != null
-                    ? this.props.initialFValues.uid
-                    : ''
-
+            values.uid = this.state.uid
             values.formId = this.props.formId
 
             this.props.saveProduct(
-                (data) => {
-                    this.resetForm()
-                    console.log(`About to Redirect to ${this.props.redirectTo}`)
-                    this.setState({
-                        redirectTo: <Redirect to={this.props.redirectTo} />,
-                    })
-                },
-                (data) => {
-                    this.setState({
-                        redirectTo: 'Some Errors Exists',
-                    })
-                },
+                onSuccess,
+                onError,
                 values,
                 this.props.option,
                 this.props.token
             )
-            return <Redirect to="/somewhere/else" />
         }
     }
 
@@ -108,10 +118,17 @@ export class AddForm extends Component {
     }
 
     componentWillMount() {
+        const uid =
+            this.props.initialFValues != null
+                ? this.props.initialFValues.uid
+                : ''
+
         const initialFValues = this.props.initialFValues
             ? this.props.initialFValues
             : []
         const formStructure = this.props.formStructure
+
+        let blankInitialValues = {}
 
         // Store the output json, and default values
         let values = {}
@@ -126,6 +143,7 @@ export class AddForm extends Component {
 
             field.value = value
             values[field.id] = field.value
+            blankInitialValues[field.id] = ''
 
             errorCondition[field.id] = {
                 datatype: field.datatype,
@@ -136,6 +154,7 @@ export class AddForm extends Component {
             if (field.datatype === 'boolean') {
                 field.value = field.value ? field.value : false
                 values[field.id] = field.value
+                blankInitialValues[field.id] = false
             }
 
             return field
@@ -145,8 +164,9 @@ export class AddForm extends Component {
             values,
             errors: {},
             formStructure: structure,
-            initialFValues: values,
+            blankInitialValues,
             errorCondition,
+            uid,
         })
     }
 
@@ -168,7 +188,7 @@ export class AddForm extends Component {
     }
 
     resetForm = () => {
-        this.setValues(this.state.initialFValues)
+        this.setValues(this.state.blankInitialValues)
         this.setErrors({})
     }
 
@@ -178,6 +198,7 @@ export class AddForm extends Component {
         const formStructure = this.state.formStructure
         const handleInputChange = this.handleInputChange
         const resetForm = this.resetForm
+        const saveAndReset = this.saveAndReset
 
         const inputFields = formStructure.map((field, index) => {
             if (getType(field.datatype) === 'input') {
@@ -235,20 +256,22 @@ export class AddForm extends Component {
                         <GridContainer>{inputFields}</GridContainer>
                     </CardContent>
                     <CardActions>
-                        <GridItem xs={12} sm={12} md={6}>
-                            <div>
-                                <Controls.Button type="submit" text="Submit" />
-                                <Controls.Button
-                                    text="Reset"
-                                    color="default"
-                                    onClick={resetForm}
-                                />
-                                <Controls.Button
-                                    text="Cancel"
-                                    color="default"
-                                    onClick={this.handleCancel}
-                                />
-                            </div>
+                        <GridItem xs={12} sm={12} md={12}>
+                            <Controls.Button type="submit" text="Submit" />
+                            <Controls.Button
+                                text="Save and Another"
+                                onClick={saveAndReset}
+                            />
+                            <Controls.Button
+                                text="Reset"
+                                color="default"
+                                onClick={resetForm}
+                            />
+                            <Controls.Button
+                                text="Cancel"
+                                color="default"
+                                onClick={this.handleCancel}
+                            />
                         </GridItem>
                     </CardActions>
                 </Form>
