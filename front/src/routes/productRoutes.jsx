@@ -12,7 +12,15 @@ const ProductLanding = React.lazy(() =>
     import('../components/AdminLayout/Product/productLanding')
 )
 
+const Profile = React.lazy(() => import('../components/authentication/index'))
+
 const routes = [
+    // {
+    //     path: '/',
+    //     exact: true,
+    //     name: 'Profile',
+    //     component: Profile,
+    // },
     {
         path: '/data/:options/:formUrl',
         exact: true,

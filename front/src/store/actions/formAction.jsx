@@ -114,9 +114,6 @@ export const deleteForms = (isLoading, onError, data, token) => (dispatch) => {
 
 export const getTable = (onSuccess, onError, token) => (dispatch) => {
     const url = `${BASE_URL}/forms/all`
-
-    console.log(url)
-
     const headers = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,

@@ -8,7 +8,6 @@ export class Profile extends Component {
         this.props.auth0
             .getAccessTokenSilently({
                 audience: domain,
-                // scope: 'read:posts',
             })
             .then((token) => {
                 let userDetailsByIdUrl = `${domain}/users/${this.props.auth0.user.sub}`
@@ -23,13 +22,7 @@ export class Profile extends Component {
     }
 
     render() {
-        const {
-            loginWithRedirect,
-            user,
-            logout,
-            isAuthenticated,
-            getAccessTokenSilently,
-        } = this.props.auth0
+        const { user, logout, isAuthenticated } = this.props.auth0
         console.log(user)
         return (
             <>
