@@ -62,11 +62,10 @@ public class FormController {
 		return service.saveForm(fields, formName, formId, category, client);
 	}
 
-
-	@GetMapping(path = "/all/raw")
-	public List<Form> getAllFormsRaw() {
-		return service.getAllForms();
-	}
+//	@GetMapping(path = "/all/raw")
+//	public List<Form> getAllFormsRaw() {
+//		return service.getAllForms();
+//	}
 
 
 	@GetMapping(path = "/all")
