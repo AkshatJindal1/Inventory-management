@@ -64,7 +64,7 @@ public class Product {
     
     private String url;
 
-    private Map<String, Object> productDetails = new HashMap<String, Object>();
+    private Map<String, Object> productDetails = new HashMap<>();
 
     @JsonAnyGetter
     public Map<String, Object> otherFields() {
