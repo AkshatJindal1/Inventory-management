@@ -28,6 +28,8 @@ const useStyles = (theme) => ({
 
 class AdminLayout extends Component {
     render() {
+        console.log(this.props)
+
         const { classes } = this.props
         const menu = routes.map((route, index) => {
             return route.component ? (
@@ -36,11 +38,13 @@ class AdminLayout extends Component {
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
-                    render={(props) => {
-                        console.log(props)
-                        return <PrivateRoute route={route} {...props} />
-                        // return <route.component {...props} />
-                    }}
+                    render={(props) =>
+                        route.private ? (
+                            <PrivateRoute route={route} {...props} />
+                        ) : (
+                            <route.component {...props} />
+                        )
+                    }
                 />
             ) : null
         })
@@ -49,7 +53,6 @@ class AdminLayout extends Component {
             <div className={classes.root}>
                 <NavBar />
                 <Navigation />
-                {/* <Breadcrumb /> */}
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Switch>{menu}</Switch>

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
 import Loader from '../Loader'
-import LoginButton from './Login'
-import { Redirect } from 'react-router-dom'
 import { withAuth0 } from '@auth0/auth0-react'
 
 export class PrivateRoute extends Component {
@@ -35,18 +33,17 @@ export class PrivateRoute extends Component {
             isAuthenticated,
             loginWithRedirect,
             handleRedirectCallback,
+            isLoading,
         } = this.props.auth0
         const redirect_uri = `${window.location.origin}${this.props.match.url}`
 
-        console.log(redirect_uri)
-        console.log(isAuthenticated)
+        if (isLoading) return <Loader text="Fetching the details for you" />
         if (!isAuthenticated) {
             return loginWithRedirect()
         }
-
         if (this.state.isLoading) {
             this.getToken()
-            return <Loader />
+            return <Loader text="Fetching the details for you" />
         }
         if (this.state.isError) return 'Something Went Wrong'
         return <route.component token={this.state.token} {...this.props} />
