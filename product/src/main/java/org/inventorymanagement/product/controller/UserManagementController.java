@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.controller;
 
+import org.inventorymanagement.product.model.DefaultTemplates;
 import org.inventorymanagement.product.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,14 +17,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @CrossOrigin
 @RequestMapping("/user-management")
 public class UserManagementController {
-	
+
 	@Autowired
 	private UserManagementService service;
-	
+
 	@PostMapping
-	public void saveUser(@RequestParam String clientName,
+	public void saveUser(@RequestParam String clientName, @RequestParam("industry") DefaultTemplates defaultTemplate,
 			@RequestHeader("Authorization") String token) throws JsonMappingException, JsonProcessingException {
-		service.saveUser(token, clientName);
+		service.saveUser(token, defaultTemplate, clientName);
 	}
 
 }

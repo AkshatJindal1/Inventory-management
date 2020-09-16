@@ -1,8 +1,10 @@
 package org.inventorymanagement.product.security.model;
 
+import org.inventorymanagement.product.model.DefaultTemplates;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -30,4 +32,9 @@ public class CustomUser {
 	@JsonProperty("client_name")
 	private String clientName;
 
+	@JsonIgnore
+	private DefaultTemplates defaultTemplates;
+
+	@JsonIgnore
+	private Boolean approved = false;
 }
