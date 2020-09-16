@@ -47,14 +47,23 @@ export class MaterialTable extends Component {
         this.setState({ selectedRowIndex })
     }
 
-    rowDelete = () => {
+    rowDelete = (page, searchText, sortOrder, rowsPerPage) => {
         const { data } = this.props
         const { selectedRowIndex } = this.state
+
         const productUids = data
             .filter((d, index) => selectedRowIndex.indexOf(index) !== -1)
             .map((product) => product.uid)
-        this.props.deleteRows(productUids)
-        console.log(this.state)
+
+        const filterOptions = {
+            pageNumber: page,
+            recordsPerPage: rowsPerPage,
+            sortBy: sortOrder.name,
+            descending: sortOrder.direction === 'desc',
+            searchText: searchText,
+            filter: this.props.filterCategories,
+        }
+        this.props.deleteRows(productUids, filterOptions)
     }
 
     filterSubmit = (filterCategories) => {
@@ -119,7 +128,12 @@ export class MaterialTable extends Component {
                         this.rowSelectionChange(tableState.selectedRows.data)
                         break
                     case 'rowDelete':
-                        this.rowDelete(tableState.previousSelectedRow.index)
+                        this.rowDelete(
+                            tableState.page,
+                            tableState.searchText || '',
+                            tableState.sortOrder,
+                            tableState.rowsPerPage
+                        )
                         break
                     default:
                         console.log('action not handled.')

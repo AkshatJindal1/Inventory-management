@@ -12,12 +12,14 @@ import {
 import { CheckBox, ThreeSixty } from '@material-ui/icons'
 import React, { Component, Fragment } from 'react'
 import {
+    deleteProducts,
     getAllProducts,
-    getCategories,
     getColumns,
+    getInitialState,
     setCategories,
 } from '../../../store/actions/productAction'
 
+import CustomizedButtons from '../../CustomButton'
 import Filters from '../../Filters'
 import MUIDataTable from 'mui-datatables'
 import { MaterialTable } from '../../Table/MaterialTable'
@@ -45,13 +47,23 @@ export class ProductLanding extends Component {
             page: 0,
             count: 1,
             rowsPerPage: 5,
-            isLoading: false,
             redirectTo: null,
+            isPageLoading: true,
         }
     }
 
     componentDidMount() {
-        // this.props.getCategories()
+        this.props.getInitialState()
+        this.props.getColumns(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            this.props.token
+        )
+        this.props.getAllProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            this.props.token
+        )
     }
 
     getAllProducts = (filterOptions) => {
@@ -63,8 +75,14 @@ export class ProductLanding extends Component {
         )
     }
 
-    deleteRows = (productUids) => {
-        this.props.deleteProducts(productUids)
+    deleteRows = (productUids, filterOptions) => {
+        this.props.deleteProducts(
+            this.props.match.params.options,
+            this.props.match.params.formUrl,
+            this.props.token,
+            productUids,
+            filterOptions
+        )
     }
 
     filterSubmit = (filterCategories) => {
@@ -73,7 +91,6 @@ export class ProductLanding extends Component {
     }
 
     rowClick = (data) => {
-        console.log(data)
         this.setState({
             redirectTo: (
                 <Redirect
@@ -83,38 +100,34 @@ export class ProductLanding extends Component {
         })
     }
 
+    handleButtonClick = () => {
+        this.setState({
+            redirectTo: (
+                <Redirect
+                    to={`/form/${this.props.match.params.options}/${this.props.match.params.formUrl}`}
+                />
+            ),
+        })
+    }
+
     render() {
-        // const { columns } = this.state
         const {
             categories,
             products: data,
             isLoading,
-            isCategoriesLoading,
             columns,
+            totalRows,
         } = this.props
 
         const options = {
             caseSensitive: false,
+            count: totalRows,
         }
+
+        console.log('isLoading', isLoading)
+
         return (
             <Fragment>
-                <Typography paragraph>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Rhoncus dolor purus non enim praesent elementum
-                    facilisis leo vel. Risus at ultrices mi tempus imperdiet.
-                    Semper risus in hendrerit gravida rutrum quisque non tellus.
-                    Convallis convallis tellus id interdum velit laoreet id
-                    donec ultrices. Odio morbi quis commodo odio aenean sed
-                    adipiscing. Amet nisl suscipit adipiscing bibendum est
-                    ultricies integer quis. Cursus euismod quis viverra nibh
-                    cras. Metus vulputate eu scelerisque felis imperdiet proin
-                    fermentum leo. Mauris commodo quis imperdiet massa
-                    tincidunt. Cras tincidunt lobortis feugiat vivamus at augue.
-                    At augue eget arcu dictum varius duis at consectetur lorem.
-                    Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-                    sapien faucibus et molestie ac.
-                </Typography>
                 <MaterialTable
                     filterCategories={categories}
                     data={data}
@@ -130,6 +143,12 @@ export class ProductLanding extends Component {
                     token={this.props.token}
                 />
                 {this.state.redirectTo}
+                <CustomizedButtons
+                    id="add"
+                    buttonType="add"
+                    children="Add Product"
+                    handleSubmit={this.handleButtonClick}
+                />
             </Fragment>
         )
     }
@@ -155,7 +174,8 @@ const mapStateToProps = ({
 
 export default connect(mapStateToProps, {
     getAllProducts,
-    getCategories,
     setCategories,
     getColumns,
+    getInitialState,
+    deleteProducts,
 })(ProductLanding)

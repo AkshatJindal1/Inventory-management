@@ -15,16 +15,7 @@ import org.inventorymanagement.product.service.SalesService;
 import org.inventorymanagement.product.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -94,5 +85,14 @@ public class SaleController {
 		String client = userService.getClientName(token);
 
 		return commonService.getMaxMinValue(formUrl, sortFields, Model.SALE, client);
+	}
+
+	@DeleteMapping("/{formUrl}")
+	public void deleteSales(
+			@RequestBody List<String> req,
+			@PathVariable("formUrl") String formUrl,
+			@RequestHeader("Authorization") String token) throws JsonProcessingException {
+		String client = userService.getClientName(token);
+		service.deleteSales(req, formUrl, client);
 	}
 }

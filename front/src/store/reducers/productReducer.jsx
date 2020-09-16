@@ -3,10 +3,9 @@ import {
     GET_ALL_PRODUCTS,
     GET_ALL_PRODUCTS_FORMS,
     GET_ALL_PRODUCTS_INIT,
-    GET_CATEGORIES,
-    GET_CATEGORIES_INIT,
     GET_COLUMN_DETAILS,
     GET_COLUMN_INIT,
+    GET_INITIAL_STATE,
     SET_SELECTED_CATEGORIES,
 } from '../actions/types'
 
@@ -16,7 +15,6 @@ const initialState = {
     totalProducts: 0,
     allProducts: [],
     isLoading: true,
-    isCategoriesLoading: true,
     allCategories: [],
     formFields: [],
     columns: [],
@@ -24,10 +22,13 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case GET_INITIAL_STATE:
+            return { ...initialState }
+
         case GET_ALL_PRODUCTS_INIT:
             return {
-                isLoading: true,
                 ...state,
+                isLoading: true,
             }
 
         case FALSE_RESPONSE:
@@ -43,23 +44,10 @@ export default function (state = initialState, action) {
                 isLoading: false,
             }
 
-        case GET_CATEGORIES_INIT:
-            return {
-                isCategoriesLoading: true,
-                ...state,
-            }
-
         case GET_ALL_PRODUCTS_FORMS:
             return {
                 ...state,
                 formFields: action.payload,
-            }
-
-        case GET_CATEGORIES:
-            return {
-                ...state,
-                allCategories: action.payload,
-                isCategoriesLoading: false,
             }
 
         case SET_SELECTED_CATEGORIES:
@@ -70,8 +58,8 @@ export default function (state = initialState, action) {
 
         case GET_COLUMN_INIT:
             return {
-                isLoading: true,
                 ...state,
+                isLoading: true,
             }
 
         case GET_COLUMN_DETAILS:
@@ -91,7 +79,6 @@ export default function (state = initialState, action) {
                         action.payload[1][field.id] !== null
                             ? parseInt(action.payload[1][field.id][1])
                             : null
-                    console.log(minValue, maxValue)
                     return {
                         id: field.id,
                         label: field.labelText,
@@ -121,7 +108,6 @@ export default function (state = initialState, action) {
                             field.options.maximumValue === null
                         )
                 )
-            console.log(filterCategories)
             return {
                 ...state,
                 columns: action.payload[0].fields.map((field) => {

@@ -16,13 +16,9 @@ import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Model;
-import org.inventorymanagement.product.repository.FormRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProductUtils {
 
-	@Autowired
-	private FormRepository repository;
 
 	private static final String breakpoint = "$$<-->$$";
 
@@ -32,9 +28,12 @@ public class ProductUtils {
 	}
 
 	public static Object[][] getDefaultProductValuesArray() {
-		Object[][] defaultForms = { { "productId", "Product Id", "text", true },
-				{ "productName", "Product Name", "text", true }, { "description", "Description", "text", false },
-				{ "image", "Image", "text", false }, { "cost", "Cost", "number", false },
+		Object[][] defaultForms = {
+				{ "productId", "Product Id", "text", true },
+				{ "productName", "Product Name", "text", true },
+				{ "description", "Description", "text", false },
+				{ "image", "Image", "text", false },
+				{ "cost", "Cost", "number", false },
 				{ "quantityInStock", "Quantity in Stock", "number", false },
 				{ "quantityInTransit", "Quantity in Transit", "number", false },
 				{ "benchmark", "Benchmark", "number", false } };
@@ -94,10 +93,6 @@ public class ProductUtils {
 		}
 		return id;
 	}
-
-//	public static String generateId(String labelText) {
-//		return getOrGenerateId(labelText, null, new ArrayList<String>());
-//	}
 
 	public static String toSlug(String input) {
 

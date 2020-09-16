@@ -30,8 +30,20 @@ export class PrivateRoute extends Component {
 
     render() {
         const { route } = this.props
-        const { user, isAuthenticated, loginWithRedirect } = this.props.auth0
-        if (!isAuthenticated) return loginWithRedirect()
+        const {
+            user,
+            isAuthenticated,
+            loginWithRedirect,
+            handleRedirectCallback,
+        } = this.props.auth0
+        const redirect_uri = `${window.location.origin}${this.props.match.url}`
+
+        console.log(redirect_uri)
+        console.log(isAuthenticated)
+        if (!isAuthenticated) {
+            return loginWithRedirect()
+        }
+
         if (this.state.isLoading) {
             this.getToken()
             return <Loader />

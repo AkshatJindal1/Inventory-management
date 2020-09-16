@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Slf4j
@@ -66,5 +67,13 @@ public class SalesService {
     if (sale == null)
       throw new ProductNotFoundException("Url incorrect");
     return sale;
+  }
+
+  public void deleteSales(List<String> uids, String formUrl, String client) {
+
+    String formId = formRepository.findByUrlAndModel(formUrl, Model.SALE).get_id();
+    for (String uid : uids) {
+      repository.deleteBy_idAndFormIdAndClient(uid, formId, client);
+    }
   }
 }

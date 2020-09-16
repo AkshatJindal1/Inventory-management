@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.service;
 
+import java.util.List;
 import java.util.Random;
 
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
@@ -10,6 +11,7 @@ import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -85,10 +87,6 @@ public class ProductService {
 		return productRepository.save(product);
 	}
 
-	public Product getProductById(String id) {
-		return productRepository.findByProductId(id);
-	}
-
 	public Product getProductByUrl(String formUrl, String productUrl, String client) {
 		Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.PRODUCT, client);
 		if (form == null)
@@ -98,5 +96,12 @@ public class ProductService {
 		if (product == null)
 			throw new ProductNotFoundException("Url incorrect");
 		return product;
+	}
+	public void deleteProducts(List<String> uids, String formUrl, String client) {
+
+		String formId = formRepository.findByUrlAndModelAndClient(formUrl, Model.PRODUCT, client).get_id();
+		for(String uid: uids) {
+			productRepository.deleteBy_idAndFormId(uid, formId);
+		}
 	}
 }

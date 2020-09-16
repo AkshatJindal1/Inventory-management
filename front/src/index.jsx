@@ -14,7 +14,7 @@ const app = (
     <Auth0Provider
         domain="dev-jl9-q1h7.eu.auth0.com"
         clientId="0JG66AY7GZaBQW7lsmkATkKjm64ZEZJ8"
-        redirectUri={window.location.origin}
+        redirectUri={`${window.location.origin}`}
         audience="https://dev-jl9-q1h7.eu.auth0.com/api/v2/"
         scope="read:current_user update:current_user_metadata"
         useRefreshTokens={true}

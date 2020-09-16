@@ -5,17 +5,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.inventorymanagement.product.exceptionhandler.NoSupportedMethodException;
-import org.inventorymanagement.product.model.FilterOptions;
-import org.inventorymanagement.product.model.Model;
-import org.inventorymanagement.product.model.Option;
-import org.inventorymanagement.product.model.Product;
-import org.inventorymanagement.product.model.Sale;
+import org.inventorymanagement.product.model.*;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
 import org.inventorymanagement.product.repository.SaleRepository;
+import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -69,10 +67,18 @@ public class CommonService {
 		}
 
 		criterias.add(Criteria.where("formId").is(formId));
+		List<String> defaultFieldIds = ProductUtils
+				.getDefaultForms(modelType)
+				.stream()
+				.map( field -> field.getId())
+				.collect(Collectors.toList());
 
 		for (FilterOptions filter : filters) {
 			Map<String, Object> options = filter.getOptions();
 			String id = filter.getId();
+			if(!defaultFieldIds.contains(id)) {
+				id = "productDetails."+id;
+			}
 			List<Object> selected = filter.getSelected();
 			String datatype = options.get("dataType").toString();
 			if (datatype.equalsIgnoreCase("number")) {
@@ -91,6 +97,7 @@ public class CommonService {
 
 		query.addCriteria(expression.andOperator(criterias.toArray(new Criteria[criterias.size()])));
 
+		log.info("QUERY: {}", query);
 		Map<String, Object> resp = new HashMap<>();
 		switch (modelType) {
 		case OPTION:
@@ -153,8 +160,6 @@ public class CommonService {
 		}
 
 		sortFields.stream().forEach(sortField -> {
-
-			log.info(sortField);
 			Query maxQuery = new Query();
 			maxQuery.addCriteria(expression).with(Sort.by(Sort.Direction.DESC, sortField)).limit(1).fields()
 					.include(sortField).exclude("_id");

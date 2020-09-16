@@ -21,6 +21,8 @@ public interface SaleRepository extends MongoRepository<Sale, String> {
   Sale findByUrlAndFormId(String url, String formId);
   boolean existsByUrl(String candidate);
 
+  void deleteBy_idAndFormIdAndClient(String id, String formId, String client);
+
   @Configuration
   @DependsOn("mongoTemplate")
   class CollectionsConfig {
