@@ -27,8 +27,8 @@ export default function (state = initialState, action) {
 
         case GET_ALL_PRODUCTS_INIT:
             return {
-                ...state,
                 isLoading: true,
+                ...state,
             }
 
         case FALSE_RESPONSE:
@@ -58,8 +58,8 @@ export default function (state = initialState, action) {
 
         case GET_COLUMN_INIT:
             return {
-                ...state,
                 isLoading: true,
+                ...state,
             }
 
         case GET_COLUMN_DETAILS:
