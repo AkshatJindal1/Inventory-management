@@ -6,12 +6,17 @@ import {
     GET_CATEGORIES_INIT,
     GET_COLUMN_DETAILS,
     GET_COLUMN_INIT,
+    GET_INITIAL_STATE,
     SET_SELECTED_CATEGORIES,
 } from './types'
 
 import { BASE_URL } from './constants'
 import axios from 'axios'
 import store from '../store'
+
+export const getInitialState = () => (dispatch) => {
+    dispatch({ type: GET_INITIAL_STATE })
+}
 
 export const getAllProducts = (option, formUrl, token, filterOptions = {}) => (
     dispatch
@@ -34,35 +39,6 @@ export const getAllProducts = (option, formUrl, token, filterOptions = {}) => (
         .then((response) =>
             dispatch({
                 type: GET_ALL_PRODUCTS,
-                payload: response.data,
-            })
-        )
-        .catch((err) => {
-            console.log(err)
-            dispatch({
-                type: FALSE_RESPONSE,
-                payload: false,
-            })
-        })
-}
-
-export const getCategories = (token) => (dispatch) => {
-    dispatch({
-        type: GET_CATEGORIES_INIT,
-    })
-
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-    }
-
-    axios
-        .get(BASE_URL + '/categories', {
-            headers: headers,
-        })
-        .then((response) =>
-            dispatch({
-                type: GET_CATEGORIES,
                 payload: response.data,
             })
         )

@@ -2,17 +2,16 @@ import React, { Component } from 'react'
 
 import Card from '@material-ui/core/Card'
 import { CardActions } from '@material-ui/core'
-import Typography from '@material-ui/core/Typography'
 import CardContent from '@material-ui/core/CardContent'
 import Controls from '../Controls/Controls'
 import { Form } from '../Forms'
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
+import { Redirect } from 'react-router'
+import Typography from '@material-ui/core/Typography'
 import ValidateFields from './validate'
 import { connect } from 'react-redux'
 import getType from './typeDatatypeMap'
-import { Redirect } from 'react-router'
-
 import { saveProduct } from '../../store/actions/productAction'
 
 const validateOnChange = true
