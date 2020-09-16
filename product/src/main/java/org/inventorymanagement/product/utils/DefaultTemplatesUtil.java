@@ -84,8 +84,7 @@ public class DefaultTemplatesUtil {
 			formSchemas = getTextileSchemas();
 			break;
 		default:
-			formSchemas = new Object[0][0];
-			break;
+			throw new ProductNotFoundException("Men At Work");
 		}
 		
 		for (int i = 0; i < formSchemas.length; i++) {

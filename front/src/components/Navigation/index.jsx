@@ -74,12 +74,12 @@ class Navigation extends Component {
                     <Divider />
 
                     <NavLink
-                        to="/auth/main"
+                        to="/profile"
                         activeClassName="active"
-                        key="tables"
+                        key="profile"
                     >
                         <List>
-                            <ListItem button key="tables">
+                            <ListItem button key="profile">
                                 <ListItemIcon>
                                     <InboxIcon />
                                 </ListItemIcon>

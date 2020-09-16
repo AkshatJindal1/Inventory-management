@@ -33,20 +33,35 @@ public class UserManagementService {
 		return user.getClientName();
 	}
 
-	public void saveUser(String token, DefaultTemplates defaultTemplate, String clientName)
+	public void updateUser(String token, DefaultTemplates defaultTemplate, String clientName)
 			throws JsonMappingException, JsonProcessingException {
 		
-		// Create new Customer
-		CustomUser user = new CustomUser();
+		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
+		CustomUser user = userRepository.getUserBySubject(subject);
+		if(user == null) 
+			throw new ProductNotFoundException("User Not Found");
+			
 		user.setClientName(clientName);
-		user.setSubject(SecurityUtils.getSubjectFromToken(token.split(" ")[1]));
 		user.setDefaultTemplates(defaultTemplate);
+		user.setTemplateSelected(true);
 		
 		// Get All Forms
 		List<Form> forms = DefaultTemplatesUtil.getDefaultTextileForms(clientName, defaultTemplate);
 		
 		userRepository.save(user);
 		formRepository.saveAll(forms);
+	}
+
+	public CustomUser getUserDetails(String token) throws JsonMappingException, JsonProcessingException {
+		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
+		CustomUser user = userRepository.getUserBySubject(subject);
+		if(user == null) {
+			user = new CustomUser();
+			user.setSubject(SecurityUtils.getSubjectFromToken(token.split(" ")[1]));
+			user.setTemplateSelected(false);
+			userRepository.save(user);
+		}
+		return user;
 	}
 
 }
