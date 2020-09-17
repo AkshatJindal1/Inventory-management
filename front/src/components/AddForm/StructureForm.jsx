@@ -338,16 +338,16 @@ export class StructureForm extends Component {
 
             return (
                 <GridContainer>
-                    <GridItem>
-                        <Controls.Button
-                            text="Delete"
-                            variant="outlined"
-                            size="medium"
-                            disabled={disabled[index]}
-                            color="secondary"
-                            onClick={(e) => handleDeleteButton(e, index)}
-                        />
-                    </GridItem>
+                    {/* <GridItem> */}
+                    <Controls.Button
+                        text="Delete"
+                        variant="outlined"
+                        size="medium"
+                        disabled={disabled[index]}
+                        color="secondary"
+                        onClick={(e) => handleDeleteButton(e, index)}
+                    />
+                    {/* </GridItem> */}
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
                             name="labelText"

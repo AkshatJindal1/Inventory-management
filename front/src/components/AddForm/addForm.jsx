@@ -194,6 +194,7 @@ export class AddForm extends Component {
 
     resetForm = () => {
         this.setValues(this.state.blankInitialValues)
+        this.setState({ redirectTo: '' })
         this.setErrors({})
     }
 
