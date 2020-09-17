@@ -8,15 +8,15 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface OptionRepository extends MongoRepository<Option, String> {
 
-	Option findByOptionName(String optiontName);
+	Option findByName(String name);
 
-	Option findByUrlAndFormId(String optionName, String formId);
+	Option findByUrlAndFormId(String url, String formId);
 
 	List<Datatype> findByFormId(String formId);
 
 	boolean existsByUrl(String candidate);
 
-	boolean existsByOptionNameAndFormId(String name, String formId);
+	boolean existsByNameAndFormId(String name, String formId);
 
 	Option findBy_idAndFormId(String get_id, String formId);
 

@@ -23,7 +23,7 @@ public class ProductUtils {
 	private static final String breakpoint = "$$<-->$$";
 
 	public static Object[][] getDefaultOptionValuesArray() {
-		Object[][] defaultForms = { { "optionName", "Option Name", "text", true } };
+		Object[][] defaultForms = { { "name", "Option Name", "text", true } };
 		return defaultForms;
 	}
 
@@ -131,12 +131,13 @@ public class ProductUtils {
 		return name+breakpoint+client;
 	}
 
-	public static Form saveSalesForm() {
+	public static Form getSalesForm() {
 
 		Form form = new Form();
 		form.setFields(ProductUtils.getDefaultForms(Model.SALE));
 		form.setUrl("sales");
 		form.setModel(Model.SALE);
+		System.out.println(form);
 		return form;
 	}
 

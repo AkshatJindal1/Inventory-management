@@ -13,7 +13,7 @@ import org.inventorymanagement.product.model.Model;
 public class DefaultTemplatesUtil {
 
 	private static List<List<Object>> getDefaultOptionValuesArray() {
-		List<List<Object>> defaultForms = Arrays.asList(Arrays.asList("optionName", "Option Name", "text", true));
+		List<List<Object>> defaultForms = Arrays.asList(Arrays.asList("name", "Option Name", "text", true));
 		return defaultForms;
 	}
 

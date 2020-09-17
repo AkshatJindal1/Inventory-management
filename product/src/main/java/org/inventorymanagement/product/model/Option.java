@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -37,11 +38,12 @@ public class Option {
     private String url;
     
     @NotBlank(message = "Option name must not be null or empty")
-    private String optionName;
+    private String name;
     
     @NotNull(message = "Form Id cannot be null")
     private String formId;
     
+    @JsonIgnore
     private Map<String, Object> productDetails = new HashMap<String, Object>();
 
     @JsonAnyGetter

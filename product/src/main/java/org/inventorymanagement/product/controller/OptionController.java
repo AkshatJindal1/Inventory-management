@@ -60,7 +60,7 @@ public class OptionController {
 
 		Integer pageNumber = req.getPageNumber() == null ? 0 : req.getPageNumber();
 		Integer recordsPerPage = req.getRecordsPerPage() == null ? 5 : req.getRecordsPerPage();
-		String sortBy = req.getSortBy() == null || req.getSortBy().equals("0") ? "optionName" : req.getSortBy();
+		String sortBy = req.getSortBy() == null || req.getSortBy().equals("0") ? "name" : req.getSortBy();
 		String isDescending = req.getDescending() == null ? "false" : req.getDescending();
 		String searchText = req.getSearchText() == null ? "" : req.getSearchText();
 		List<FilterOptions> filters = req.getFilter() == null ? new ArrayList<>() : req.getFilter();
