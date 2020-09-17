@@ -50,11 +50,67 @@ const textValidation = (value, errorCondition, key) => {
     return temp
 }
 
+const productDefault = [
+    'productId',
+    'productName',
+    'description',
+    'image',
+    'cost',
+    'quantityInStock',
+    'quantityInTransit',
+    'benchmark',
+]
+
+const optionDefault = ['name']
+
+const defaultTypes = ['number', 'text', 'email', 'boolean']
+
+const getTypeAndValue = (structure, value, key) => {
+    const structureDetails = structure.find((v, k) => v.id == key)
+    if (defaultTypes.includes(structureDetails.datatype))
+        return {
+            ref: '',
+            value: value,
+        }
+    else {
+        const optionObject = structureDetails.menuitems.find(
+            (v, k) => v.id == value
+        )
+        const finalValue = optionObject ? optionObject.title : ''
+
+        return {
+            ref: value,
+            value: finalValue,
+        }
+    }
+}
+
+const changeStructure = (values, option, structure) => {
+    let newValues = {}
+    let defaultValues = []
+    if (option == 'products') {
+        defaultValues = productDefault
+    } else if (option == 'options') {
+        defaultValues = optionDefault
+    }
+
+    for (const [key, value] of Object.entries(values)) {
+        if (defaultValues.includes(key)) {
+            newValues[key] = value
+        } else {
+            newValues[key] = getTypeAndValue(structure, value, key)
+        }
+    }
+
+    return newValues
+}
+
 const ValidateFields = {
     isRequired,
     numberValidation,
     emailValidation,
     textValidation,
+    changeStructure,
 }
 
 export default ValidateFields

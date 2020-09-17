@@ -16,7 +16,7 @@ import { Redirect } from 'react-router'
 import { saveForm } from '../../store/actions/formAction'
 import { CardActions, CardHeader } from '@material-ui/core'
 
-export class AddForm extends Component {
+export class StructureForm extends Component {
     validate = (fieldValues = this.state.values) => {
         let temp = this.state.errors
 
@@ -434,6 +434,6 @@ const mapStateToProps = (state) => ({})
 
 export default connect(mapStateToProps, {
     saveForm,
-})(AddForm)
+})(StructureForm)
 
 // TODO RESET FORM
