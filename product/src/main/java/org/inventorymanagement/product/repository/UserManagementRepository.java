@@ -27,6 +27,8 @@ public interface UserManagementRepository extends MongoRepository<CustomUser, St
 
 	CustomUser getUserBySubject(String subject);
 
+	Boolean existsByClientName(String clientName);
+
 	@Configuration
 	@DependsOn("mongoTemplate")
 	public class CollectionsConfig {

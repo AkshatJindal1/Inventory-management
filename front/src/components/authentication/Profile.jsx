@@ -1,14 +1,34 @@
 import React, { Component } from 'react'
-import { withAuth0 } from '@auth0/auth0-react'
+
 import LoginButton from './Login'
+import { Redirect } from 'react-router-dom'
+import { checkUserRegistered } from '../../store/actions/profileAction'
+import { connect } from 'react-redux'
+import { withAuth0 } from '@auth0/auth0-react'
 
 export class Profile extends Component {
-    componentWillMount() {}
+    constructor() {
+        super()
+        this.state = {
+            redirectTo: null,
+        }
+    }
+
+    componentWillMount() {
+        const { token } = this.props
+        this.props.checkUserRegistered(token, (redirectTo) => {
+            if (redirectTo !== null) {
+                this.setState({
+                    redirectTo: <Redirect to={`/${redirectTo}`} />,
+                })
+            }
+        })
+    }
     render() {
         const { user, logout, isAuthenticated } = this.props.auth0
-        console.log(user)
         return (
             <>
+                {this.state.redirectTo}
                 {isAuthenticated && (
                     <div>
                         <img src={user.picture} alt={user.name} />
@@ -25,4 +45,8 @@ export class Profile extends Component {
     }
 }
 
-export default withAuth0(Profile)
+const mapStateToProps = () => ({})
+
+export default withAuth0(
+    connect(mapStateToProps, { checkUserRegistered })(Profile)
+)

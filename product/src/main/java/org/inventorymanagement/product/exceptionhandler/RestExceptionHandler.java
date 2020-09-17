@@ -21,6 +21,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler({UnauthenticatedUserException.class})
+    protected ResponseEntity<Object> unauthenticatedUser(
+        Exception ex,
+        WebRequest request) {
+
+        final ApiError apiError = new ApiError(
+            HttpStatus.FORBIDDEN,
+            ex.getLocalizedMessage(), ex.getLocalizedMessage());
+
+        return handleExceptionInternal(
+            ex,
+            apiError,
+            new HttpHeaders(),
+            HttpStatus.FORBIDDEN,
+            request);
+    }
+
     @ExceptionHandler({ ProductNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(
             Exception ex,

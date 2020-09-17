@@ -2,7 +2,9 @@ package org.inventorymanagement.product.service;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.UnauthenticatedUserException;
 import org.inventorymanagement.product.model.DefaultTemplates;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.repository.FormRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+@Slf4j
 @Service
 public class UserManagementService {
 
@@ -35,7 +38,7 @@ public class UserManagementService {
 
 	public void updateUser(String token, DefaultTemplates defaultTemplate, String clientName)
 			throws JsonMappingException, JsonProcessingException {
-		
+		log.info(token, defaultTemplate, clientName);
 		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
 		CustomUser user = userRepository.getUserBySubject(subject);
 		if(user == null) 
@@ -52,7 +55,7 @@ public class UserManagementService {
 		formRepository.saveAll(forms);
 	}
 
-	public CustomUser getUserDetails(String token) throws JsonMappingException, JsonProcessingException {
+	public CustomUser getUserDetails(String token) throws JsonProcessingException {
 		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
 		CustomUser user = userRepository.getUserBySubject(subject);
 		if(user == null) {
@@ -62,6 +65,15 @@ public class UserManagementService {
 			userRepository.save(user);
 		}
 		return user;
+	}
+
+	public Boolean checkIfClientExists(String token, String clientName) throws JsonProcessingException {
+
+		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
+		CustomUser user = userRepository.getUserBySubject(subject);
+		if(user == null)
+			throw new UnauthenticatedUserException("User is not authenticated");
+		return userRepository.existsByClientName(clientName);
 	}
 
 }
