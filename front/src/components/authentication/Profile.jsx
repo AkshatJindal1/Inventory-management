@@ -19,7 +19,7 @@ export class Profile extends Component {
         this.props.checkUserRegistered(token, (redirectTo) => {
             if (redirectTo !== null) {
                 this.setState({
-                    redirectTo: <Redirect to={`/tables`} />,
+                    redirectTo: <Redirect to={`/${redirectTo}`} />,
                 })
             }
         })

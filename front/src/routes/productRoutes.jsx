@@ -17,12 +17,23 @@ const ProductLanding = React.lazy(() =>
 
 const Profile = React.lazy(() => import('../components/authentication/Profile'))
 
+const UserRegistration = React.lazy(() =>
+    import('../components/authentication/UserRegistration')
+)
+
 const routes = [
     {
         path: '/profile',
         exact: true,
         name: 'Profile',
         component: Profile,
+        private: true,
+    },
+    {
+        path: '/set-profile',
+        exact: true,
+        name: 'Set Profile',
+        component: UserRegistration,
         private: true,
     },
     {
