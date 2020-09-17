@@ -13,36 +13,36 @@ import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserManagementRepository extends MongoRepository<CustomUser, String> {
-	
+
 	/*
 	 * 
-	 * TODO Assuming just one user per company
-	 * TODO Make Sure No two different client register with same ClientName  
+	 * TODO Assuming just one user per company TODO Make Sure No two different
+	 * client register with same ClientName
 	 * 
 	 */
-	
+
 	CustomUser findBySubject(String subject);
 
-    @Configuration
-    @DependsOn("mongoTemplate")
-    public class CollectionsConfig {
+	CustomUser getUserByClientName(String client);
 
-        @Autowired
-        private MongoTemplate mongoTemplate;
+	CustomUser getUserBySubject(String subject);
 
-        @PostConstruct
-        public void initIndexes() {
-            mongoTemplate.indexOps("users")
-                    .ensureIndex(
-                            new Index().on("subject", Sort.Direction.ASC).unique()
-                    );
+	Boolean existsByClientName(String clientName);
 
-            TextIndexDefinition textIndex = new TextIndexDefinition.TextIndexDefinitionBuilder()
-                .onField("$**")
-                .build();
-            mongoTemplate.indexOps("users")
-                .ensureIndex(textIndex);
-        }
-    }
+	@Configuration
+	@DependsOn("mongoTemplate")
+	public class CollectionsConfig {
+
+		@Autowired
+		private MongoTemplate mongoTemplate;
+
+		@PostConstruct
+		public void initIndexes() {
+			mongoTemplate.indexOps("users").ensureIndex(new Index().on("subject", Sort.Direction.ASC).unique());
+
+			TextIndexDefinition textIndex = new TextIndexDefinition.TextIndexDefinitionBuilder().onField("$**").build();
+			mongoTemplate.indexOps("users").ensureIndex(textIndex);
+		}
+	}
 
 }
