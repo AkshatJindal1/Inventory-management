@@ -1,8 +1,12 @@
-import Button from '@material-ui/core/Button'
 import MuiAlert from '@material-ui/lab/Alert'
 import React from 'react'
 import Slide from '@material-ui/core/Slide'
 import Snackbar from '@material-ui/core/Snackbar'
+import { makeStyles } from '@material-ui/core/styles'
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,7 +29,6 @@ export default function ToastNotification(props) {
         if (reason === 'clickaway') {
             return
         }
-
         setOpen(false)
     }
 

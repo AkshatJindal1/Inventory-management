@@ -14,6 +14,7 @@ import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
 import LoginButton from './Login'
 import { Redirect } from 'react-router-dom'
+import ToastNotification from '../Notification/ToastNotification'
 import Typography from '@material-ui/core/Typography'
 import ValidateFields from '../AddForm/validate'
 import { connect } from 'react-redux'
@@ -174,29 +175,40 @@ export class UserRegistration extends Component {
             </GridItem>,
         ]
         return (
-            <Card variant="outlined">
-                <Form onSubmit={this.handleSubmit}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="h5">
-                            User Registration
-                        </Typography>
-                    </CardContent>
-                    <CardContent>
-                        <GridContainer>{inputFields}</GridContainer>
-                    </CardContent>
-                    <CardActions>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <Controls.Button type="submit" text="Submit" />
-                            <Controls.Button
-                                text="Reset"
-                                color="default"
-                                onClick={resetForm}
-                            />
-                        </GridItem>
-                    </CardActions>
-                </Form>
-                {this.state.redirectTo}
-            </Card>
+            <Fragment>
+                {}
+                <ToastNotification
+                    severity="success"
+                    message="Successfully Registered"
+                />
+                <Card variant="outlined">
+                    <Form onSubmit={this.handleSubmit}>
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h3"
+                                component="h5"
+                            >
+                                User Registration
+                            </Typography>
+                        </CardContent>
+                        <CardContent>
+                            <GridContainer>{inputFields}</GridContainer>
+                        </CardContent>
+                        <CardActions>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <Controls.Button type="submit" text="Submit" />
+                                <Controls.Button
+                                    text="Reset"
+                                    color="default"
+                                    onClick={resetForm}
+                                />
+                            </GridItem>
+                        </CardActions>
+                    </Form>
+                    {this.state.redirectTo}
+                </Card>
+            </Fragment>
         )
     }
 }
