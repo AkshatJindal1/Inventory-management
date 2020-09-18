@@ -23,7 +23,6 @@ export class AddForm extends Component {
     validate = (fieldValues = this.state.values) => {
         let temp = { ...this.state.errors }
         const errorConditions = this.state.errorCondition
-        console.log(errorConditions)
         for (const [key, value] of Object.entries(fieldValues)) {
             console.log(key)
             const errorCondition = errorConditions[key]
@@ -97,8 +96,12 @@ export class AddForm extends Component {
 
     save = (onSuccess, onError) => {
         if (this.validate()) {
-            const values = { ...this.state.values }
-
+            let values = { ...this.state.values }
+            values = ValidateFields.changeStructure(
+                values,
+                this.props.option,
+                this.state.formStructure
+            )
             // Set uid
             values.uid = this.state.uid
             values.formId = this.props.formId
@@ -160,6 +163,8 @@ export class AddForm extends Component {
             return field
         })
 
+        console.log(structure)
+
         this.setState({
             values,
             errors: {},
@@ -189,6 +194,7 @@ export class AddForm extends Component {
 
     resetForm = () => {
         this.setValues(this.state.blankInitialValues)
+        this.setState({ redirectTo: '' })
         this.setErrors({})
     }
 

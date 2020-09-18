@@ -1,6 +1,5 @@
 package org.inventorymanagement.product.model;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -29,52 +29,57 @@ import lombok.ToString;
 @ToString
 @Document(collection = "products")
 public class Product {
-    @Id
-    @JsonProperty("uid")
-    private String _id;
+	@Id
+	@JsonProperty("uid")
+	private String _id;
 
-    //TODO: make id unique
-    @NotBlank(message = "Product ID must not be null or empty")
-    @Indexed(unique = true)
-    private String productId;
+	// TODO: make id unique
+	@NotBlank(message = "Product ID must not be null or empty")
+	@Indexed(unique = true)
+	private String productId;
 
-    @NotBlank(message = "Product name must not be null or empty")
-    private String productName;
+	@NotBlank(message = "Product name must not be null or empty")
+	private String productName;
 
-    private String description;
+	private String description;
 
-    private String image;
+	private String image;
 
-    private Double cost;
+	private Double cost;
 
 	private Long quantityInStock;
 
-    private Long quantityInTransit;
+	private Long quantityInTransit;
 
-    private Integer ratings;
+	private Integer ratings;
 
-    private Integer numberOfRatings;
+	private Integer numberOfRatings;
 
-    private List<String> reviews;
+	private List<String> reviews;
 
-    private Long benchmark;
-    
-    @NotNull(message = "Form Id cannot be null")
-    private String formId;
-    
-    private String url;
+	private Long benchmark;
 
-    private Map<String, Object> otherDetails = new HashMap<>();
+	@NotNull(message = "Form Id cannot be null")
+	private String formId;
 
-    @JsonAnyGetter
-    public Map<String, Object> otherFields() {
-        return otherDetails;
-    }
+	private String url;
 
-    @JsonAnySetter
-    public void setOtherField(String name, Object value) {
-    	System.out.println(name);
-    	otherDetails.put(name, value);
-    }
-    
+	@JsonIgnore
+	private Map<String, Object> otherDetails = new HashMap<>();
+
+	@JsonAnyGetter
+	public Map<String, Object> otherFields() {
+		Map<String, Object> flatMap = new HashMap<>();
+		for (Map.Entry mapElement : otherDetails.entrySet()) {
+			flatMap.put((String) mapElement.getKey(), ((HashMap)mapElement.getValue()).get("value"));
+		}
+		return flatMap;
+	}
+
+	@JsonAnySetter
+	public void setOtherField(String name, Object value) {
+		System.out.println(name);
+		otherDetails.put(name, value);
+	}
+
 }

@@ -154,6 +154,7 @@ public class FormService {
 
 	public Pair<List<Datatype>, List<Datatype>> getAllDatatypes(String client) {
 		List<Datatype> datatypeFromDb = repository.getDatatypes(client);
+		System.out.println(datatypeFromDb);
 		List<Datatype> defaultTypes = ProductUtils.getDefaultDatatype();
 		Pair<List<Datatype>, List<Datatype>> pair = Pair.of(datatypeFromDb, defaultTypes);
 		return pair;

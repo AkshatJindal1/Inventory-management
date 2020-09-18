@@ -16,7 +16,7 @@ import { Redirect } from 'react-router'
 import { saveForm } from '../../store/actions/formAction'
 import { CardActions, CardHeader } from '@material-ui/core'
 
-export class AddForm extends Component {
+export class StructureForm extends Component {
     validate = (fieldValues = this.state.values) => {
         let temp = this.state.errors
 
@@ -338,16 +338,16 @@ export class AddForm extends Component {
 
             return (
                 <GridContainer>
-                    <GridItem>
-                        <Controls.Button
-                            text="Delete"
-                            variant="outlined"
-                            size="medium"
-                            disabled={disabled[index]}
-                            color="secondary"
-                            onClick={(e) => handleDeleteButton(e, index)}
-                        />
-                    </GridItem>
+                    {/* <GridItem> */}
+                    <Controls.Button
+                        text="Delete"
+                        variant="outlined"
+                        size="medium"
+                        disabled={disabled[index]}
+                        color="secondary"
+                        onClick={(e) => handleDeleteButton(e, index)}
+                    />
+                    {/* </GridItem> */}
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
                             name="labelText"
@@ -434,6 +434,6 @@ const mapStateToProps = (state) => ({})
 
 export default connect(mapStateToProps, {
     saveForm,
-})(AddForm)
+})(StructureForm)
 
 // TODO RESET FORM

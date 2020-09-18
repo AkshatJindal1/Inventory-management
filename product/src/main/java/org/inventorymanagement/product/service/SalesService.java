@@ -1,9 +1,14 @@
 package org.inventorymanagement.product.service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.*;
+import org.inventorymanagement.product.model.Form;
+import org.inventorymanagement.product.model.Model;
+import org.inventorymanagement.product.model.Sale;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.SaleRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -11,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

@@ -20,6 +20,10 @@ const Profile = React.lazy(() => import('../components/authentication/Profile'))
 const UserRegistration = React.lazy(() =>
     import('../components/authentication/UserRegistration')
 )
+const Sale = React.lazy(() => import('../components/AdminLayout/Sales/'))
+const Autcoom = React.lazy(() =>
+    import('../components/AdminLayout/Sales/Autocomplete')
+)
 
 const routes = [
     {
@@ -34,6 +38,13 @@ const routes = [
         exact: true,
         name: 'Set Profile',
         component: UserRegistration,
+        private: true,
+    },
+    {
+        path: '/sale/new',
+        exact: true,
+        name: 'New Sale',
+        component: Sale,
         private: true,
     },
     {

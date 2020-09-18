@@ -92,7 +92,6 @@ public class CommonService {
 			} else if (datatype.equalsIgnoreCase("date")) {
 				criterias.add(Criteria.where(id).gte(selected.get(0)).lte(selected.get(1)));
 			}
-
 		}
 
 		// CREATE SEARCH TEXT QUERY

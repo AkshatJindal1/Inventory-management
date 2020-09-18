@@ -47,7 +47,7 @@ public class OptionService {
 			}
 
 			// Check if optionName and formId match
-			if (optionRepository.existsByOptionNameAndFormId(option.getOptionName(), option.getFormId())) {
+			if (optionRepository.existsByNameAndFormId(option.getName(), option.getFormId())) {
 				throw new ProductNotFoundException("Option with same name already exists");
 			}
 		}
@@ -67,13 +67,13 @@ public class OptionService {
 			}
 
 			// Check if optionName and formId match
-			if (!oldOption.getOptionName().equals(option.getOptionName())
-					&& optionRepository.existsByOptionNameAndFormId(option.getOptionName(), option.getFormId())) {
+			if (!oldOption.getName().equals(option.getName())
+					&& optionRepository.existsByNameAndFormId(option.getName(), option.getFormId())) {
 				throw new ProductNotFoundException("Option with same name already exists");
 			}
 		}
 
-		String candidate = ProductUtils.toSlug(option.getOptionName()) + "-";
+		String candidate = ProductUtils.toSlug(option.getName()) + "-";
 		do {
 			candidate = candidate + String.valueOf((new Random()).nextInt(10));
 		} while (optionRepository.existsByUrl(candidate));

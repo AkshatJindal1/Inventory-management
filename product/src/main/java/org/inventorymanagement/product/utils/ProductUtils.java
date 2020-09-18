@@ -21,21 +21,17 @@ public class ProductUtils {
 
 	private static final String PATH_PREFIX = "otherDetails.";
 
-
 	private static final String breakpoint = "$$<-->$$";
 
 	public static Object[][] getDefaultOptionValuesArray() {
-		Object[][] defaultForms = { { "optionName", "Option Name", "text", true } };
+		Object[][] defaultForms = { { "name", "Option Name", "text", true } };
 		return defaultForms;
 	}
 
 	public static Object[][] getDefaultProductValuesArray() {
-		Object[][] defaultForms = {
-				{ "productId", "Product Id", "text", true },
-				{ "productName", "Product Name", "text", true },
-				{ "description", "Description", "text", false },
-				{ "image", "Image", "text", false },
-				{ "cost", "Cost", "number", false },
+		Object[][] defaultForms = { { "productId", "Product Id", "text", true },
+				{ "productName", "Product Name", "text", true }, { "description", "Description", "text", false },
+				{ "image", "Image", "text", false }, { "cost", "Cost", "number", false },
 				{ "quantityInStock", "Quantity in Stock", "number", false },
 				{ "quantityInTransit", "Quantity in Transit", "number", false },
 				{ "benchmark", "Benchmark", "number", false } };
@@ -43,27 +39,24 @@ public class ProductUtils {
 	}
 
 	public static Object[][] getDefaultSalesValuesArray() {
-		Object[][] defaultForms = {
-				{ "amount", "Amount", "number", true},
-				{ "discount", "Discount", "number", false },
+		Object[][] defaultForms = { { "amount", "Amount", "number", true }, { "discount", "Discount", "number", false },
 				{ "netAmount", "Net Amount", "number", true },
 				{ "customerPhone", "Customer Phone Number", "text", false },
 				{ "customerEmail", "Customer Email", "text", false },
-				{ "customerName", "Customer Name", "text", false },
-		};
+				{ "customerName", "Customer Name", "text", false }, };
 		return defaultForms;
 	}
 
 	public static Object[][] getDefaultValuesArray(Model model) {
-		switch(model) {
-			case PRODUCT:
-				return getDefaultProductValuesArray();
-			case OPTION:
-				return getDefaultOptionValuesArray();
-			case SALE:
-				return getDefaultSalesValuesArray();
-			default:
-				throw new ProductNotFoundException("Wrong Category");
+		switch (model) {
+		case PRODUCT:
+			return getDefaultProductValuesArray();
+		case OPTION:
+			return getDefaultOptionValuesArray();
+		case SALE:
+			return getDefaultSalesValuesArray();
+		default:
+			throw new ProductNotFoundException("Wrong Category");
 		}
 	}
 
@@ -87,7 +80,8 @@ public class ProductUtils {
 	public static String getOrGenerateId(String labelText, String id, ArrayList<String> ids) {
 		if (id == null || id.trim().equalsIgnoreCase("")) {
 			String candidate = CaseUtils.toCamelCase(labelText, false);
-			if(ids.contains(candidate)) return getOrGenerateId(labelText + String.valueOf(new Random().nextInt(10)), id, ids);
+			if (ids.contains(candidate))
+				return getOrGenerateId(labelText + String.valueOf(new Random().nextInt(10)), id, ids);
 			else {
 				ids.add(candidate);
 				return candidate;
@@ -110,15 +104,15 @@ public class ProductUtils {
 	}
 
 	public static Model getModel(String category) {
-		switch(category) {
-			case "options":
-				return Model.OPTION;
-			case "products":
-				return Model.PRODUCT;
-			case "sales":
-				return Model.SALE;
-			default:
-				throw new ProductNotFoundException("Wrong Category");
+		switch (category) {
+		case "options":
+			return Model.OPTION;
+		case "products":
+			return Model.PRODUCT;
+		case "sales":
+			return Model.SALE;
+		default:
+			throw new ProductNotFoundException("Wrong Category");
 		}
 	}
 
@@ -130,20 +124,21 @@ public class ProductUtils {
 
 	public static String getNameClient(String name, String client) {
 
-		return name+breakpoint+client;
+		return name + breakpoint + client;
 	}
 
-	public static Form saveSalesForm() {
+	public static Form getSalesForm() {
 
 		Form form = new Form();
 		form.setFields(ProductUtils.getDefaultForms(Model.SALE));
 		form.setUrl("sales");
 		form.setModel(Model.SALE);
+		System.out.println(form);
 		return form;
 	}
 
 	public static String fullyQualifiedFieldName(String field, List<String> defaultFields) {
-		if(!defaultFields.contains(field)) {
+		if (!defaultFields.contains(field)) {
 			return PATH_PREFIX + field;
 		}
 		return field;

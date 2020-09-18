@@ -104,7 +104,7 @@ class Navigation extends Component {
                     </NavLink>
 
                     <NavLink
-                        to="/data/sales/sales"
+                        to="/sale/new"
                         activeClassName="active"
                         key="sales"
                     >
