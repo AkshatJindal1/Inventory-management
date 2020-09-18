@@ -125,14 +125,34 @@ export class AddForm extends Component {
         this.setProductValues(productValues)
     }
 
+    handleProductUnitCostChange = (e, index) => {
+        const { name, value } = e.target
+        let productValues = this.state.productValues
+        productValues[index].unitCost = value
+        let totalCost = value * productValues[index].quantity
+        if (!totalCost) totalCost = 0
+        productValues[index].totalCost = totalCost
+        this.setProductValues(productValues)
+    }
+
+    handleProductQuantityChange = (e, index) => {
+        const { name, value } = e.target
+        let productValues = this.state.productValues
+        productValues[index].quantity = value
+        let totalCost = value * productValues[index].unitCost
+        if (!totalCost) totalCost = 0
+        productValues[index].totalCost = totalCost
+        this.setProductValues(productValues)
+    }
+
     handleProductOptionChange = (option, index) => {
         console.log(option, index)
 
         let productValues = this.state.productValues
-        productValues[index].unitCost = option['country']
-        productValues[index].quantity = option['country']
-        productValues[index].totalCost = option['country']
-        productValues[index].product = option['country']
+        productValues[index].quantity = 1
+        productValues[index].unitCost = option.cost ? option.cost : 0
+        productValues[index].totalCost = option.cost ? option.cost : 0
+        productValues[index].product = option.productId
 
         this.setProductValues(productValues)
     }
@@ -207,8 +227,8 @@ export class AddForm extends Component {
                         <ProductSelect
                             id={'product'}
                             label={'Products'}
-                            // value={this.state.productValues[i].product}
-                            value={'Andorra'}
+                            token={this.props.token}
+                            value={this.state.productValues[i].product}
                             optionSelected={(option) =>
                                 this.handleProductOptionChange(option, i)
                             }
@@ -216,11 +236,12 @@ export class AddForm extends Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
+                            type="number"
                             name={'quantity'}
                             label={'Quantity'}
                             value={this.state.productValues[i].quantity}
                             onChange={(e) =>
-                                this.handleProductInputChange(e, i)
+                                this.handleProductQuantityChange(e, i)
                             }
                             error={this.state.productErrors[i].quantity}
                         />
@@ -228,10 +249,11 @@ export class AddForm extends Component {
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
                             name={'unitCost'}
+                            type="number"
                             label={'Unit Cost'}
                             value={this.state.productValues[i].unitCost}
                             onChange={(e) =>
-                                this.handleProductInputChange(e, i)
+                                this.handleProductUnitCostChange(e, i)
                             }
                             error={this.state.productErrors[i].unitCost}
                         />
@@ -239,6 +261,7 @@ export class AddForm extends Component {
                     <GridItem xs={12} sm={12} md={2}>
                         <Controls.Input
                             name={'totalCost'}
+                            type="number"
                             label={'Total Cost'}
                             value={this.state.productValues[i].totalCost}
                             onChange={(e) =>

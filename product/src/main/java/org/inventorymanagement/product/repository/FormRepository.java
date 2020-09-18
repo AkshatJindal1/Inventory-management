@@ -53,7 +53,7 @@ public interface FormRepository extends MongoRepository<Form, String> {
           org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
           query.addCriteria(Criteria.where("url").is("sales"));
           if(mongoTemplate.findOne(query, Form.class) == null)
-            mongoTemplate.save(ProductUtils.saveSalesForm());
+            mongoTemplate.save(ProductUtils.getSalesForm());
 
             mongoTemplate.indexOps("forms")
                     .ensureIndex(

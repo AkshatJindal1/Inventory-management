@@ -1,10 +1,12 @@
 // *https://www.registers.service.gov.uk/registers/country/use-the-api*
 import fetch from 'cross-fetch'
+import axios from 'axios'
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
+import { BASE_URL } from '../../../store/actions/constants'
 
 function sleep(delay = 0) {
     return new Promise((resolve) => {
@@ -24,33 +26,44 @@ const useStyles = makeStyles((theme) => ({
 export default function Asynchronous(props) {
     const [open, setOpen] = React.useState(false)
     const [options, setOptions] = React.useState([])
+    const [value, setValue] = React.useState('')
     const loading = open && options.length === 0
 
     React.useEffect(() => {
         let active = true
 
-        if (!loading) {
-            return undefined
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${props.token}`,
         }
 
-        ;(async () => {
-            const response = await fetch(
-                'https://country.register.gov.uk/records.json?page-size=5000'
-            )
-            // await sleep(1e3) // For demo purposes.
-            const countries = await response.json()
+        const data = {
+            recordsPerPage: 5,
+            searchText: value,
+        }
 
-            if (active) {
-                setOptions(
-                    Object.keys(countries).map((key) => countries[key].item[0])
-                )
+        const url = `${BASE_URL}/products/t-shirts-5`
+
+        ;(async () => {
+            const response = await axios.post(
+                `${BASE_URL}/products/t-shirts-5`,
+                data,
+                {
+                    headers: headers,
+                }
+            )
+
+            const countries = await response.data.response
+
+            if (active && countries.length !== 0) {
+                setOptions(countries)
             }
         })()
 
         return () => {
             active = false
         }
-    }, [loading])
+    }, [loading, value])
 
     React.useEffect(() => {
         if (!open) {
@@ -72,14 +85,16 @@ export default function Asynchronous(props) {
                 setOpen(false)
             }}
             getOptionSelected={(option, value) => {
-                if (option.name === value.name) {
-                    if (option.country != props.value)
+                if (option.productId === value.productId) {
+                    if (option.productId != props.value)
                         props.optionSelected(option)
                     return true
                 }
                 return false
             }}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) =>
+                `${option.productId} - ${option.productName}`
+            }
             options={options}
             loading={loading}
             renderInput={(params) => (
@@ -87,6 +102,7 @@ export default function Asynchronous(props) {
                     {...params}
                     label={props.label}
                     variant="outlined"
+                    onChange={(e) => setValue(e.target.value)}
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (
