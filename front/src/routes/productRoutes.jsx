@@ -21,6 +21,9 @@ const UserRegistration = React.lazy(() =>
     import('../components/authentication/UserRegistration')
 )
 const Sale = React.lazy(() => import('../components/AdminLayout/Sales/'))
+const Autcoom = React.lazy(() =>
+    import('../components/AdminLayout/Sales/Autocomplete')
+)
 
 const routes = [
     {

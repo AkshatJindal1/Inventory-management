@@ -1,5 +1,4 @@
 // *https://www.registers.service.gov.uk/registers/country/use-the-api*
-import fetch from 'cross-fetch'
 import axios from 'axios'
 import React from 'react'
 import TextField from '@material-ui/core/TextField'

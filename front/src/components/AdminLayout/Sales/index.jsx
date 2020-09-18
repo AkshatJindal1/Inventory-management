@@ -12,6 +12,7 @@ import { Form } from '../../Forms'
 import GridContainer from '../../Grid/GridContainer'
 import GridItem from '../../Grid/GridItem'
 import ProductSelect from './ProductSelect'
+import Autocomplete from './Autocomplete'
 
 const validateOnChange = true
 
@@ -37,7 +38,7 @@ export class AddForm extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
         console.log(this.state.productValues)
-        // this.save(this.onSuccess, this.onError)
+        console.log(this.state.customerValues)
     }
 
     saveAndReset = () => {
@@ -63,26 +64,14 @@ export class AddForm extends Component {
 
     componentWillMount() {
         // Store the output json, and default values
-        let customerValues = {}
+        let customerValues = {
+            productId: '',
+            cost: '',
+            productName: '',
+        }
         let productValues = [this.getNewProductRow()]
         let customerErrors = {}
         let productErrors = [{}]
-
-        // Customer Form
-        const customerFormStructure = [
-            {
-                name: 'name',
-                label: 'Customer Name',
-            },
-            {
-                name: 'phone',
-                label: 'Phone Number',
-            },
-            {
-                name: 'email',
-                label: 'Email',
-            },
-        ]
 
         const rowCount = 1
 
@@ -92,12 +81,11 @@ export class AddForm extends Component {
             customerErrors,
             productErrors,
             rowCount,
-            customerFormStructure,
         })
     }
 
     setCustomerValues = (customerValues) => {
-        this.setState({ customerValues })
+        this.setState({ customerValues }, () => {})
     }
 
     setProductValues = (productValues) => {
@@ -111,8 +99,15 @@ export class AddForm extends Component {
     handleCustomerInputChange = (e) => {
         const { name, value } = e.target
         this.setCustomerValues({
-            ...this.state.values,
+            ...this.state.customerValues,
             [name]: value,
+        })
+    }
+
+    handleCustomerOptionChange = (customer) => {
+        this.setCustomerValues({
+            ...this.state.customerValues,
+            ...customer,
         })
     }
 
@@ -146,8 +141,6 @@ export class AddForm extends Component {
     }
 
     handleProductOptionChange = (option, index) => {
-        console.log(option, index)
-
         let productValues = this.state.productValues
         productValues[index].quantity = 1
         productValues[index].unitCost = option.cost ? option.cost : 0
@@ -165,9 +158,9 @@ export class AddForm extends Component {
 
     getNewProductRow = () => {
         return {
-            unitCost: 0,
-            quantity: 0,
-            totalCost: 0,
+            unitCost: '',
+            quantity: '',
+            totalCost: '',
         }
     }
 
@@ -198,18 +191,49 @@ export class AddForm extends Component {
     }
 
     render() {
-        const customerFields = this.state.customerFormStructure.map(
-            (row, index) => (
+        // const customerFields = this.state.customerFormStructure.map(
+        //     (row, index) => (
+        // <GridItem xs={12} sm={12} md={6}>
+        //     <Controls.Input
+        //         name={row.name}
+        //         label={row.label}
+        //         value={this.state.customerValues[row.name]}
+        //         onChange={(e) => this.handleCustomerInputChange(e)}
+        //         error={this.state.customerErrors[row.name]}
+        //     />
+        // </GridItem>
+        //     )
+        // )
+
+        const customerFields = (
+            <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                    <Controls.Input
-                        name={row.name}
-                        label={row.label}
-                        value={this.state.customerValues[row.name]}
-                        onChange={(e) => this.handleCustomerInputChange(e)}
-                        error={this.state.customerErrors[row.name]}
+                    <Autocomplete
+                        token={this.props.token}
+                        optionSelected={(customer) =>
+                            this.handleCustomerOptionChange(customer)
+                        }
                     />
                 </GridItem>
-            )
+                <GridItem xs={12} sm={12} md={6}>
+                    <Controls.Input
+                        name={'productName'}
+                        label={'Phone Number'}
+                        value={this.state.customerValues.productName}
+                        onChange={(e) => this.handleCustomerInputChange(e)}
+                        error={this.state.customerErrors.productName}
+                    />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                    <Controls.Input
+                        name={'cost'}
+                        label={'Email Id'}
+                        value={this.state.customerValues.cost}
+                        onChange={(e) => this.handleCustomerInputChange(e)}
+                        error={this.state.customerErrors.cost}
+                    />
+                </GridItem>
+            </GridContainer>
         )
 
         let productsFields = []
@@ -225,6 +249,7 @@ export class AddForm extends Component {
                     />
                     <GridItem xs={12} sm={12} md={4}>
                         <ProductSelect
+                            key={i}
                             id={'product'}
                             label={'Products'}
                             token={this.props.token}
@@ -283,7 +308,7 @@ export class AddForm extends Component {
                         </Typography>
                     </CardContent>
                     <CardContent>
-                        <GridContainer>{customerFields}</GridContainer>
+                        {customerFields}
                         <CardContent>{productsFields}</CardContent>
                         <GridContainer>
                             <GridItem>
