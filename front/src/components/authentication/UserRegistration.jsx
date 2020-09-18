@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
 import {
     checkCompanyAlreadyExists,
     getIndustryList,
@@ -14,6 +15,7 @@ import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
 import LoginButton from './Login'
 import { Redirect } from 'react-router-dom'
+import ToastNotification from '../Notification/ToastNotification'
 import Typography from '@material-ui/core/Typography'
 import ValidateFields from '../AddForm/validate'
 import { connect } from 'react-redux'
@@ -22,6 +24,12 @@ export class UserRegistration extends Component {
     constructor() {
         super()
         this.state = {
+            notification: {
+                open: false,
+                message: '',
+                severity: 'success',
+            },
+            notificationOpen: true,
             industries: [],
             redirectTo: null,
             blankInitialValues: {
@@ -63,6 +71,15 @@ export class UserRegistration extends Component {
                 }),
             })
         })
+    }
+
+    handleNotificationClose = () => {
+        const notification = {
+            open: false,
+            message: '',
+            severity: '',
+        }
+        this.setState({ notification })
     }
 
     setErrors = (errors) => {
@@ -118,11 +135,18 @@ export class UserRegistration extends Component {
     resetForm = () => {
         this.setValues(this.state.blankInitialValues)
         this.setErrors({})
+        this.setState({ notificationOpen: true })
     }
 
     onSuccess = () => {
+        const notification = {
+            open: true,
+            message: 'Successflly registered',
+            severity: 'success',
+        }
         this.setState({
             redirectTo: <Redirect to={`/profile`} />,
+            notification,
         })
     }
 
@@ -142,11 +166,18 @@ export class UserRegistration extends Component {
                 values,
                 this.props.token
             )
+        } else {
+            const notification = {
+                open: true,
+                message: 'Some errors',
+                severity: 'error',
+            }
+            this.setState({ notification })
         }
     }
 
     render() {
-        const { industries, values, errors } = this.state
+        const { industries, values, errors, notification } = this.state
         const handleInputChange = this.handleInputChange
         const resetForm = this.resetForm
         console.log(this.state)
@@ -174,29 +205,42 @@ export class UserRegistration extends Component {
             </GridItem>,
         ]
         return (
-            <Card variant="outlined">
-                <Form onSubmit={this.handleSubmit}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="h5">
-                            User Registration
-                        </Typography>
-                    </CardContent>
-                    <CardContent>
-                        <GridContainer>{inputFields}</GridContainer>
-                    </CardContent>
-                    <CardActions>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <Controls.Button type="submit" text="Submit" />
-                            <Controls.Button
-                                text="Reset"
-                                color="default"
-                                onClick={resetForm}
-                            />
-                        </GridItem>
-                    </CardActions>
-                </Form>
-                {this.state.redirectTo}
-            </Card>
+            <Fragment>
+                <ToastContainer />
+                <ToastNotification
+                    open={notification.open}
+                    severity={notification.severity}
+                    message={notification.message}
+                    handleNotificationClose={this.handleNotificationClose}
+                />
+                <Card variant="outlined">
+                    <Form onSubmit={this.handleSubmit}>
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h3"
+                                component="h5"
+                            >
+                                User Registration
+                            </Typography>
+                        </CardContent>
+                        <CardContent>
+                            <GridContainer>{inputFields}</GridContainer>
+                        </CardContent>
+                        <CardActions>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <Controls.Button type="submit" text="Submit" />
+                                <Controls.Button
+                                    text="Reset"
+                                    color="default"
+                                    onClick={resetForm}
+                                />
+                            </GridItem>
+                        </CardActions>
+                    </Form>
+                    {this.state.redirectTo}
+                </Card>
+            </Fragment>
         )
     }
 }
