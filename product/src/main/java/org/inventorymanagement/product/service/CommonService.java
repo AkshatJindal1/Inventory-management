@@ -110,7 +110,7 @@ public class CommonService {
 					new ArrayList<>();
 					break;
 			}
-			textFieldList.forEach( field -> searchQuery.add(Criteria.where(field).regex(searchText)));
+			textFieldList.forEach( field -> searchQuery.add(Criteria.where(field).regex(searchText, "i")));
 			criterias.add(new Criteria().orOperator(searchQuery.toArray(new Criteria[searchQuery.size()])));
 		}
 
@@ -194,18 +194,13 @@ public class CommonService {
 			try {
 				String minValue = new ObjectMapper().convertValue(mongoOps.findOne(minQuery, classType), Map.class)
 						.getOrDefault(sortField, 0).toString();
-				Map<String, Object> abc = new ObjectMapper().convertValue(mongoOps.findOne(maxQuery, classType), Map.class);
-				log.info("{}", abc);
 				String maxValue = new ObjectMapper().convertValue(mongoOps.findOne(maxQuery, classType), Map.class)
 						.getOrDefault(sortField, 0).toString();
-//				log.info("{}", abc.get("numbers"));
 				mp.put(sortField, new ArrayList<>(Arrays.asList(minValue==null ? maxValue: minValue, maxValue == null ? minValue: maxValue)));
 			} catch (Exception e) {
-				log.info("exception");
 				mp.put(sortField, new ArrayList<>(Arrays.asList(null, null)));
 			}
 		});
-		log.info("{}", mp);
 		return mp;
 	}
 }
