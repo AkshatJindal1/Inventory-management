@@ -19,6 +19,8 @@ import org.inventorymanagement.product.model.Model;
 
 public class ProductUtils {
 
+	private static final String PATH_PREFIX = "otherDetails.";
+
 
 	private static final String breakpoint = "$$<-->$$";
 
@@ -139,6 +141,13 @@ public class ProductUtils {
 		form.setModel(Model.SALE);
 		System.out.println(form);
 		return form;
+	}
+
+	public static String fullyQualifiedFieldName(String field, List<String> defaultFields) {
+		if(!defaultFields.contains(field)) {
+			return PATH_PREFIX + field;
+		}
+		return field;
 	}
 
 }

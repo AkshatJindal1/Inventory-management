@@ -44,16 +44,16 @@ public class Option {
     private String formId;
     
     @JsonIgnore
-    private Map<String, Object> productDetails = new HashMap<String, Object>();
+    private Map<String, Object> otherDetails = new HashMap<String, Object>();
 
     @JsonAnyGetter
     public Map<String, Object> otherFields() {
-        return productDetails;
+        return otherDetails;
     }
 
     @JsonAnySetter
     public void setOtherField(String name, Object value) {
     	System.out.println(name);
-    	productDetails.put(name, value);
+    	otherDetails.put(name, value);
     }
 }

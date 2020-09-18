@@ -69,10 +69,7 @@ export default function (state = initialState, action) {
                     const minValue =
                         action.payload[1][field.id] !== undefined &&
                         action.payload[1][field.id] !== null
-                            ? action.payload[1][field.id][0] !==
-                              action.payload[1][field.id][1]
-                                ? parseInt(action.payload[1][field.id][0])
-                                : 0
+                            ? parseInt(action.payload[1][field.id][0])
                             : null
                     const maxValue =
                         action.payload[1][field.id] !== undefined &&
@@ -104,8 +101,11 @@ export default function (state = initialState, action) {
                 .filter(
                     (field) =>
                         !(
-                            field.options.datatype === 'number' &&
-                            field.options.maximumValue === null
+                            field.options.dataType === 'number' &&
+                            (field.options.maximumValue === null ||
+                                field.options.minimumValue === null ||
+                                field.options.minimumValue ===
+                                    field.options.maximumValue)
                         )
                 )
             return {
