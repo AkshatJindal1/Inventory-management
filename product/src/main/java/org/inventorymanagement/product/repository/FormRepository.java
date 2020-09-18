@@ -49,10 +49,15 @@ public interface FormRepository extends MongoRepository<Form, String> {
 
         @PostConstruct
         public void initIndexes() {
+
+          org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
+          query.addCriteria(Criteria.where("url").is("sales"));
+          if(mongoTemplate.findOne(query, Form.class) == null)
+            mongoTemplate.save(ProductUtils.saveSalesForm());
+
             mongoTemplate.indexOps("forms")
                     .ensureIndex(
-                            new Index().on("nameClient", Sort.Direction.ASC).unique()
-                    );
+                            new Index().on("nameClient", Sort.Direction.ASC).unique());
 
             TextIndexDefinition textIndex = new TextIndexDefinition.TextIndexDefinitionBuilder()
                 .onField("$**")
@@ -60,10 +65,11 @@ public interface FormRepository extends MongoRepository<Form, String> {
             mongoTemplate.indexOps("products")
                 .ensureIndex(textIndex);
 
-            org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
-            query.addCriteria(Criteria.where("url").is("sales"));
-            if(mongoTemplate.findOne(query, Form.class) == null)
-              mongoTemplate.save(ProductUtils.saveSalesForm());
+            mongoTemplate.indexOps("options")
+                .ensureIndex(textIndex);
+
+            mongoTemplate.indexOps("sales")
+                .ensureIndex(textIndex);
         }
     }
 

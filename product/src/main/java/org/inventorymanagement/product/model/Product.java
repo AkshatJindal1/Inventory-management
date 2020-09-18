@@ -64,17 +64,17 @@ public class Product {
     
     private String url;
 
-    private Map<String, Object> productDetails = new HashMap<>();
+    private Map<String, Object> otherDetails = new HashMap<>();
 
     @JsonAnyGetter
     public Map<String, Object> otherFields() {
-        return productDetails;
+        return otherDetails;
     }
 
     @JsonAnySetter
     public void setOtherField(String name, Object value) {
     	System.out.println(name);
-    	productDetails.put(name, value);
+    	otherDetails.put(name, value);
     }
     
 }
