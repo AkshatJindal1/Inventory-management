@@ -11,7 +11,7 @@ import Controls from '../../Controls/Controls'
 import { Form } from '../../Forms'
 import GridContainer from '../../Grid/GridContainer'
 import GridItem from '../../Grid/GridItem'
-import ProductSelect from './auto'
+import ProductSelect from './ProductSelect'
 import Autocomplete from './Autocomplete'
 
 import { saveSale } from '../../../store/actions/saleAction'
