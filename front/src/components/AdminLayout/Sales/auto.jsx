@@ -70,7 +70,8 @@ export default function ControllableStates(props) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Controllable"
+                    error={props.error}
+                    label={props.label}
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,

@@ -21,7 +21,51 @@ const validateOnChange = true
 // TODO Render data values for option fields in data table
 
 export class AddForm extends Component {
-    validate = (fieldValues = this.state.values) => {}
+    validate = () => {
+        let productErrors = this.state.productErrors
+        let productValues = this.state.productValues
+
+        productValues.forEach((key, index) => {
+            // Product Exists Check
+            if (!key.uid || key.uid == '') {
+                productErrors[index].product = 'No Product Selected'
+            } else productErrors[index].product = ''
+
+            // Quantity Check
+            if (isNaN(key.quantity) || key.quantity <= 0) {
+                productErrors[index].quantity =
+                    'Quantity should be greater than Zero'
+            } else productErrors[index].quantity = ''
+
+            // Unit Cost Exists Check
+            if (isNaN(key.unitCost) || key.unitCost == '' || key.unitCost < 0) {
+                productErrors[index].unitCost = 'Value Should be positive'
+            } else productErrors[index].unitCost = ''
+
+            // Total Exists Check
+            if (
+                isNaN(key.totalCost) ||
+                key.totalCost == '' ||
+                key.totalCost < 0
+            ) {
+                productErrors[index].totalCost = 'Value Should be positive'
+            } else productErrors[index].totalCost = ''
+        })
+
+        this.setState({ productErrors })
+        console.log(productErrors)
+
+        for (const [key, value] of Object.entries(productErrors)) {
+            if (
+                value.product ||
+                value.quantity ||
+                value.unitCost ||
+                value.totalCost
+            )
+                return false
+        }
+        return true
+    }
 
     onSuccess = () => {
         this.resetForm()
@@ -38,17 +82,20 @@ export class AddForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        const data = {
-            customer: this.state.customerValues,
-            sale: this.state.productValues,
+        if (this.validate()) {
+            const data = {
+                customer: this.state.customerValues,
+                sale: this.state.productValues,
+            }
+            console.log(data)
+            this.props.saveSale(
+                this.onSuccess,
+                this.onError,
+                data,
+                this.props.token
+            )
         }
-        console.log(data)
-        this.props.saveSale(
-            this.onSuccess,
-            this.onError,
-            data,
-            this.props.token
-        )
+        console.log('Some Errors Exist')
     }
 
     saveAndReset = () => {
@@ -269,7 +316,6 @@ export class AddForm extends Component {
                     />
                     <GridItem xs={12} sm={12} md={4}>
                         <ProductSelect
-                            key={i}
                             id={'product'}
                             label={'Products'}
                             token={this.props.token}
@@ -277,6 +323,7 @@ export class AddForm extends Component {
                             optionSelected={(option) =>
                                 this.handleProductOptionChange(option, i)
                             }
+                            error={this.state.productErrors[i].product}
                         />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={2}>
