@@ -21,4 +21,9 @@ public class CustomerService {
 		customer.setClient(client);
 		customerRepository.save(customer);
 	}
+
+	public List<Customer> getCustomers(String client, String searchText) {
+		System.out.printf("searching '%s' for '%s'", searchText, client);
+		return customerRepository.getBySearchTextAndClient(client, searchText);
+	}
 }

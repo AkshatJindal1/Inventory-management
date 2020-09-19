@@ -42,9 +42,6 @@ public class CommonService {
 	private OptionRepository optionRepository;
 
 	@Autowired
-	private SaleRepository saleRepository;
-
-	@Autowired
 	private MongoOperations mongoOps;
 
 	public Map<String, Object> getProducts(String formUrl, Integer pageNumber, Integer recordsPerPage, String sortBy,
@@ -68,12 +65,7 @@ public class CommonService {
 		List<Criteria> criterias = new ArrayList<>();
 
 		String formId = "";
-		if(modelType == Model.SALE) {
-			formId = formRepository.findByUrlAndModel(formUrl, modelType).get_id();
-			criterias.add(Criteria.where("client").is(client));
-		} else {
-			formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
-		}
+		formId = formRepository.findByUrlAndModelAndClient(formUrl, modelType, client).get_id();
 
 		criterias.add(Criteria.where("formId").is(formId));
 

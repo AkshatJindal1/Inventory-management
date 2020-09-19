@@ -8,8 +8,6 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface CustomerRepository extends MongoRepository<Customer, String> {
 
-	@Query(value = "{$and: [{clientName: ?0}, { name : {$regularExpression: { pattern : ?1, options : i }}}]}")
+	@Query(value = "{$and: [{client: ?0}, { name : {$regularExpression: { pattern : ?1, options : i }}}]}")
 	List<Customer> getBySearchTextAndClient(String client, String searchText);
-
-	
 }

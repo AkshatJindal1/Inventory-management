@@ -23,6 +23,8 @@ import lombok.ToString;
 @ToString
 public class Customer {
 
+	public static final String SEQUENCE_NAME = "customer_sequence";
+
 	@Id
 	@JsonProperty("customerId")
 	private String _id;

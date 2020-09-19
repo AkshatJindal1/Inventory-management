@@ -40,38 +40,4 @@ public interface FormRepository extends MongoRepository<Form, String> {
 	
 	public boolean existsBy_idAndClient(String formId, String client);
 
-    @Configuration
-    @DependsOn("mongoTemplate")
-    public class CollectionsConfig {
-
-        @Autowired
-        private MongoTemplate mongoTemplate;
-
-        @PostConstruct
-        public void initIndexes() {
-
-          org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
-          query.addCriteria(Criteria.where("url").is("sales"));
-          if(mongoTemplate.findOne(query, Form.class) == null)
-            mongoTemplate.save(ProductUtils.getSalesForm());
-
-            mongoTemplate.indexOps("forms")
-                    .ensureIndex(
-                            new Index().on("nameClient", Sort.Direction.ASC).unique());
-
-            TextIndexDefinition textIndex = new TextIndexDefinition.TextIndexDefinitionBuilder()
-                .onField("$**")
-                .build();
-            mongoTemplate.indexOps("products")
-                .ensureIndex(textIndex);
-
-            mongoTemplate.indexOps("options")
-                .ensureIndex(textIndex);
-
-            mongoTemplate.indexOps("sales")
-                .ensureIndex(textIndex);
-        }
-    }
-
-
 }

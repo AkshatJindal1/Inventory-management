@@ -7,6 +7,7 @@ import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Product;
+import org.inventorymanagement.product.model.ProductAsOption;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
@@ -105,8 +106,7 @@ public class ProductService {
 		}
 	}
 
-  public List<Product> getProductBySearchText(String searchText, String client) {
-
+  public List<ProductAsOption> getProductBySearchText(String searchText, String client) {
 		return productRepository.getBySearchTextAndClient(client, searchText);
   }
 }

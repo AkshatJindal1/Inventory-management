@@ -14,6 +14,8 @@ import GridItem from '../../Grid/GridItem'
 import ProductSelect from './ProductSelect'
 import Autocomplete from './Autocomplete'
 
+import { saveSale } from '../../../store/actions/saleAction'
+
 const validateOnChange = true
 
 // TODO Render data values for option fields in data table
@@ -37,8 +39,22 @@ export class AddForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        console.log(this.state.productValues)
-        console.log(this.state.customerValues)
+        const data = {
+            customer: this.state.customerValues,
+            sale: this.state.productValues,
+        }
+        console.log(data)
+        this.props.saveSale(
+            () => {
+                console.log('Saved')
+            },
+            (err) => {
+                console.log(err)
+                this.setState({ redirectTo: 'Something Went Wrong' })
+            },
+            data,
+            this.props.token
+        )
     }
 
     saveAndReset = () => {
@@ -65,9 +81,9 @@ export class AddForm extends Component {
     componentWillMount() {
         // Store the output json, and default values
         let customerValues = {
-            productId: '',
-            cost: '',
-            productName: '',
+            name: '',
+            email: '',
+            phone: '',
         }
         let productValues = [this.getNewProductRow()]
         let customerErrors = {}
@@ -141,11 +157,14 @@ export class AddForm extends Component {
     }
 
     handleProductOptionChange = (option, index) => {
+        console.log(option)
         let productValues = this.state.productValues
         productValues[index].quantity = 1
-        productValues[index].unitCost = option.cost ? option.cost : 0
-        productValues[index].totalCost = option.cost ? option.cost : 0
-        productValues[index].product = option.productId
+        productValues[index].unitCost = option.unitCost ? option.unitCost : 0
+        productValues[index].totalCost = option.unitCost ? option.unitCost : 0
+        productValues[index].uid = option.uid
+        productValues[index].productName = option.productName
+        productValues[index].productId = option.productId
 
         this.setProductValues(productValues)
     }
@@ -191,24 +210,12 @@ export class AddForm extends Component {
     }
 
     render() {
-        // const customerFields = this.state.customerFormStructure.map(
-        //     (row, index) => (
-        // <GridItem xs={12} sm={12} md={6}>
-        //     <Controls.Input
-        //         name={row.name}
-        //         label={row.label}
-        //         value={this.state.customerValues[row.name]}
-        //         onChange={(e) => this.handleCustomerInputChange(e)}
-        //         error={this.state.customerErrors[row.name]}
-        //     />
-        // </GridItem>
-        //     )
-        // )
-
         const customerFields = (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                     <Autocomplete
+                        name={'name'}
+                        label={'Customer Name'}
                         token={this.props.token}
                         optionSelected={(customer) =>
                             this.handleCustomerOptionChange(customer)
@@ -217,20 +224,20 @@ export class AddForm extends Component {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                     <Controls.Input
-                        name={'productName'}
+                        name={'phone'}
                         label={'Phone Number'}
-                        value={this.state.customerValues.productName}
+                        value={this.state.customerValues.phone}
                         onChange={(e) => this.handleCustomerInputChange(e)}
-                        error={this.state.customerErrors.productName}
+                        error={this.state.customerErrors.phone}
                     />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                     <Controls.Input
-                        name={'cost'}
+                        name={'email'}
                         label={'Email Id'}
-                        value={this.state.customerValues.cost}
+                        value={this.state.customerValues.email}
                         onChange={(e) => this.handleCustomerInputChange(e)}
-                        error={this.state.customerErrors.cost}
+                        error={this.state.customerErrors.email}
                     />
                 </GridItem>
             </GridContainer>
@@ -253,7 +260,7 @@ export class AddForm extends Component {
                             id={'product'}
                             label={'Products'}
                             token={this.props.token}
-                            value={this.state.productValues[i].product}
+                            value={this.state.productValues[i].uid}
                             optionSelected={(option) =>
                                 this.handleProductOptionChange(option, i)
                             }
@@ -351,4 +358,6 @@ export class AddForm extends Component {
 
 const mapStateToProps = (state) => ({})
 
-export default connect(mapStateToProps, {})(AddForm)
+export default connect(mapStateToProps, {
+    saveSale,
+})(AddForm)

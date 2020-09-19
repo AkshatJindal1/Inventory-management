@@ -83,16 +83,13 @@ export default function Asynchronous(props) {
                 setOpen(false)
             }}
             getOptionSelected={(option, value) => {
-                if (option.productId === value.productId) {
-                    if (option.productId != props.value)
-                        props.optionSelected(option)
+                if (option.uid === value.uid) {
+                    if (option.uid != props.value) props.optionSelected(option)
                     return true
                 }
                 return false
             }}
-            getOptionLabel={(option) =>
-                `${option.productId} - ${option.productName}`
-            }
+            getOptionLabel={(option) => option.productLabel}
             options={options}
             loading={loading}
             renderInput={(params) => (
