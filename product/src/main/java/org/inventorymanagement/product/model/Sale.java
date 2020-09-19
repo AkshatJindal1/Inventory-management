@@ -1,11 +1,12 @@
 package org.inventorymanagement.product.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,23 +26,23 @@ import lombok.ToString;
 @Document(collection = "sales")
 public class Sale {
 
-  @Id
-  @JsonProperty("uid")
-  private String _id;
+	@Transient
+	public static final String SEQUENCE_NAME = "sale_sequence";
 
-  @NotBlank(message = "Sales ID must not be null or empty")
-  @Indexed(unique = true)
-  private String salesId;
-  private String url;
-  @NotNull(message = "Form Id cannot be null")
-  private String formId;
-  private String salesDate;
-  private Double amount;
-  private Double discount;
-  private Double netAmount;
-  private List<SalePerProduct> products;
-  private String customerPhone;
-  private String customerEmail;
-  private String customerName;
-  private String client;
+	@Id
+	@JsonProperty("uid")
+	private String _id;
+
+	@NotBlank(message = "Sales ID must not be null or empty")
+	@Indexed(unique = true)
+	private Long salesId;
+
+	private Date salesDate;
+
+	private List<SalePerProduct> products;
+
+	private Customer customer;
+
+	private String client;
+
 }

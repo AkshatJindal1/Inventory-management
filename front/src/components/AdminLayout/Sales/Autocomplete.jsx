@@ -35,7 +35,7 @@ export default function FreeSolo(props) {
             searchText: value,
         }
 
-        const url = `${BASE_URL}/products/sales/?searchText=${value}`
+        const url = `${BASE_URL}/customer/?searchText=${value}`
 
         ;(async () => {
             const response = await axios.get(url, {
@@ -62,23 +62,26 @@ export default function FreeSolo(props) {
                 freeSolo
                 id="free-solo-2-demo"
                 disableClearable
-                options={options.map((option) => option.productId)}
+                options={options.map((option) => option.name)}
                 renderInput={(params) => (
                     <TextField
                         className={classes.textInput}
                         {...params}
-                        label="Customer Name"
+                        label={props.label}
                         onBlur={(e) => {
                             let contact = options.find(
-                                (value, key) =>
-                                    value.productId == e.target.value
+                                (value, key) => value.name == e.target.value
                             )
                             if (contact == null) {
                                 contact = {
-                                    productId: e.target.value,
+                                    name: e.target.value,
+                                    customerId: '',
                                 }
                             }
                             props.optionSelected(contact)
+                        }}
+                        onChange={(e) => {
+                            setValue(e.target.value)
                         }}
                         margin="normal"
                         variant="outlined"

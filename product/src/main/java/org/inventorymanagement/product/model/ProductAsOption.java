@@ -22,6 +22,11 @@ public class ProductAsOption {
 
 	private String productName;
 
+	@JsonProperty("unitCost")
 	private Double cost;
+	
+	public String getProductLabel() {
+		return productId + " - " + productName;
+	}
 
 }

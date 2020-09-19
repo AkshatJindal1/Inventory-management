@@ -1,82 +1,85 @@
 package org.inventorymanagement.product.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
 import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
-import org.inventorymanagement.product.model.Form;
-import org.inventorymanagement.product.model.Model;
+import org.inventorymanagement.product.model.Customer;
 import org.inventorymanagement.product.model.Sale;
-import org.inventorymanagement.product.repository.FormRepository;
+import org.inventorymanagement.product.model.SalePerProduct;
+import org.inventorymanagement.product.repository.CustomerRepository;
 import org.inventorymanagement.product.repository.SaleRepository;
-import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Slf4j
 @Service
 public class SalesService {
 
-  @Autowired
-  private FormRepository formRepository;
+	/*
+	 * Change Customer Seq logic, if two people read at same time, then possibility
+	 * of collision
+	 */
 
-  @Autowired
-  private MongoOperations mongoOps;
+	@Autowired
+	private SaleRepository saleRepository;
 
-  @Autowired
-  SaleRepository repository;
+	@Autowired
+	private CustomerRepository customerRepository;
 
-  public Sale insertSales(Sale sale) {
+	@Autowired
+	private SequenceGeneratorService sequenceGeneratorService;
 
-    String candidate = ProductUtils.toSlug(sale.getSalesId()) + "-";
-    do {
-      candidate = candidate + (new Random()).nextInt(10);
-    } while (repository.existsByUrl(candidate));
+	public void insertSales(HashMap<String, Object> data, String client) {
 
-    sale.setUrl(candidate);
-    sale.setSalesDate(new Date().toString());
-    return repository.save(sale);
-  }
+		// Check if required data present
+		if (!data.containsKey("customer") || !data.containsKey("sale"))
+			throw new ProductNotFoundException("Some of reuqired fields are missing");
 
-  public Sale getSaleById(String id) {
+		// Mapper Object
+		ObjectMapper mapper = new ObjectMapper();
 
-    return repository.findBySalesId(id);
-  }
+		// Read data from map
+		Object customerData = data.get("customer");
+		Object saleData = data.get("sale");
 
-  public Sale updateSalesById(String id, Sale sale) {
+		// Get Seq Number
+		long customerSeq = sequenceGeneratorService.generateSequence(Customer.SEQUENCE_NAME);
+		long saleSeq = sequenceGeneratorService.generateSequence(Sale.SEQUENCE_NAME);
 
-    if (!sale.getSalesId().equals(id)) {
-      throw new ProductIdMismatchException("Sales id  does not match with the request body");
-    }
-    Sale oldSale = getSaleById(id);
-    if (oldSale == null)
-      return repository.save(sale);
+		// Validate Customer
+		Customer customer = mapper.convertValue(customerData, Customer.class);
+		if (customer.getName().trim().equals(""))
+			customer.setName("No Name - " + String.valueOf(customerSeq));
+		if (customer.get_id() == null) {
+			customer.set_id(customerSeq);
+		}
+		customer.setClient(client);
 
-    sale.set_id(oldSale.get_id());
-    return repository.save(sale);
-  }
+		// Save Sale to DB
+		List salePerProducts = mapper.convertValue(saleData, List.class);
 
-  public Sale getSaleByUrl(String formUrl, String saleUrl, String client) {
-    Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.SALE, client);
-    if (form == null)
-      throw new ProductNotFoundException("Form Url incorrect");
-    String formId = form.get_id();
-    Sale sale = repository.findByUrlAndFormId(saleUrl, formId);
-    if (sale == null)
-      throw new ProductNotFoundException("Url incorrect");
-    return sale;
-  }
+		// Verify Sale
+		for (int i = 0; i < salePerProducts.size(); i++) {
+			SalePerProduct salePerProduct = mapper.convertValue(salePerProducts.get(i), SalePerProduct.class);
+			if (!salePerProduct.isValid())
+				throw new ProductIdMismatchException("Some fields are not valid");
+		}
 
-  public void deleteSales(List<String> uids, String formUrl, String client) {
+		customerRepository.save(customer);
 
-    String formId = formRepository.findByUrlAndModel(formUrl, Model.SALE).get_id();
-    for (String uid : uids) {
-      repository.deleteBy_idAndFormIdAndClient(uid, formId, client);
-    }
-  }
+		Sale sale = new Sale();
+		sale.setClient(client);
+		sale.setCustomer(customer);
+		sale.setSalesDate(new Date());
+		sale.setProducts(salePerProducts);
+		sale.setSalesId(saleSeq);
+
+		// Save to DB
+		saleRepository.save(sale);
+	}
+
 }

@@ -10,6 +10,7 @@ import org.inventorymanagement.product.model.Filter;
 import org.inventorymanagement.product.model.FilterOptions;
 import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Product;
+import org.inventorymanagement.product.model.ProductAsOption;
 import org.inventorymanagement.product.service.CommonService;
 import org.inventorymanagement.product.service.ProductService;
 import org.inventorymanagement.product.service.UserManagementService;
@@ -102,7 +103,7 @@ public class ProductController {
 		service.deleteProducts(req, formUrl, client);
 	}
 	@GetMapping("/sales")
-	public List<Product> getProductsByText(
+	public List<ProductAsOption> getProductsByText(
 			@RequestParam("searchText") String searchText,
 			@RequestHeader("Authorization") String token) throws JsonProcessingException {
 

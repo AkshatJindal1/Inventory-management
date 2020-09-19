@@ -57,10 +57,16 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/options/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/options/**").authenticated()
-								.antMatchers(HttpMethod.DELETE, "/options/**").authenticated()
-                
+				.antMatchers(HttpMethod.DELETE, "/options/**").authenticated()
+
                 .antMatchers(HttpMethod.GET, "/user-management/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/user-management/**").authenticated();
+                .antMatchers(HttpMethod.POST, "/user-management/**").authenticated()
+
+                .antMatchers(HttpMethod.GET, "/sales/**").authenticated()
+		        .antMatchers(HttpMethod.POST, "/sales/**").authenticated()
+        
+		        .antMatchers(HttpMethod.GET, "/customer/**").authenticated()
+		        .antMatchers(HttpMethod.POST, "/customer/**").authenticated();
 
 
                 

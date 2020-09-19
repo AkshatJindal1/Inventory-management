@@ -14,18 +14,63 @@ import GridItem from '../../Grid/GridItem'
 import ProductSelect from './ProductSelect'
 import Autocomplete from './Autocomplete'
 
+import { saveSale } from '../../../store/actions/saleAction'
+
 const validateOnChange = true
 
 // TODO Render data values for option fields in data table
 
 export class AddForm extends Component {
-    validate = (fieldValues = this.state.values) => {}
+    validate = () => {
+        let productErrors = this.state.productErrors
+        let productValues = this.state.productValues
+
+        productValues.forEach((key, index) => {
+            // Product Exists Check
+            if (!key.uid || key.uid == '') {
+                productErrors[index].product = 'No Product Selected'
+            } else productErrors[index].product = ''
+
+            // Quantity Check
+            if (isNaN(key.quantity) || key.quantity <= 0) {
+                productErrors[index].quantity =
+                    'Quantity should be greater than Zero'
+            } else productErrors[index].quantity = ''
+
+            // Unit Cost Exists Check
+            if (isNaN(key.unitCost) || key.unitCost == '' || key.unitCost < 0) {
+                productErrors[index].unitCost = 'Value Should be positive'
+            } else productErrors[index].unitCost = ''
+
+            // Total Exists Check
+            if (
+                isNaN(key.totalCost) ||
+                key.totalCost == '' ||
+                key.totalCost < 0
+            ) {
+                productErrors[index].totalCost = 'Value Should be positive'
+            } else productErrors[index].totalCost = ''
+        })
+
+        this.setState({ productErrors })
+        console.log(productErrors)
+
+        for (const [key, value] of Object.entries(productErrors)) {
+            if (
+                value.product ||
+                value.quantity ||
+                value.unitCost ||
+                value.totalCost
+            )
+                return false
+        }
+        return true
+    }
 
     onSuccess = () => {
         this.resetForm()
-        console.log(`About to Redirect to ${this.props.redirectTo}`)
         this.setState({
-            redirectTo: <Redirect to={this.props.redirectTo} />,
+            redirectTo: 'Successfuly saved',
         })
     }
 
@@ -37,8 +82,20 @@ export class AddForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        console.log(this.state.productValues)
-        console.log(this.state.customerValues)
+        if (this.validate()) {
+            const data = {
+                customer: this.state.customerValues,
+                sale: this.state.productValues,
+            }
+            console.log(data)
+            this.props.saveSale(
+                this.onSuccess,
+                this.onError,
+                data,
+                this.props.token
+            )
+        }
+        console.log('Some Errors Exist')
     }
 
     saveAndReset = () => {
@@ -64,24 +121,7 @@ export class AddForm extends Component {
 
     componentWillMount() {
         // Store the output json, and default values
-        let customerValues = {
-            productId: '',
-            cost: '',
-            productName: '',
-        }
-        let productValues = [this.getNewProductRow()]
-        let customerErrors = {}
-        let productErrors = [{}]
-
-        const rowCount = 1
-
-        this.setState({
-            customerValues,
-            productValues,
-            customerErrors,
-            productErrors,
-            rowCount,
-        })
+        this.resetForm()
     }
 
     setCustomerValues = (customerValues) => {
@@ -92,8 +132,8 @@ export class AddForm extends Component {
         this.setState({ productValues })
     }
 
-    setErrors = (errors) => {
-        this.setState({ errors })
+    setProductValueObject = (productValueObject) => {
+        this.setState({ productValueObject })
     }
 
     handleCustomerInputChange = (e) => {
@@ -141,19 +181,47 @@ export class AddForm extends Component {
     }
 
     handleProductOptionChange = (option, index) => {
+        let productValueObject = this.state.productValueObject
         let productValues = this.state.productValues
-        productValues[index].quantity = 1
-        productValues[index].unitCost = option.cost ? option.cost : 0
-        productValues[index].totalCost = option.cost ? option.cost : 0
-        productValues[index].product = option.productId
+
+        productValueObject[index] = option
+
+        if (option)
+            productValues[index] = {
+                ...option,
+                unitCost: option.unitCost ? option.unitCost : 0,
+                totalCost: option.unitCost ? option.unitCost : 0,
+                quantity: 1,
+            }
+        else {
+            productValues[index] = this.getNewProductRow()
+        }
 
         this.setProductValues(productValues)
+        this.setProductValueObject(productValueObject)
     }
 
     resetForm = () => {
-        this.setValues({})
-        this.setErrors({})
-        this.setState({ redirectTo: '' })
+        let customerValues = {
+            name: '',
+            email: '',
+            phone: '',
+        }
+        let productValues = [this.getNewProductRow()]
+        let customerErrors = {}
+        let productErrors = [{}]
+        let productValueObject = [null]
+
+        const rowCount = 1
+
+        this.setState({
+            customerValues,
+            productValues,
+            customerErrors,
+            productErrors,
+            rowCount,
+            productValueObject,
+        })
     }
 
     getNewProductRow = () => {
@@ -167,48 +235,47 @@ export class AddForm extends Component {
     addAnotherRow = () => {
         let productValues = this.state.productValues
         let productErrors = this.state.productErrors
+        let productValueObject = this.state.productValueObject
         let rowCount = this.state.rowCount + 1
 
         productValues.push(this.getNewProductRow())
         productErrors.push({})
+        productValueObject.push(null)
 
         this.setState({
             rowCount,
             productValues,
             productErrors,
+            productValueObject,
         })
     }
 
     handleDeleteButton = (event, index) => {
         let productValues = this.state.productValues
         let productErrors = this.state.productErrors
+        let productValueObject = this.state.productValueObject
         let rowCount = this.state.rowCount - 1
 
         productValues.splice(index, 1)
         productErrors.splice(index, 1)
+        productValueObject.splice(index, 1)
 
-        this.setState({ productValues, productErrors, rowCount })
+        this.setState({
+            productValues,
+            productErrors,
+            rowCount,
+            productValueObject,
+        })
     }
 
     render() {
-        // const customerFields = this.state.customerFormStructure.map(
-        //     (row, index) => (
-        // <GridItem xs={12} sm={12} md={6}>
-        //     <Controls.Input
-        //         name={row.name}
-        //         label={row.label}
-        //         value={this.state.customerValues[row.name]}
-        //         onChange={(e) => this.handleCustomerInputChange(e)}
-        //         error={this.state.customerErrors[row.name]}
-        //     />
-        // </GridItem>
-        //     )
-        // )
-
+        console.log(this.state.productValueObject)
         const customerFields = (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                     <Autocomplete
+                        name={'name'}
+                        label={'Customer Name'}
                         token={this.props.token}
                         optionSelected={(customer) =>
                             this.handleCustomerOptionChange(customer)
@@ -217,20 +284,20 @@ export class AddForm extends Component {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                     <Controls.Input
-                        name={'productName'}
+                        name={'phone'}
                         label={'Phone Number'}
-                        value={this.state.customerValues.productName}
+                        value={this.state.customerValues.phone}
                         onChange={(e) => this.handleCustomerInputChange(e)}
-                        error={this.state.customerErrors.productName}
+                        error={this.state.customerErrors.phone}
                     />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                     <Controls.Input
-                        name={'cost'}
+                        name={'email'}
                         label={'Email Id'}
-                        value={this.state.customerValues.cost}
+                        value={this.state.customerValues.email}
                         onChange={(e) => this.handleCustomerInputChange(e)}
-                        error={this.state.customerErrors.cost}
+                        error={this.state.customerErrors.email}
                     />
                 </GridItem>
             </GridContainer>
@@ -249,14 +316,14 @@ export class AddForm extends Component {
                     />
                     <GridItem xs={12} sm={12} md={4}>
                         <ProductSelect
-                            key={i}
                             id={'product'}
                             label={'Products'}
                             token={this.props.token}
-                            value={this.state.productValues[i].product}
+                            value={this.state.productValueObject[i]}
                             optionSelected={(option) =>
                                 this.handleProductOptionChange(option, i)
                             }
+                            error={this.state.productErrors[i].product}
                         />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={2}>
@@ -326,10 +393,6 @@ export class AddForm extends Component {
                             <GridItem xs={12} sm={12} md={12}>
                                 <Controls.Button type="submit" text="Submit" />
                                 <Controls.Button
-                                    text="Save and Another"
-                                    onClick={this.saveAndReset}
-                                />
-                                <Controls.Button
                                     text="Reset"
                                     color="default"
                                     onClick={this.resetForm}
@@ -351,4 +414,6 @@ export class AddForm extends Component {
 
 const mapStateToProps = (state) => ({})
 
-export default connect(mapStateToProps, {})(AddForm)
+export default connect(mapStateToProps, {
+    saveSale,
+})(AddForm)
