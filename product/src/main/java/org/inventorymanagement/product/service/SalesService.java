@@ -19,6 +19,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class SalesService {
 
+	/*
+	 * Change Customer Seq logic, if two people read at same time, then possibility
+	 * of collision
+	 */
+
 	@Autowired
 	private SaleRepository saleRepository;
 
@@ -43,34 +48,38 @@ public class SalesService {
 
 		// Get Seq Number
 		long customerSeq = sequenceGeneratorService.generateSequence(Customer.SEQUENCE_NAME);
-		long saleSeq = sequenceGeneratorService.generateSequence(Customer.SEQUENCE_NAME);
+		long saleSeq = sequenceGeneratorService.generateSequence(Sale.SEQUENCE_NAME);
 
-		// Save Customer to DB
+		// Validate Customer
 		Customer customer = mapper.convertValue(customerData, Customer.class);
 		if (customer.getName().trim().equals(""))
 			customer.setName("No Name - " + String.valueOf(customerSeq));
+		if (customer.get_id() == null) {
+			customer.set_id(customerSeq);
+		}
 		customer.setClient(client);
-		customerRepository.save(customer);
-		
 
 		// Save Sale to DB
 		List salePerProducts = mapper.convertValue(saleData, List.class);
-		
+
 		// Verify Sale
-		for(int i=0;i<salePerProducts.size();i++) {
+		for (int i = 0; i < salePerProducts.size(); i++) {
 			SalePerProduct salePerProduct = mapper.convertValue(salePerProducts.get(i), SalePerProduct.class);
-			if(!salePerProduct.isValid()) 
+			if (!salePerProduct.isValid())
 				throw new ProductIdMismatchException("Some fields are not valid");
 		}
-		
+
+		customerRepository.save(customer);
+
 		Sale sale = new Sale();
 		sale.setClient(client);
 		sale.setCustomer(customer);
 		sale.setSalesDate(new Date());
 		sale.setProducts(salePerProducts);
 		sale.setSalesId(saleSeq);
-		saleRepository.save(sale);
 
+		// Save to DB
+		saleRepository.save(sale);
 	}
 
 }

@@ -27,7 +27,7 @@ public class Customer {
 
 	@Id
 	@JsonProperty("customerId")
-	private String _id;
+	private Long _id;
 
 	private String name;
 	private String phone;

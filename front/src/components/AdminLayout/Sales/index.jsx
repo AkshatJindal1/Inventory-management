@@ -108,10 +108,6 @@ export class AddForm extends Component {
         this.setState({ productValues })
     }
 
-    setErrors = (errors) => {
-        this.setState({ errors })
-    }
-
     handleCustomerInputChange = (e) => {
         const { name, value } = e.target
         this.setCustomerValues({
@@ -170,9 +166,13 @@ export class AddForm extends Component {
     }
 
     resetForm = () => {
-        this.setValues({})
-        this.setErrors({})
-        this.setState({ redirectTo: '' })
+        this.setCustomerValues({
+            name: '',
+            email: '',
+            phone: '',
+        })
+        this.setProductValues([this.getNewProductRow()])
+        this.setState({ redirectTo: '', rowCount: 1 })
     }
 
     getNewProductRow = () => {
@@ -332,10 +332,6 @@ export class AddForm extends Component {
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
                                 <Controls.Button type="submit" text="Submit" />
-                                <Controls.Button
-                                    text="Save and Another"
-                                    onClick={this.saveAndReset}
-                                />
                                 <Controls.Button
                                     text="Reset"
                                     color="default"
