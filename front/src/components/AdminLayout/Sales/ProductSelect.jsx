@@ -41,18 +41,17 @@ export default function Asynchronous(props) {
             searchText: value,
         }
 
-        const url = `${BASE_URL}/products/t-shirts-5`
+        const url = `${BASE_URL}/products/sales/?searchText=${value}`
 
         ;(async () => {
-            const response = await axios.post(
-                `${BASE_URL}/products/t-shirts-5`,
-                data,
+            const response = await axios.get(
+                url,
+                // data,
                 {
                     headers: headers,
                 }
             )
-
-            const countries = await response.data.response
+            const countries = await response.data
 
             if (active && countries.length !== 0) {
                 setOptions(countries)

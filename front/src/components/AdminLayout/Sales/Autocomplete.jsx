@@ -35,16 +35,14 @@ export default function FreeSolo(props) {
             searchText: value,
         }
 
-        ;(async () => {
-            const response = await axios.post(
-                `${BASE_URL}/products/t-shirts-5`,
-                data,
-                {
-                    headers: headers,
-                }
-            )
+        const url = `${BASE_URL}/products/sales/?searchText=${value}`
 
-            const countries = await response.data.response
+        ;(async () => {
+            const response = await axios.get(url, {
+                headers: headers,
+            })
+
+            const countries = await response.data
 
             if (active && countries.length !== 0) {
                 setOptions(countries)
