@@ -29,6 +29,7 @@ export default function ControllableStates(props) {
     React.useEffect(() => {
         if (!(value == props.value)) props.optionSelected(value)
         if (value != null) setInputValue(value.productLabel)
+        if (value == null) setInputValue('')
     }, [value])
 
     React.useEffect(() => {

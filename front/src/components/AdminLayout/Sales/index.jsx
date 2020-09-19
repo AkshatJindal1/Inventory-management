@@ -25,9 +25,8 @@ export class AddForm extends Component {
 
     onSuccess = () => {
         this.resetForm()
-        console.log(`About to Redirect to ${this.props.redirectTo}`)
         this.setState({
-            redirectTo: <Redirect to={this.props.redirectTo} />,
+            redirectTo: 'Successfuly saved',
         })
     }
 
@@ -45,13 +44,8 @@ export class AddForm extends Component {
         }
         console.log(data)
         this.props.saveSale(
-            () => {
-                console.log('Saved')
-            },
-            (err) => {
-                console.log(err)
-                this.setState({ redirectTo: 'Something Went Wrong' })
-            },
+            this.onSuccess,
+            this.onError,
             data,
             this.props.token
         )
@@ -80,26 +74,7 @@ export class AddForm extends Component {
 
     componentWillMount() {
         // Store the output json, and default values
-        let customerValues = {
-            name: '',
-            email: '',
-            phone: '',
-        }
-        let productValues = [this.getNewProductRow()]
-        let customerErrors = {}
-        let productErrors = [{}]
-        let productValueObject = [null]
-
-        const rowCount = 1
-
-        this.setState({
-            customerValues,
-            productValues,
-            customerErrors,
-            productErrors,
-            rowCount,
-            productValueObject,
-        })
+        this.resetForm()
     }
 
     setCustomerValues = (customerValues) => {
@@ -180,13 +155,26 @@ export class AddForm extends Component {
     }
 
     resetForm = () => {
-        this.setCustomerValues({
+        let customerValues = {
             name: '',
             email: '',
             phone: '',
+        }
+        let productValues = [this.getNewProductRow()]
+        let customerErrors = {}
+        let productErrors = [{}]
+        let productValueObject = [null]
+
+        const rowCount = 1
+
+        this.setState({
+            customerValues,
+            productValues,
+            customerErrors,
+            productErrors,
+            rowCount,
+            productValueObject,
         })
-        this.setProductValues([this.getNewProductRow()])
-        this.setState({ redirectTo: '', rowCount: 1 })
     }
 
     getNewProductRow = () => {
