@@ -101,5 +101,13 @@ public class ProductController {
 		String client = userService.getClientName(token);
 		service.deleteProducts(req, formUrl, client);
 	}
+	@GetMapping("/sales/{searchText}")
+	public List<Product> getProductsByText(
+			@PathVariable("searchText") String searchText,
+			@RequestHeader("Authorization") String token) throws JsonProcessingException {
+
+		String client = userService.getClientName(token);
+		return service.getProductBySearchText(searchText, client);
+	}
 
 }
