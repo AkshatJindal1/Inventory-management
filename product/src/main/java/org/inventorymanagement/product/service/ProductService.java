@@ -1,5 +1,6 @@
 package org.inventorymanagement.product.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -84,6 +85,7 @@ public class ProductService {
 		} while (productRepository.existsByUrl(candidate));
 
 		product.setUrl(candidate);
+		product.setClientName(client);
 		return productRepository.save(product);
 	}
 
@@ -104,4 +106,9 @@ public class ProductService {
 			productRepository.deleteBy_idAndFormId(uid, formId);
 		}
 	}
+
+  public List<Product> getProductBySearchText(String searchText, String client) {
+
+		return productRepository.getBySearchTextAndClient(client, searchText);
+  }
 }

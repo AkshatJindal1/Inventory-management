@@ -64,6 +64,8 @@ public class Product {
 
 	private String url;
 
+	private String clientName;
+
 	@JsonIgnore
 	private Map<String, Object> otherDetails = new HashMap<>();
 
