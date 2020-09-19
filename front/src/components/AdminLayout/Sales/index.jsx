@@ -11,7 +11,7 @@ import Controls from '../../Controls/Controls'
 import { Form } from '../../Forms'
 import GridContainer from '../../Grid/GridContainer'
 import GridItem from '../../Grid/GridItem'
-import ProductSelect from './ProductSelect'
+import ProductSelect from './auto'
 import Autocomplete from './Autocomplete'
 
 import { saveSale } from '../../../store/actions/saleAction'
@@ -88,6 +88,7 @@ export class AddForm extends Component {
         let productValues = [this.getNewProductRow()]
         let customerErrors = {}
         let productErrors = [{}]
+        let productValueObject = [null]
 
         const rowCount = 1
 
@@ -97,6 +98,7 @@ export class AddForm extends Component {
             customerErrors,
             productErrors,
             rowCount,
+            productValueObject,
         })
     }
 
@@ -106,6 +108,10 @@ export class AddForm extends Component {
 
     setProductValues = (productValues) => {
         this.setState({ productValues })
+    }
+
+    setProductValueObject = (productValueObject) => {
+        this.setState({ productValueObject })
     }
 
     handleCustomerInputChange = (e) => {
@@ -153,16 +159,24 @@ export class AddForm extends Component {
     }
 
     handleProductOptionChange = (option, index) => {
-        console.log(option)
+        let productValueObject = this.state.productValueObject
         let productValues = this.state.productValues
-        productValues[index].quantity = 1
-        productValues[index].unitCost = option.unitCost ? option.unitCost : 0
-        productValues[index].totalCost = option.unitCost ? option.unitCost : 0
-        productValues[index].uid = option.uid
-        productValues[index].productName = option.productName
-        productValues[index].productId = option.productId
+
+        productValueObject[index] = option
+
+        if (option)
+            productValues[index] = {
+                ...option,
+                unitCost: option.unitCost ? option.unitCost : 0,
+                totalCost: option.unitCost ? option.unitCost : 0,
+                quantity: 1,
+            }
+        else {
+            productValues[index] = this.getNewProductRow()
+        }
 
         this.setProductValues(productValues)
+        this.setProductValueObject(productValueObject)
     }
 
     resetForm = () => {
@@ -186,30 +200,41 @@ export class AddForm extends Component {
     addAnotherRow = () => {
         let productValues = this.state.productValues
         let productErrors = this.state.productErrors
+        let productValueObject = this.state.productValueObject
         let rowCount = this.state.rowCount + 1
 
         productValues.push(this.getNewProductRow())
         productErrors.push({})
+        productValueObject.push(null)
 
         this.setState({
             rowCount,
             productValues,
             productErrors,
+            productValueObject,
         })
     }
 
     handleDeleteButton = (event, index) => {
         let productValues = this.state.productValues
         let productErrors = this.state.productErrors
+        let productValueObject = this.state.productValueObject
         let rowCount = this.state.rowCount - 1
 
         productValues.splice(index, 1)
         productErrors.splice(index, 1)
+        productValueObject.splice(index, 1)
 
-        this.setState({ productValues, productErrors, rowCount })
+        this.setState({
+            productValues,
+            productErrors,
+            rowCount,
+            productValueObject,
+        })
     }
 
     render() {
+        console.log(this.state.productValueObject)
         const customerFields = (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
@@ -260,7 +285,7 @@ export class AddForm extends Component {
                             id={'product'}
                             label={'Products'}
                             token={this.props.token}
-                            value={this.state.productValues[i].uid}
+                            value={this.state.productValueObject[i]}
                             optionSelected={(option) =>
                                 this.handleProductOptionChange(option, i)
                             }

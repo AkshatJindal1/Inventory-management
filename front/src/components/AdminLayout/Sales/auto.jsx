@@ -1,17 +1,11 @@
-// *https://www.registers.service.gov.uk/registers/country/use-the-api*
 import axios from 'axios'
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import { BASE_URL } from '../../../store/actions/constants'
 
-function sleep(delay = 0) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, delay)
-    })
-}
+import { BASE_URL } from '../../../store/actions/constants'
 
 const useStyles = makeStyles((theme) => ({
     textInput: {
@@ -22,76 +16,61 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function Asynchronous(props) {
-    const [open, setOpen] = React.useState(false)
+export default function ControllableStates(props) {
+    const [value, setValue] = React.useState()
+    const [inputValue, setInputValue] = React.useState('')
     const [options, setOptions] = React.useState([])
-    const [value, setValue] = React.useState('')
-    const loading = open && options.length === 0
+    const [loading, setLoading] = React.useState(false)
 
     React.useEffect(() => {
-        let active = true
+        if (!(value == props.value)) setValue(props.value)
+    }, [props.value])
 
+    React.useEffect(() => {
+        if (!(value == props.value)) props.optionSelected(value)
+        if (value != null) setInputValue(value.productLabel)
+    }, [value])
+
+    React.useEffect(() => {
+        setLoading(true)
         const headers = {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${props.token}`,
         }
 
-        const data = {
-            recordsPerPage: 5,
-            searchText: value,
-        }
-
-        const url = `${BASE_URL}/products/sales/?searchText=${value}`
+        const url = `${BASE_URL}/products/sales/?searchText=${inputValue}`
 
         ;(async () => {
-            const response = await axios.get(
-                url,
-                // data,
-                {
-                    headers: headers,
-                }
-            )
+            const response = await axios.get(url, {
+                headers: headers,
+            })
             const countries = await response.data
-
-            if (active && countries.length !== 0) {
-                setOptions(countries)
-            }
+            setOptions(countries)
+            setLoading(false)
         })()
-
-        return () => {
-            active = false
-        }
-    }, [loading, value])
-
-    React.useEffect(() => {
-        if (!open) {
-            setOptions([])
-        }
-    }, [open])
+    }, [inputValue])
 
     const classes = useStyles()
 
     return (
         <Autocomplete
             value={value}
-            id={props.id}
-            className={classes.textInput}
-            open={open}
-            onOpen={() => {
-                setOpen(true)
+            onChange={(event, newValue) => {
+                setValue(newValue)
             }}
-            onClose={() => {
-                setOpen(false)
+            className={classes.textInput}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue)
             }}
             getOptionLabel={(option) => option.productLabel}
+            id="controllable-states-demo"
             options={options}
-            loading={loading}
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label={props.label}
+                    label="Controllable"
                     variant="outlined"
-                    onChange={(e) => setValue(e.target.value)}
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (
