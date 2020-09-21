@@ -82,4 +82,8 @@ public class SalesService {
 		saleRepository.save(sale);
 	}
 
+	public List<Sale> getSales(String client) {
+		return saleRepository.findByClient(client);
+	}
+
 }

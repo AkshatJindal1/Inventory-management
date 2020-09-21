@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -37,12 +38,33 @@ public class Sale {
 	@Indexed(unique = true)
 	private Long salesId;
 
+	
 	private Date salesDate;
 
+	@JsonIgnore
 	private List<SalePerProduct> products;
 
+	@JsonIgnore
 	private Customer customer;
 
+	@JsonIgnore
 	private String client;
+	
+	public int getSaleCount() {
+		return products.size();
+	}
+	
+	public String getCustomerName() {
+		return customer.getName();
+	}
+	
+	public String getCustomerPhone() {
+		return customer.getPhone();
+	}
+	
+	public String getCustomerEmail() {
+		return customer.getEmail();
+	}
+	
 
 }

@@ -156,7 +156,7 @@ export class AddForm extends Component {
 
         let productValues = this.state.productValues
         productValues[index][name] = value
-
+        this.revaluateTotalSales(productValues)
         this.setProductValues(productValues)
     }
 
@@ -167,6 +167,7 @@ export class AddForm extends Component {
         let totalCost = value * productValues[index].quantity
         if (!totalCost) totalCost = 0
         productValues[index].totalCost = totalCost
+        this.revaluateTotalSales(productValues)
         this.setProductValues(productValues)
     }
 
@@ -177,7 +178,18 @@ export class AddForm extends Component {
         let totalCost = value * productValues[index].unitCost
         if (!totalCost) totalCost = 0
         productValues[index].totalCost = totalCost
+        this.revaluateTotalSales(productValues)
         this.setProductValues(productValues)
+    }
+
+    revaluateTotalSales = (productValues) => {
+        let totalSales = 0
+        let totalItems = 0
+        productValues.forEach((product) => {
+            if (!isNaN(product.totalCost)) totalSales += +product.totalCost
+            if (!isNaN(product.quantity)) totalItems += +product.quantity
+        })
+        this.setState({ totalSales, totalItems })
     }
 
     handleProductOptionChange = (option, index) => {
@@ -197,6 +209,7 @@ export class AddForm extends Component {
             productValues[index] = this.getNewProductRow()
         }
 
+        this.revaluateTotalSales(productValues)
         this.setProductValues(productValues)
         this.setProductValueObject(productValueObject)
     }
@@ -221,6 +234,8 @@ export class AddForm extends Component {
             productErrors,
             rowCount,
             productValueObject,
+            totalSales: 0,
+            totalItems: 0,
         })
     }
 
@@ -377,6 +392,17 @@ export class AddForm extends Component {
                     <CardContent>
                         {customerFields}
                         <CardContent>{productsFields}</CardContent>
+                        <GridContainer>
+                            <GridItem>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="h5"
+                                >
+                                    {`Total Sales - ${this.state.totalSales}, Total Items - ${this.state.totalItems}`}
+                                </Typography>
+                            </GridItem>
+                        </GridContainer>
                         <GridContainer>
                             <GridItem>
                                 <Controls.Button
