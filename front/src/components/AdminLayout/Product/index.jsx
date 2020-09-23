@@ -1,14 +1,3 @@
-import {
-    Button,
-    Card,
-    FormControl,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Popover,
-    Select,
-    Slider,
-} from '@material-ui/core'
 import { CheckBox, ThreeSixty } from '@material-ui/icons'
 import React, { Component, Fragment } from 'react'
 import {
@@ -19,7 +8,7 @@ import {
     setCategories,
 } from '../../../store/actions/productAction'
 
-import CustomizedButtons from '../../CustomButton'
+import Controls from '../../Controls/Controls'
 import Filters from '../../Filters'
 import MUIDataTable from 'mui-datatables'
 import { MaterialTable } from '../../Table/MaterialTable'
@@ -133,7 +122,7 @@ export class ProductLanding extends Component {
                     token={this.props.token}
                 />
                 {this.state.redirectTo}
-                <CustomizedButtons
+                <Controls.Button
                     id="add"
                     buttonType="add"
                     children="Add Product"

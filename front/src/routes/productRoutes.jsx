@@ -22,7 +22,18 @@ const UserRegistration = React.lazy(() =>
 )
 const Sale = React.lazy(() => import('../components/AdminLayout/Sales/'))
 
+const ImagePicker = React.lazy(() =>
+    import('../components/Controls/ImagePicker')
+)
+
 const routes = [
+    {
+        path: '/trials',
+        exact: true,
+        name: 'Trials',
+        component: ImagePicker,
+        private: true,
+    },
     {
         path: '/profile',
         exact: true,

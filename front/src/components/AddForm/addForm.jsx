@@ -247,6 +247,21 @@ export class AddForm extends Component {
                         />
                     </GridItem>
                 )
+            } else if (getType(field.datatype) === 'image') {
+                return (
+                    <GridItem>
+                        <Controls.ImagePicker
+                        // name={field.id}
+                        // label={field.labelText}
+                        // value={values[index]['conditions'][field.id]}
+                        // onChange={(e) =>
+                        //     handleInputChange(e, index, 'conditions')
+                        // }
+                        // error={errors[index]['conditions'][field.id]}
+                        // disabled={field.disabled}
+                        />
+                    </GridItem>
+                )
             }
         })
 
