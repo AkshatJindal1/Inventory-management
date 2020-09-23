@@ -13,6 +13,7 @@ import org.inventorymanagement.product.security.model.CustomUser;
 import org.inventorymanagement.product.utils.DefaultTemplatesUtil;
 import org.inventorymanagement.product.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,30 +28,39 @@ public class UserManagementService {
 
 	@Autowired
 	private FormRepository formRepository;
+	
+	private CustomUser getUserFromToken(String token) throws JsonMappingException, JsonProcessingException {
+		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
+		CustomUser user = userRepository.findBySubjectAndApproved(subject, true);
+
+		// if user exists and approved
+		if (user == null) {
+			user = userRepository.findBySubject(subject);
+
+			// Check if user exists but not approved
+			if (user == null)
+				throw new InsufficientAuthenticationException("User not identified");
+			throw new InsufficientAuthenticationException("User not approved yet");
+		}
+		return user;
+	}
 
 	public String getClientName(String token) throws JsonProcessingException {
-		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
-		CustomUser user = userRepository.findBySubject(subject);
-		if (user == null)
-			throw new ProductNotFoundException("User Not Found");
+		CustomUser user = getUserFromToken(token);
 		return user.getClientName();
 	}
 
 	public void updateUser(String token, DefaultTemplates defaultTemplate, String clientName)
 			throws JsonMappingException, JsonProcessingException {
-		log.info(token, defaultTemplate, clientName);
-		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
-		CustomUser user = userRepository.getUserBySubject(subject);
-		if(user == null) 
-			throw new ProductNotFoundException("User Not Found");
-			
+		
+		CustomUser user = getUserFromToken(token);
 		user.setClientName(clientName);
 		user.setDefaultTemplates(defaultTemplate);
 		user.setTemplateSelected(true);
-		
+
 		// Get All Forms
 		List<Form> forms = DefaultTemplatesUtil.getDefaultTextileForms(clientName, defaultTemplate);
-		
+
 		userRepository.save(user);
 		formRepository.saveAll(forms);
 	}
@@ -58,7 +68,7 @@ public class UserManagementService {
 	public CustomUser getUserDetails(String token) throws JsonProcessingException {
 		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
 		CustomUser user = userRepository.getUserBySubject(subject);
-		if(user == null) {
+		if (user == null) {
 			user = new CustomUser();
 			user.setSubject(SecurityUtils.getSubjectFromToken(token.split(" ")[1]));
 			user.setTemplateSelected(false);
@@ -69,10 +79,7 @@ public class UserManagementService {
 
 	public Boolean checkIfClientExists(String token, String clientName) throws JsonProcessingException {
 
-		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
-		CustomUser user = userRepository.getUserBySubject(subject);
-		if(user == null)
-			throw new UnauthenticatedUserException("User is not authenticated");
+		CustomUser user = getUserFromToken(token);
 		return userRepository.existsByClientName(clientName);
 	}
 
