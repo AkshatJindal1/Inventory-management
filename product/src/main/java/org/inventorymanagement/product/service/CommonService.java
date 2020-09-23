@@ -95,8 +95,6 @@ public class CommonService {
 					textFieldList = Arrays.asList("optionName"); break;
 				case PRODUCT:
 					textFieldList = Arrays.asList("productId", "productName"); break;
-				case SALE:
-					textFieldList = Arrays.asList("salesId","customerPhone", "customerEmail", "customerName"); break;
 				default:
 					new ArrayList<>();
 					break;
