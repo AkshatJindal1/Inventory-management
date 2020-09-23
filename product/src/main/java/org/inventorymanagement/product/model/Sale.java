@@ -27,6 +27,27 @@ import lombok.ToString;
 @Document(collection = "sales")
 public class Sale {
 
+	
+	/*
+	 * TODO Benchmark -> Notification ( Message or Email)
+	 * 
+	 * TODO Remove Quantity in Transit
+	 * 
+	 * TODO No Back for set-profile
+	 * 
+	 * TODO Return 2 decimal
+	 * 
+	 * TODO Add Symbol Currency
+	 * 
+	 * TODO Image Picker, Auto Reduce Size
+	 * 
+	 * TODO Branch Option
+	 * 
+	 * TODO Options in Forms as well
+	 * 
+	 */
+	
+	
 	@Transient
 	public static final String SEQUENCE_NAME = "sale_sequence";
 

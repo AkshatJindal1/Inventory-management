@@ -4,6 +4,7 @@ import Select from './Select'
 import Checkbox from './Checkbox'
 import DatePicker from './DatePicker'
 import Button from './Button'
+import ImagePicker from './ImagePicker'
 
 const Controls = {
     Input,
@@ -11,6 +12,7 @@ const Controls = {
     Select,
     Checkbox,
     DatePicker,
+    ImagePicker,
     Button,
 }
 

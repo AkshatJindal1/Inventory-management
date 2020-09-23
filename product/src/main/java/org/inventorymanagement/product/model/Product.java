@@ -83,5 +83,9 @@ public class Product {
 		System.out.println(name);
 		otherDetails.put(name, value);
 	}
+	
+	public String getCost() {
+		return String.format("%.2f", cost);		
+	}
 
 }

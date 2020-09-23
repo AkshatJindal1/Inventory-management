@@ -383,7 +383,7 @@ export class StructureForm extends Component {
                             disabled={
                                 this.props.option === 'options'
                                     ? [0].includes(index)
-                                    : [0, 1].includes(index)
+                                    : [0, 4, 5].includes(index)
                             } // Disabling 1st two field in case of option, 2 in case of product
                         />
                     </GridItem>

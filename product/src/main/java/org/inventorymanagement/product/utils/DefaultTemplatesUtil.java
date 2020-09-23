@@ -25,7 +25,6 @@ public class DefaultTemplatesUtil {
 				Arrays.asList("image", "Image", "text", false), 
 				Arrays.asList("cost", "Cost", "number", false),
 				Arrays.asList("quantityInStock", "Quantity in Stock", "number", false),
-				Arrays.asList("quantityInTransit", "Quantity in Transit", "number", false),
 				Arrays.asList("benchmark", "Benchmark", "number", false));
 		return defaultForms;
 	}

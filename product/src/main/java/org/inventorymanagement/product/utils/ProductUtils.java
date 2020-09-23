@@ -31,19 +31,9 @@ public class ProductUtils {
 	public static Object[][] getDefaultProductValuesArray() {
 		Object[][] defaultForms = { { "productId", "Product Id", "text", true },
 				{ "productName", "Product Name", "text", true }, { "description", "Description", "text", false },
-				{ "image", "Image", "text", false }, { "cost", "Cost", "number", false },
-				{ "quantityInStock", "Quantity in Stock", "number", false },
-				{ "quantityInTransit", "Quantity in Transit", "number", false },
-				{ "benchmark", "Benchmark", "number", false } };
-		return defaultForms;
-	}
-
-	public static Object[][] getDefaultSalesValuesArray() {
-		Object[][] defaultForms = { { "amount", "Amount", "number", true }, { "discount", "Discount", "number", false },
-				{ "netAmount", "Net Amount", "number", true },
-				{ "customerPhone", "Customer Phone Number", "text", false },
-				{ "customerEmail", "Customer Email", "text", false },
-				{ "customerName", "Customer Name", "text", false }, };
+				{ "image", "Image", "image", false }, { "cost", "Cost", "number", true },
+				{ "quantityInStock", "Quantity in Stock", "number", true },
+				{ "benchmark", "Notification At", "number", false } };
 		return defaultForms;
 	}
 
@@ -53,8 +43,6 @@ public class ProductUtils {
 			return getDefaultProductValuesArray();
 		case OPTION:
 			return getDefaultOptionValuesArray();
-		case SALE:
-			return getDefaultSalesValuesArray();
 		default:
 			throw new ProductNotFoundException("Wrong Category");
 		}
@@ -118,7 +106,7 @@ public class ProductUtils {
 
 	public static List<Datatype> getDefaultDatatype() {
 		List<Datatype> defaultTypes = Arrays.asList(new Datatype("number", "Number"), new Datatype("text", "Text"),
-				new Datatype("boolean", "Boolean"), new Datatype("email", "Email"));
+				new Datatype("boolean", "Boolean"), new Datatype("email", "Email"), new Datatype("image", "Image"));
 		return defaultTypes;
 	}
 

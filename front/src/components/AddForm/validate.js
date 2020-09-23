@@ -57,7 +57,6 @@ const productDefault = [
     'image',
     'cost',
     'quantityInStock',
-    'quantityInTransit',
     'benchmark',
 ]
 
