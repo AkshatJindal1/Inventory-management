@@ -25,6 +25,7 @@ export default function UploadButtons() {
         setFilePath(e.target.files[0].name)
         //  TODO Call an API Here to get the path after storing in cloud storage
         console.log(
+            e.target.files[0],
             'API to Cloud Functions storing and reducing size of image and returing back the url to store o mongo'
         )
     }

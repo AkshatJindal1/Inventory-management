@@ -20,11 +20,11 @@ public class DefaultTemplatesUtil {
 	private static List<List<Object>> getDefaultProductValuesArray() {
 		List<List<Object>> defaultForms = Arrays.asList(
 				Arrays.asList("productId", "Product Id", "text", true),
-				Arrays.asList("productName", "Product Name", "text", true),
+				Arrays.asList("productName", "Product Name", "text", false),
 				Arrays.asList("description", "Description", "text", false),
 				Arrays.asList("image", "Image", "text", false), 
-				Arrays.asList("cost", "Cost", "number", false),
-				Arrays.asList("quantityInStock", "Quantity in Stock", "number", false),
+				Arrays.asList("cost", "Cost", "number", true),
+				Arrays.asList("quantityInStock", "Quantity in Stock", "number", true),
 				Arrays.asList("benchmark", "Benchmark", "number", false));
 		return defaultForms;
 	}

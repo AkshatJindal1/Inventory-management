@@ -12,6 +12,7 @@ import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -107,6 +108,6 @@ public class ProductService {
 	}
 
   public List<ProductAsOption> getProductBySearchText(String searchText, String client) {
-		return productRepository.getBySearchTextAndClient(client, searchText);
+		return productRepository.getBySearchTextAndClient(client, searchText, PageRequest.of(0, 10));
   }
 }
