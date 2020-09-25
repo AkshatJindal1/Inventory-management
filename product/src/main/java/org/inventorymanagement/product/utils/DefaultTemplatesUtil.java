@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductNotFoundException;
 import org.inventorymanagement.product.model.DefaultTemplates;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;

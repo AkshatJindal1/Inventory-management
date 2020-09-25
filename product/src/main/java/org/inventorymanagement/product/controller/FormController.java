@@ -43,7 +43,7 @@ public class FormController {
 
 	@Autowired
 	private FormService service;
-	
+
 	@Autowired
 	private UserManagementService userService;
 
@@ -62,12 +62,6 @@ public class FormController {
 		return service.saveForm(fields, formName, formId, category, client);
 	}
 
-//	@GetMapping(path = "/all/raw")
-//	public List<Form> getAllFormsRaw() {
-//		return service.getAllForms();
-//	}
-
-
 	@GetMapping(path = "/all")
 	public HashMap<Model, List<FormShort>> getAllFormShorts(@RequestHeader("Authorization") String token)
 			throws JsonMappingException, JsonProcessingException {
@@ -75,12 +69,10 @@ public class FormController {
 		return service.getAllFormShorts(client);
 	}
 
-
 	@GetMapping(value = "/{category}/default")
 	public List<Field> getDefault(@PathVariable("category") String category) {
 		return service.getDefaultForms(category);
 	}
-
 
 	@GetMapping(value = "/{category}/{url}")
 	public Form getFormByUrl(@PathVariable String url, @PathVariable("category") String category,
@@ -88,7 +80,6 @@ public class FormController {
 		String client = userService.getClientName(token);
 		return service.getByUrl(url, category, client);
 	}
-
 
 	@GetMapping(path = "datatypes")
 	public Pair<List<Datatype>, List<Datatype>> getAllDatatypes(@RequestHeader("Authorization") String token)

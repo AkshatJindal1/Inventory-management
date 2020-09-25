@@ -3,12 +3,23 @@ package org.inventorymanagement.product.exceptionhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.inventorymanagement.product.exceptionhandler.Exceptions.DuplicateOptionNameException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.DuplicateProductException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.RequiredFieldsMissingException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.FormNameNullException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.FormNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.InsufficientPermissionException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.OptionNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductIdMismatchException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.UnauthenticatedUserException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.UserNotApprovedException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.UserNotIdentifiedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -22,7 +33,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler({ UnauthenticatedUserException.class })
+	@ExceptionHandler({ UnauthenticatedUserException.class, InsufficientPermissionException.class,
+			UserNotApprovedException.class, UserNotIdentifiedException.class })
 	protected ResponseEntity<Object> unauthenticatedUser(Exception ex, WebRequest request) {
 
 		final ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, ex.getLocalizedMessage(),
@@ -31,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
 	}
 
-	@ExceptionHandler({ ProductNotFoundException.class })
+	@ExceptionHandler({ ProductNotFoundException.class, OptionNotFoundException.class, FormNotFoundException.class })
 	protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
 
 		final ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getLocalizedMessage(),
@@ -40,7 +52,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
-	@ExceptionHandler({ ProductIdMismatchException.class, DataIntegrityViolationException.class })
+	@ExceptionHandler({ ProductIdMismatchException.class, DataIntegrityViolationException.class,
+			FormNameNullException.class, RequiredFieldsMissingException.class, DuplicateOptionNameException.class,
+			DuplicateProductException.class })
 	public ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
 
 		final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(),

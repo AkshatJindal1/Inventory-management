@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.text.CaseUtils;
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.OptionNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductNotFoundException;
 import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
@@ -29,9 +30,12 @@ public class ProductUtils {
 	}
 
 	public static Object[][] getDefaultProductValuesArray() {
-		Object[][] defaultForms = { { "productId", "Product Id", "text", true },
-				{ "productName", "Product Name", "text", true }, { "description", "Description", "text", false },
-				{ "image", "Image", "image", false }, { "cost", "Cost", "number", true },
+		Object[][] defaultForms = { 
+				{ "productId", "Product Id", "text", true },
+				{ "productName", "Product Name", "text", true }, 
+				{ "description", "Description", "text", false },
+				{ "image", "Image", "image", false }, 
+				{ "cost", "Cost", "number", true },
 				{ "quantityInStock", "Quantity in Stock", "number", true },
 				{ "benchmark", "Notification At", "number", false } };
 		return defaultForms;
@@ -100,7 +104,7 @@ public class ProductUtils {
 		case "sales":
 			return Model.SALE;
 		default:
-			throw new ProductNotFoundException("Wrong Category");
+			throw new OptionNotFoundException();
 		}
 	}
 

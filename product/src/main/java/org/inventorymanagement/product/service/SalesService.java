@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.inventorymanagement.product.exceptionhandler.ProductIdMismatchException;
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductIdMismatchException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.RequiredFieldsMissingException;
 import org.inventorymanagement.product.model.Customer;
 import org.inventorymanagement.product.model.Sale;
 import org.inventorymanagement.product.model.SalePerProduct;
@@ -37,7 +37,7 @@ public class SalesService {
 
 		// Check if required data present
 		if (!data.containsKey("customer") || !data.containsKey("sale"))
-			throw new ProductNotFoundException("Some of reuqired fields are missing");
+			throw new RequiredFieldsMissingException();
 
 		// Mapper Object
 		ObjectMapper mapper = new ObjectMapper();
@@ -66,7 +66,7 @@ public class SalesService {
 		for (int i = 0; i < salePerProducts.size(); i++) {
 			SalePerProduct salePerProduct = mapper.convertValue(salePerProducts.get(i), SalePerProduct.class);
 			if (!salePerProduct.isValid())
-				throw new ProductIdMismatchException("Some fields are not valid");
+				throw new RequiredFieldsMissingException();
 		}
 
 		customerRepository.save(customer);

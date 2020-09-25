@@ -1,4 +1,4 @@
-package org.inventorymanagement.product.exceptionhandler;
+package org.inventorymanagement.product.exceptionhandler.Exceptions;
 
 public class NoSupportedMethodException  extends RuntimeException {
 
