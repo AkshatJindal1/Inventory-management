@@ -109,8 +109,12 @@ public class ProductUtils {
 	}
 
 	public static List<Datatype> getDefaultDatatype() {
-		List<Datatype> defaultTypes = Arrays.asList(new Datatype("number", "Number"), new Datatype("text", "Text"),
-				new Datatype("boolean", "Boolean"), new Datatype("email", "Email"), new Datatype("image", "Image"));
+		List<Datatype> defaultTypes = Arrays.asList(
+				new Datatype("number", "Number"), 
+				new Datatype("text", "Text"),
+				new Datatype("boolean", "Boolean"), 
+				new Datatype("email", "Email"), 
+				new Datatype("image", "Image"));
 		return defaultTypes;
 	}
 
