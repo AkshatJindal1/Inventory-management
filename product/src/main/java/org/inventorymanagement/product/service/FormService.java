@@ -111,9 +111,6 @@ public class FormService {
 
 		else {
 
-//			TODO I think we can just replace it
-
-			// If updating a Form delete the previous form and create a identical new form
 			if (form == null) {
 				throw new FormNotFoundException();
 			}
@@ -123,7 +120,6 @@ public class FormService {
 			form.setNameClient(ProductUtils.getNameClient(name, client));
 		}
 
-		System.out.println(form);
 		return repository.save(form);
 	}
 
@@ -149,7 +145,6 @@ public class FormService {
 
 	public Pair<List<Datatype>, List<Datatype>> getAllDatatypes(String client) {
 		List<Datatype> datatypeFromDb = repository.getDatatypes(client);
-		System.out.println(datatypeFromDb);
 		List<Datatype> defaultTypes = ProductUtils.getDefaultDatatype();
 		Pair<List<Datatype>, List<Datatype>> pair = Pair.of(datatypeFromDb, defaultTypes);
 		return pair;
