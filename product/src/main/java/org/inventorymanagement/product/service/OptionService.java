@@ -3,7 +3,10 @@ package org.inventorymanagement.product.service;
 import java.util.List;
 import java.util.Random;
 
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.DuplicateOptionNameException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.FormNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.InsufficientPermissionException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.OptionNotFoundException;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Option;
@@ -43,12 +46,12 @@ public class OptionService {
 
 			// Check if formId and clientName Match
 			if (!formRepository.existsBy_idAndClient(option.getFormId(), client)) {
-				throw new ProductNotFoundException("Not Enough Permissions");
+				throw new InsufficientPermissionException();
 			}
 
 			// Check if optionName and formId match
 			if (optionRepository.existsByNameAndFormId(option.getName(), option.getFormId())) {
-				throw new ProductNotFoundException("Option with same name already exists");
+				throw new DuplicateOptionNameException();
 			}
 		}
 
@@ -57,19 +60,19 @@ public class OptionService {
 
 			// Check if formId and clientName match
 			if (!formRepository.existsBy_idAndClient(option.getFormId(), client)) {
-				throw new ProductNotFoundException("Not Enough Permissions");
+				throw new InsufficientPermissionException();
 			}
 
 			// Check if _id and formId match
 			Option oldOption = optionRepository.findBy_idAndFormId(option.get_id(), option.getFormId());
 			if (oldOption == null) {
-				throw new ProductNotFoundException("Option Not Found");
+				throw new OptionNotFoundException();
 			}
 
 			// Check if optionName and formId match
 			if (!oldOption.getName().equals(option.getName())
 					&& optionRepository.existsByNameAndFormId(option.getName(), option.getFormId())) {
-				throw new ProductNotFoundException("Option with same name already exists");
+				throw new DuplicateOptionNameException();
 			}
 		}
 
@@ -86,18 +89,18 @@ public class OptionService {
 	public Option getOptionByUrl(String formUrl, String optionUrl, String client) {
 		Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.OPTION, client);
 		if (form == null)
-			throw new ProductNotFoundException("Form Url incorrect");
+			throw new FormNotFoundException();
 		String formId = form.get_id();
 		Option option = optionRepository.findByUrlAndFormId(optionUrl, formId);
 		if (option == null)
-			throw new ProductNotFoundException("Option Url incorrect");
+			throw new OptionNotFoundException();
 		return option;
 	}
 
 	public Option getOptionById(String id) {
 		Option option = optionRepository.findById(id).orElse(null);
 		if (option == null) {
-			throw new ProductNotFoundException("Option with this id not found");
+			throw new OptionNotFoundException();
 		}
 		return option;
 	}

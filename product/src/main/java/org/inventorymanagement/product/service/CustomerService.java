@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerService {
-	
+
 	@Autowired
 	private CustomerRepository customerRepository;
 
@@ -20,7 +20,6 @@ public class CustomerService {
 	}
 
 	public List<Customer> getCustomers(String client, String searchText) {
-		System.out.printf("searching '%s' for '%s'", searchText, client);
 		return customerRepository.getBySearchTextAndClient(client, searchText, PageRequest.of(0, 10));
 	}
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.inventorymanagement.product.exceptionhandler.NoSupportedMethodException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.NoSupportedMethodException;
 import org.inventorymanagement.product.model.*;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;

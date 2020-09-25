@@ -7,7 +7,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.RequiredFieldsMissingException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.FormNameNullException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.FormNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductNotFoundException;
 import org.inventorymanagement.product.model.Datatype;
 import org.inventorymanagement.product.model.Field;
 import org.inventorymanagement.product.model.Form;
@@ -58,7 +61,7 @@ public class FormService {
 
 		// Check if Form Name is null or blank
 		if (name == null || name.trim().equals("")) {
-			throw new ProductNotFoundException("Form Name Cannot be null");
+			throw new FormNameNullException();
 		}
 
 		// Generate Ids for new fields
@@ -79,14 +82,12 @@ public class FormService {
 
 		// Check if Duplicate Keys are sent
 		if (requestIds.size() != fields.size()) {
-			throw new ProductNotFoundException("Duplicate Key Error\nMandatory Ids: " + mandatoryIds.toString()
-					+ "\nRequestedIds: " + requestIds.toString());
+			throw new RequiredFieldsMissingException("Duplicate Keys", requestIds, mandatoryIds);
 		}
 
 		// Check if All Mandatory Fields are present
 		if (!requestIds.containsAll(mandatoryIds)) {
-			throw new ProductNotFoundException("Mandatory Field Missing\nMandatory Ids: " + mandatoryIds.toString()
-					+ "\nRequestedIds: " + requestIds.toString());
+			throw new RequiredFieldsMissingException("Mandatory Missing", requestIds, mandatoryIds);
 		}
 
 		// Set a url for the form
@@ -114,7 +115,7 @@ public class FormService {
 
 			// If updating a Form delete the previous form and create a identical new form
 			if (form == null) {
-				throw new ProductNotFoundException("Product with that id could not be found");
+				throw new FormNotFoundException();
 			}
 			form.setUrl(slugCandidate);
 			form.setName(name);
@@ -126,10 +127,6 @@ public class FormService {
 		return repository.save(form);
 	}
 
-	public List<Form> getAllForms() {
-		return repository.findAll();
-	}
-
 	public void deleteForm(List<String> formIds, String client) {
 		repository.deleteBy_idInAndClient(formIds, client);
 	}
@@ -138,12 +135,10 @@ public class FormService {
 
 		Model model = ProductUtils.getModel(category);
 
-		Form form = model == Model.SALE
-				? repository.findByUrlAndModel(url, model)
-				: repository.findByUrlAndModelAndClient(url, model, client);
+		Form form = repository.findByUrlAndModelAndClient(url, model, client);
 
 		if (form == null)
-			throw new ProductNotFoundException("URL NOT FOUND");
+			throw new FormNotFoundException();
 
 		for (Field f : form.getFields()) {
 			f.setMenuitems(optionRepository.findByFormId(f.getDatatype()));

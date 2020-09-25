@@ -3,7 +3,10 @@ package org.inventorymanagement.product.service;
 import java.util.List;
 import java.util.Random;
 
-import org.inventorymanagement.product.exceptionhandler.ProductNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.DuplicateProductException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.FormNotFoundException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.InsufficientPermissionException;
+import org.inventorymanagement.product.exceptionhandler.Exceptions.ProductNotFoundException;
 import org.inventorymanagement.product.model.Form;
 import org.inventorymanagement.product.model.Model;
 import org.inventorymanagement.product.model.Product;
@@ -49,12 +52,12 @@ public class ProductService {
 
 			// Check if formId and clientName Match
 			if (!formRepository.existsBy_idAndClient(product.getFormId(), client)) {
-				throw new ProductNotFoundException("Not Enough Permissions");
+				throw new InsufficientPermissionException();
 			}
 
 			// Check if productId and formId match
 			if (productRepository.existsByProductIdAndFormId(product.getProductId(), product.getFormId())) {
-				throw new ProductNotFoundException("Product with same id already exists");
+				throw new DuplicateProductException();
 			}
 		}
 
@@ -63,19 +66,19 @@ public class ProductService {
 
 			// Check if formId and clientName match
 			if (!formRepository.existsBy_idAndClient(product.getFormId(), client)) {
-				throw new ProductNotFoundException("Not Enough Permissions");
+				throw new InsufficientPermissionException();
 			}
 
 			// Check if _id and formId match
 			Product oldProduct = productRepository.findBy_idAndFormId(product.get_id(), product.getFormId());
 			if (oldProduct == null) {
-				throw new ProductNotFoundException("Product Not Found");
+				throw new ProductNotFoundException();
 			}
 
 			// Check if productId and formId match
 			if (!oldProduct.getProductId().equals(product.getProductId())
 					&& productRepository.existsByProductIdAndFormId(product.getProductId(), product.getFormId())) {
-				throw new ProductNotFoundException("Product with same name already exists");
+				throw new DuplicateProductException();
 			}
 		}
 
@@ -92,11 +95,11 @@ public class ProductService {
 	public Product getProductByUrl(String formUrl, String productUrl, String client) {
 		Form form = formRepository.findByUrlAndModelAndClient(formUrl, Model.PRODUCT, client);
 		if (form == null)
-			throw new ProductNotFoundException("Form Url incorrect");
+			throw new FormNotFoundException();
 		String formId = form.get_id();
 		Product product = productRepository.findByUrlAndFormId(productUrl, formId);
 		if (product == null)
-			throw new ProductNotFoundException("Url incorrect");
+			throw new ProductNotFoundException();
 		return product;
 	}
 	public void deleteProducts(List<String> uids, String formUrl, String client) {
