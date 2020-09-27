@@ -1,9 +1,5 @@
 import React from 'react'
 
-// import AddProduct from '../components/AdminLayout/Product/addProduct'
-// import Product from '../components/AdminLayout/Product'
-// import ProductStructure from '../components/AdminLayout/Product/productStructure'
-// import ProductLanding from '../components/AdminLayout/Product/productLanding'
 const Product = React.lazy(() => import('../components/AdminLayout/Product'))
 const AddProduct = React.lazy(() =>
     import('../components/AdminLayout/Product/addProduct')
@@ -39,13 +35,6 @@ const routes = [
         exact: true,
         name: 'Profile',
         component: Profile,
-        private: true,
-    },
-    {
-        path: '/set-profile',
-        exact: true,
-        name: 'Set Profile',
-        component: UserRegistration,
         private: true,
     },
     {

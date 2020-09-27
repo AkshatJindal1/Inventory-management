@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import {
+    checkApprovedStatus,
+    checkUserRegistered,
+} from '../../store/actions/profileAction'
 
 import LoginButton from './Login'
 import { Redirect } from 'react-router-dom'
-import { checkUserRegistered } from '../../store/actions/profileAction'
+import UserRegistration from './UserRegistration'
 import { connect } from 'react-redux'
 import { withAuth0 } from '@auth0/auth0-react'
 
@@ -11,24 +15,35 @@ export class Profile extends Component {
         super()
         this.state = {
             redirectTo: null,
+            isRegistered: false,
         }
     }
 
     componentWillMount() {
         const { token } = this.props
-        this.props.checkUserRegistered(token, (redirectTo) => {
-            if (redirectTo !== null) {
-                this.setState({
-                    redirectTo: <Redirect to={`/${redirectTo}`} />,
-                })
-            }
+        console.log('Inside profile index', token)
+        this.props.checkApprovedStatus(token)
+        this.isRegistered(token)
+    }
+
+    isRegistered = (token) => {
+        this.props.checkUserRegistered(token, (isRegistered) => {
+            this.setState({
+                isRegistered,
+            })
         })
     }
+
     render() {
         const { user, logout, isAuthenticated } = this.props.auth0
-        return (
+        const { isRegistered } = this.state
+        return !isRegistered ? (
+            <UserRegistration
+                token={this.props.token}
+                isRegistered={this.isRegistered}
+            />
+        ) : (
             <>
-                {this.state.redirectTo}
                 {isAuthenticated && (
                     <div>
                         <img src={user.picture} alt={user.name} />
@@ -48,5 +63,7 @@ export class Profile extends Component {
 const mapStateToProps = () => ({})
 
 export default withAuth0(
-    connect(mapStateToProps, { checkUserRegistered })(Profile)
+    connect(mapStateToProps, { checkUserRegistered, checkApprovedStatus })(
+        Profile
+    )
 )

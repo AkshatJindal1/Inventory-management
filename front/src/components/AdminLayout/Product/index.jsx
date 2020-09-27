@@ -112,7 +112,7 @@ export class ProductLanding extends Component {
                     data={data}
                     columns={columns}
                     options={options}
-                    filterTitle="Products Filter"
+                    filterTitle="Filter"
                     tableTitle="Products"
                     isTableLoading={isLoading}
                     getAllProducts={this.getAllProducts}
@@ -121,13 +121,13 @@ export class ProductLanding extends Component {
                     onRowClick={this.rowClick}
                     token={this.props.token}
                 />
-                {this.state.redirectTo}
                 <Controls.Button
                     id="add"
                     buttonType="add"
                     children="Add Product"
                     handleSubmit={this.handleButtonClick}
                 />
+                {this.state.redirectTo}
             </Fragment>
         )
     }

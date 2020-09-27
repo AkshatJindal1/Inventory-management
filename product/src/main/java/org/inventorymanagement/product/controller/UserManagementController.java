@@ -39,5 +39,9 @@ public class UserManagementController {
 			@PathVariable String clientName) throws JsonProcessingException {
 		return userService.checkIfClientExists(token, clientName);
 	}
+	@GetMapping("approved-status")
+	public Boolean checkApprovedStatus(@RequestHeader("Authorization") String token) throws JsonProcessingException {
+		return userService.checkApprovedStatus(token);
+	}
 
 }

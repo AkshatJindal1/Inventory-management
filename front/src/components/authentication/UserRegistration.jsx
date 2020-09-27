@@ -5,6 +5,10 @@ import {
     getIndustryList,
     saveClientInfo,
 } from '../../store/actions/profileAction'
+import {
+    openFailureNotification,
+    openSuccessNotification,
+} from '../../store/actions/notificationAction'
 
 import Card from '@material-ui/core/Card'
 import { CardActions } from '@material-ui/core'
@@ -13,8 +17,6 @@ import Controls from '../Controls/Controls'
 import { Form } from '../Forms'
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
-import LoginButton from './Login'
-import { Redirect } from 'react-router-dom'
 import ToastNotification from '../Notification/ToastNotification'
 import Typography from '@material-ui/core/Typography'
 import ValidateFields from '../AddForm/validate'
@@ -29,7 +31,6 @@ export class UserRegistration extends Component {
                 message: '',
                 severity: 'success',
             },
-            notificationOpen: true,
             industries: [],
             redirectTo: null,
             blankInitialValues: {
@@ -58,7 +59,7 @@ export class UserRegistration extends Component {
 
     componentWillMount() {
         const { token } = this.props
-        console.log('here 1')
+        console.log('here 1', token)
 
         this.props.getIndustryList(token, (industryList) => {
             this.setState({
@@ -135,25 +136,15 @@ export class UserRegistration extends Component {
     resetForm = () => {
         this.setValues(this.state.blankInitialValues)
         this.setErrors({})
-        this.setState({ notificationOpen: true })
     }
 
     onSuccess = () => {
-        const notification = {
-            open: true,
-            message: 'Successflly registered',
-            severity: 'success',
-        }
-        this.setState({
-            redirectTo: <Redirect to={`/profile`} />,
-            notification,
-        })
+        this.props.openSuccessNotification('User Successfully registered')
+        this.props.isRegistered(this.props.token)
     }
 
     onError = () => {
-        this.setState({
-            redirectTo: 'Some Errors Exists',
-        })
+        this.props.openFailureNotification('Some error from server')
     }
 
     handleSubmit = (e) => {
@@ -167,12 +158,7 @@ export class UserRegistration extends Component {
                 this.props.token
             )
         } else {
-            const notification = {
-                open: true,
-                message: 'Some errors',
-                severity: 'error',
-            }
-            this.setState({ notification })
+            this.props.openFailureNotification('Some Error Exists')
         }
     }
 
@@ -251,4 +237,6 @@ export default connect(mapStateToProps, {
     getIndustryList,
     checkCompanyAlreadyExists,
     saveClientInfo,
+    openSuccessNotification,
+    openFailureNotification,
 })(UserRegistration)

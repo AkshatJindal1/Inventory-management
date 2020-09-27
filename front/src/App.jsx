@@ -1,10 +1,10 @@
 import React, { Component, Suspense } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+
 import Loadable from 'react-loadable'
-import PrivateRoute from './components/authentication/PrivateRoute'
-
 import Loader from './components/Loader'
-
+import PrivateRoute from './components/authentication/PrivateRoute'
+import { connect } from 'react-redux'
 import routes from './routes/route'
 
 const AdminLayout = Loadable({
@@ -13,6 +13,14 @@ const AdminLayout = Loadable({
 })
 
 class App extends Component {
+    handleNotificationClose = () => {
+        const notification = {
+            open: false,
+            message: '',
+            severity: '',
+        }
+    }
+
     render() {
         const menu = routes.map((route, index) => {
             return (

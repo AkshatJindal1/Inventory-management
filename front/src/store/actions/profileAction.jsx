@@ -1,5 +1,6 @@
+import { FALSE_RESPONSE, GET_USER_APPROVED_STATUS } from './types'
+
 import { BASE_URL } from './constants'
-import { FALSE_RESPONSE } from './types'
 import axios from 'axios'
 
 export const checkUserRegistered = (token, callback = () => {}) => (
@@ -18,8 +19,8 @@ export const checkUserRegistered = (token, callback = () => {}) => (
         .then((resp) => {
             const data = resp.data
             if (!data.templateSelected) {
-                callback('set-profile')
-            } else callback(null)
+                callback(false)
+            } else callback(true)
         })
         .catch((err) =>
             dispatch({
@@ -94,6 +95,36 @@ export const saveClientInfo = (
         })
         .then((resp) => {
             onSuccess(resp.data)
+        })
+        .catch((err) => {
+            onError(err)
+            dispatch({
+                type: FALSE_RESPONSE,
+                payload: false,
+            })
+        })
+}
+
+export const checkApprovedStatus = (
+    token,
+    onSuccess = () => {},
+    onError = () => {}
+) => (dispatch) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    }
+    const url = `${BASE_URL}/user-management/approved-status`
+
+    axios
+        .get(url, { headers: headers })
+        .then((resp) => {
+            console.log(resp.data)
+            onSuccess(resp.data)
+            dispatch({
+                type: GET_USER_APPROVED_STATUS,
+                payload: resp.data,
+            })
         })
         .catch((err) => {
             onError(err)

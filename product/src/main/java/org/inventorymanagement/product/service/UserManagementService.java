@@ -2,6 +2,7 @@ package org.inventorymanagement.product.service;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.inventorymanagement.product.exceptionhandler.Exceptions.UnauthenticatedUserException;
 import org.inventorymanagement.product.exceptionhandler.Exceptions.UserNotApprovedException;
 import org.inventorymanagement.product.exceptionhandler.Exceptions.UserNotIdentifiedException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+@Slf4j
 @Service
 public class UserManagementService {
 
@@ -27,11 +29,11 @@ public class UserManagementService {
 	@Autowired
 	private FormRepository formRepository;
 
-	private CustomUser getUserFromToken(String token) throws JsonMappingException, JsonProcessingException {
+	private CustomUser getUserFromToken(String token) throws JsonProcessingException {
 		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
 
 		// TODO Change false to true once Approval Window in place
-		CustomUser user = userRepository.findBySubjectAndApproved(subject, false);
+		CustomUser user = userRepository.findBySubjectAndApproved(subject, true);
 
 		// if user exists and approved
 		if (user == null) {
@@ -51,9 +53,12 @@ public class UserManagementService {
 	}
 
 	public void updateUser(String token, DefaultTemplates defaultTemplate, String clientName)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonProcessingException {
 
-		CustomUser user = getUserFromToken(token);
+		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
+		CustomUser user = userRepository.getUserBySubject(subject);
+		if(user == null)
+			throw new UnauthenticatedUserException();
 		user.setClientName(clientName);
 		user.setDefaultTemplates(defaultTemplate);
 		user.setTemplateSelected(true);
@@ -84,6 +89,14 @@ public class UserManagementService {
 		if (user == null)
 			throw new UnauthenticatedUserException();
 		return userRepository.existsByClientName(clientName);
+	}
+
+	public Boolean checkApprovedStatus(String token) throws JsonProcessingException {
+		String subject = SecurityUtils.getSubjectFromToken(token.split(" ")[1]);
+		CustomUser user = userRepository.getUserBySubject(subject);
+		if(user == null)
+			throw new UnauthenticatedUserException();
+		return user.getApproved();
 	}
 
 }
