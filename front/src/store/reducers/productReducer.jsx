@@ -102,7 +102,9 @@ export default function (state = initialState, action) {
                     (field) =>
                         !(
                             field.options.dataType === 'number' &&
-                            (field.options.maximumValue === null ||
+                            (isNaN(field.options.maximumValue) ||
+                                isNaN(field.options.minimumValue) ||
+                                field.options.maximumValue === null ||
                                 field.options.minimumValue === null ||
                                 field.options.minimumValue ===
                                     field.options.maximumValue)

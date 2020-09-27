@@ -2,8 +2,6 @@ import {
     FALSE_RESPONSE,
     GET_ALL_PRODUCTS,
     GET_ALL_PRODUCTS_INIT,
-    GET_CATEGORIES,
-    GET_CATEGORIES_INIT,
     GET_COLUMN_DETAILS,
     GET_COLUMN_INIT,
     GET_INITIAL_STATE,
@@ -12,7 +10,6 @@ import {
 
 import { BASE_URL } from './constants'
 import axios from 'axios'
-import store from '../store'
 
 export const getInitialState = () => (dispatch) => {
     dispatch({ type: GET_INITIAL_STATE })

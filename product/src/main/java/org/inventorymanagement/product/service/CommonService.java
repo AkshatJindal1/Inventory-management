@@ -12,16 +12,15 @@ import org.inventorymanagement.product.model.*;
 import org.inventorymanagement.product.repository.FormRepository;
 import org.inventorymanagement.product.repository.OptionRepository;
 import org.inventorymanagement.product.repository.ProductRepository;
-import org.inventorymanagement.product.repository.SaleRepository;
 import org.inventorymanagement.product.utils.ProductUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -171,7 +170,6 @@ public class CommonService {
 			throw new NoSupportedMethodException(
 					"No supported method found: Currently supported product, sale and option");
 		}
-
 		sortFields.stream().forEach(sortField -> {
 			String fullSortField = ProductUtils.fullyQualifiedFieldName(sortField, defaultFieldIds);
 			Query maxQuery = new Query();
@@ -181,12 +179,16 @@ public class CommonService {
 			minQuery.addCriteria(expression).with(Sort.by(Sort.Direction.ASC, fullSortField)).limit(1);
 
 			try {
-				String minValue = new ObjectMapper().convertValue(mongoOps.findOne(minQuery, classType), Map.class)
-						.getOrDefault(sortField, 0).toString();
-				String maxValue = new ObjectMapper().convertValue(mongoOps.findOne(maxQuery, classType), Map.class)
-						.getOrDefault(sortField, 0).toString();
-				mp.put(sortField, new ArrayList<>(Arrays.asList(minValue==null ? maxValue: minValue, maxValue == null ? minValue: maxValue)));
+				Object minValue = new ObjectMapper().convertValue(mongoOps.findOne(minQuery, classType), Map.class).get(sortField);
+				Object maxValue = new ObjectMapper().convertValue(mongoOps.findOne(maxQuery, classType), Map.class).get(sortField);
+				mp.put(sortField, new ArrayList<>(Arrays.asList(minValue==null
+						? "0"
+						: minValue.toString(),
+						maxValue == null
+								? "0"
+								: maxValue.toString())));
 			} catch (Exception e) {
+				log.error("Exception: {}", e);
 				mp.put(sortField, new ArrayList<>(Arrays.asList(null, null)));
 			}
 		});

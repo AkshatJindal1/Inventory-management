@@ -1,4 +1,8 @@
 import React, { Component } from 'react'
+import {
+    openFailureNotification,
+    openSuccessNotification,
+} from '../../store/actions/notificationAction'
 
 import Card from '@material-ui/core/Card'
 import { CardActions } from '@material-ui/core'
@@ -8,12 +12,12 @@ import { Form } from '../Forms'
 import GridContainer from '../Grid/GridContainer'
 import GridItem from '../Grid/GridItem'
 import { Redirect } from 'react-router'
+import { TimerSharp } from '@material-ui/icons'
 import Typography from '@material-ui/core/Typography'
 import ValidateFields from './validate'
 import { connect } from 'react-redux'
 import getType from './typeDatatypeMap'
 import { saveProduct } from '../../store/actions/productAction'
-import { TimerSharp } from '@material-ui/icons'
 
 const validateOnChange = true
 
@@ -73,15 +77,14 @@ export class AddForm extends Component {
     onSuccess = () => {
         this.resetForm()
         console.log(`About to Redirect to ${this.props.redirectTo}`)
+        this.props.openSuccessNotification('Product added successfully')
         this.setState({
             redirectTo: <Redirect to={this.props.redirectTo} />,
         })
     }
 
     onError = () => {
-        this.setState({
-            redirectTo: 'Some Errors Exists',
-        })
+        this.props.openFailureNotification('Some error exists')
     }
 
     handleSubmit = (e) => {
@@ -90,7 +93,10 @@ export class AddForm extends Component {
     }
 
     saveAndReset = () => {
-        this.save(this.resetForm, this.onError)
+        this.save(() => {
+            this.resetForm()
+            this.props.openSuccessNotification('Product added successfully')
+        }, this.onError)
         this.setState({ uid: '' })
     }
 
@@ -306,4 +312,6 @@ const mapStateToProps = (state) => ({})
 
 export default connect(mapStateToProps, {
     saveProduct,
+    openFailureNotification,
+    openSuccessNotification,
 })(AddForm)

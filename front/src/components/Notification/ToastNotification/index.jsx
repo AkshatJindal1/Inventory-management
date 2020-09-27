@@ -28,7 +28,6 @@ class ToastNotification extends Component {
     }
 
     componentWillMount() {
-        console.log('I am called')
         this.setState({ open: true })
     }
 
@@ -44,7 +43,6 @@ class ToastNotification extends Component {
         const { severity, message, open } = this.props
         const vertical = 'bottom'
         const horizontal = 'left'
-        console.log(open)
         return (
             <div>
                 <Snackbar
